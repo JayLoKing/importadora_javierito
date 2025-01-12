@@ -1,11 +1,14 @@
-class BaseUrlService {
-  static final BaseUrlService _instance = BaseUrlService._internal();
+class SessionManager {
+  static final SessionManager _instance = SessionManager._internal();
 
-  BaseUrlService._internal();
+  SessionManager._internal();
 
-  factory BaseUrlService(){
+  factory SessionManager(){
     return _instance;
   }
 
-  static const String baseUrl = '';
+  String? token;
+  int? role;
 }
+
+final sessionManager = SessionManager();
