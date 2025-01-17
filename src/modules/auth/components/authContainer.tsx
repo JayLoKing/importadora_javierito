@@ -1,9 +1,22 @@
-import Login from "./login";
+import React from "react";
+import { Container } from "rsuite";
 
-export default function AuthContainer() {
+export default function AuthContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div>
-            <Login />
-        </div>
+        <Container style={{ ...styles }}>
+            {children}
+        </Container>
     )
 }
+
+const styles: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    padding: "20px",
+    boxSizing: "border-box",
+    width: "100%",
+    maxWidth: "1200px",
+    margin: "0 auto",
+};
