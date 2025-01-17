@@ -1,0 +1,1 @@
+export const baseUrl: string = "http://localhost:9090/api";
