@@ -3,20 +3,34 @@ import { Container } from "rsuite";
 
 export default function AuthContainer({ children }: { children: React.ReactNode }) {
     return (
-        <Container style={{ ...styles }}>
-            {children}
-        </Container>
-    )
+        <div style={styles.background}>
+            <Container style={{ ...styles.container }}>
+                {children}
+            </Container>
+        </div>
+
+    );
 }
 
-const styles: React.CSSProperties = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    padding: "20px",
-    boxSizing: "border-box",
-    width: "100%",
-    maxWidth: "1200px",
-    margin: "0 auto",
+const styles: Record<string, React.CSSProperties> = {
+    container: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        padding: "20px",
+        boxSizing: "border-box",
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+    },
+    background: {
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        background: "linear-gradient(180deg, orange 50%, white 50%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
 };
