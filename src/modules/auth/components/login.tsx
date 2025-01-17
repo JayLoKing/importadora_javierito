@@ -1,8 +1,16 @@
 import React from 'react';
-import { Panel, Form, Button, VStack, Text, Image, FlexboxGrid } from 'rsuite';
+import { Panel, Form, Button, VStack, Text, Image, InputGroup, useToaster, Message } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
 import FormGroup from 'rsuite/esm/FormGroup';
+import InputGroupButton from 'rsuite/esm/InputGroup/InputGroupButton';
+import { FaUser } from 'react-icons/fa';
+import { AiFillEyeInvisible } from 'react-icons/ai';
+import { MdVisibility } from 'react-icons/md';
+import InputGroupAddon from 'rsuite/esm/InputGroup/InputGroupAddon';
+import { RiLockPasswordFill } from 'react-icons/ri';
+import { useLoginForm } from '../hooks/useLoginForm';
+import { authenticateAsync } from '../services/authService';
 
 const styles: Record<string, React.CSSProperties> = {
     panel: {
@@ -52,6 +60,32 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 export default function Login() {
+
+    const [visible, setVisible] = React.useState(false);
+    const { formValues, handleInputChange, resetForm } = useLoginForm({ username: '', password: '' });
+    const toaster = useToaster();
+
+    function showErrorMessage() {
+        toaster.push(
+            <Message type="error" closable showIcon header="Error de inicio de sesión">
+                <p>Usuario o contraseña incorrectos.</p>
+            </Message>,
+            { duration: 3000 })
+    }
+
+    function handleChange() {
+        setVisible(!visible);
+    }
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        const res = await authenticateAsync(formValues);
+        if (res === null) {
+            showErrorMessage();
+        }
+        resetForm();
+    }
+
     return (
         <Panel bordered style={styles.panel}>
             <div>
@@ -65,10 +99,28 @@ export default function Login() {
             </div>
             <Form fluid>
                 <FormGroup>
-                    <FormControl name="email" type="email" placeholder='Ingrese su nombre de usuario' />
+                    <InputGroup inside>
+                        <InputGroupAddon><FaUser /></InputGroupAddon>
+                        <FormControl
+                            name="username"
+                            placeholder='Ingrese su nombre de usuario'
+                            value={formValues.username}
+                            onChange={(value) => handleInputChange('username', value)} />
+                    </InputGroup>
                 </FormGroup>
                 <FormGroup>
-                    <FormControl name="password" type="password" autoComplete="off" placeholder='Ingrese su contraseña' />
+                    <InputGroup inside>
+                        <InputGroupAddon><RiLockPasswordFill /></InputGroupAddon>
+                        <FormControl
+                            name="password"
+                            type={visible ? 'text' : 'password'}
+                            placeholder='Ingrese su contraseña'
+                            value={formValues.password}
+                            onChange={(value) => handleInputChange('password', value)} />
+                        <InputGroupButton onClick={handleChange}>
+                            {visible ? <MdVisibility /> : <AiFillEyeInvisible />}
+                        </InputGroupButton>
+                    </InputGroup>
                 </FormGroup>
 
                 <a href="#" style={{ color: '#f08b33', display: 'block', marginTop: '-15px', marginBottom: '15px', textAlign: 'right' }}>
@@ -76,7 +128,10 @@ export default function Login() {
                 </a>
 
                 <VStack spacing={10}>
-                    <Button appearance="primary" block>
+                    <Button
+                        appearance="primary"
+                        block
+                        onClick={(e) => handleSubmit(e)}>
                         Iniciar Sesión
                     </Button>
                 </VStack>

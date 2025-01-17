@@ -28,7 +28,7 @@ const styles: Record<string, React.CSSProperties> = {
         position: "relative",
         width: "100%",
         height: "100%",
-        background: "linear-gradient(180deg, orange 50%, white 50%)",
+        background: "linear-gradient(180deg, #f88721 50%, white 50%)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
