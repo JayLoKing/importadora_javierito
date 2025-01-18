@@ -151,7 +151,7 @@ export default function Login() {
 
             <div style={styles.signUpSection}>
                 <Text style={styles.signUpText}>¿No tienes una cuenta?</Text>
-                <a style={styles.link} onClick={() => navigate("/register")}>Registrarse</a>
+                <a onClick={() => navigate('/register')} style={styles.link}>Registrarse</a>
             </div>
         </Panel>
     );
