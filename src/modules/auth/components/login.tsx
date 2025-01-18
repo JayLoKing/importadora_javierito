@@ -139,7 +139,7 @@ export default function Login() {
 
             <div style={styles.signUpSection}>
                 <Text style={styles.signUpText}>¿No tienes una cuenta?</Text>
-                <a href="#" style={styles.link}>Registrarse</a>
+                <a href="/register" style={styles.link}>Registrarse</a>
             </div>
         </Panel>
     );

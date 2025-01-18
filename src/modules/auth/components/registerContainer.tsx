@@ -7,6 +7,7 @@ const styles: Record<string, React.CSSProperties> = {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
+        background: "linear-gradient(180deg, #f88721 50%, white 50%)",
     },
     content: {
         display: 'flex',
