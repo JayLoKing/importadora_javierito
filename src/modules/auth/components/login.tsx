@@ -1,4 +1,4 @@
-import React from 'react';
+import { CSSProperties, useState } from 'react';
 import { Panel, Form, Button, VStack, Text, Image, InputGroup, useToaster, Message } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
@@ -11,8 +11,9 @@ import InputGroupAddon from 'rsuite/esm/InputGroup/InputGroupAddon';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { authenticateAsync } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
     panel: {
         width: '100%',
         maxWidth: '400px',
@@ -24,9 +25,9 @@ const styles: Record<string, React.CSSProperties> = {
         marginTop: '10px',
     },
     link: {
-        color: '#f08b33',
-        textDecoration: 'none',
+        color: '#f88721',
         fontWeight: 'bold',
+        cursor: 'pointer'
     },
     title: {
         textAlign: 'center',
@@ -56,14 +57,23 @@ const styles: Record<string, React.CSSProperties> = {
         marginRight: '5px',
         fontSize: '14px',
         color: '#757575',
+    },
+    forgotPasswordText: {
+        color: '#f88721',
+        display: 'block',
+        marginTop: '-15px',
+        marginBottom: '15px',
+        textAlign: 'right',
+        cursor: 'pointer'
     }
 };
 
 export default function Login() {
 
-    const [visible, setVisible] = React.useState(false);
+    const [visible, setVisible] = useState(false);
     const { formValues, handleInputChange, resetForm } = useLoginForm({ username: '', password: '' });
     const toaster = useToaster();
+    const navigate = useNavigate();
 
     function showErrorMessage() {
         toaster.push(
@@ -82,6 +92,8 @@ export default function Login() {
         const res = await authenticateAsync(formValues);
         if (res === null) {
             showErrorMessage();
+        } else {
+            console.log(res);
         }
         resetForm();
     }
@@ -123,7 +135,7 @@ export default function Login() {
                     </InputGroup>
                 </FormGroup>
 
-                <a href="#" style={{ color: '#f08b33', display: 'block', marginTop: '-15px', marginBottom: '15px', textAlign: 'right' }}>
+                <a style={styles.forgotPasswordText}>
                     ¿Olvidaste tu contraseña?
                 </a>
 
@@ -139,7 +151,7 @@ export default function Login() {
 
             <div style={styles.signUpSection}>
                 <Text style={styles.signUpText}>¿No tienes una cuenta?</Text>
-                <a href="#" style={styles.link}>Registrarse</a>
+                <a style={styles.link} onClick={() => navigate("/register")}>Registrarse</a>
             </div>
         </Panel>
     );

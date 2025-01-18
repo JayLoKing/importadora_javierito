@@ -4,11 +4,12 @@ import { Container } from "rsuite";
 export default function AuthContainer({ children }: { children: React.ReactNode }) {
     return (
         <div style={styles.background}>
+            <div style={styles.curveTop} />
+            <div style={styles.curveBottom} />
             <Container style={{ ...styles.container }}>
                 {children}
             </Container>
         </div>
-
     );
 }
 
@@ -23,6 +24,7 @@ const styles: Record<string, React.CSSProperties> = {
         width: "100%",
         maxWidth: "1200px",
         margin: "0 auto",
+        zIndex: 2,
     },
     background: {
         position: "relative",
@@ -32,5 +34,26 @@ const styles: Record<string, React.CSSProperties> = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflow: "hidden",
+    },
+    curveTop: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "50%",
+        height: "100%",
+        backgroundColor: "#f88721",
+        borderBottomRightRadius: "50% 20%",
+        zIndex: 1,
+    },
+    curveBottom: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: "50%",
+        height: "100%",
+        backgroundColor: "white",
+        borderTopLeftRadius: "50% 20%",
+        zIndex: 1,
     },
 };
