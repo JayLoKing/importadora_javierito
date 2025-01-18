@@ -3,7 +3,7 @@ import { AiFillEyeInvisible } from "react-icons/ai";
 import { FaIdCard, FaUser } from "react-icons/fa";
 import { MdEmail, MdVisibility } from "react-icons/md";
 import { RiCellphoneFill, RiLockPasswordFill } from "react-icons/ri";
-import { Button, Card, Col, Form, Grid, Input, InputGroup, Row, Text } from "rsuite";
+import { Button, Card, Col, Form, Grid, InputGroup, Row, Text } from "rsuite";
 import CardBody from "rsuite/esm/Card/CardBody";
 import { userRegisterForm } from "../hooks/userRegisterForm";
 import { useNavigate } from "react-router-dom";
