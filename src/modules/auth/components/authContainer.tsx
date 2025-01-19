@@ -1,7 +1,7 @@
-import React from "react";
+import { CSSProperties, ReactNode } from "react";
 import { Container } from "rsuite";
 
-export default function AuthContainer({ children }: { children: React.ReactNode }) {
+export default function AuthContainer({ children }: { children: ReactNode }) {
     return (
         <div style={styles.background}>
             <div style={styles.curveTop} />
@@ -13,27 +13,28 @@ export default function AuthContainer({ children }: { children: React.ReactNode 
     );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
     container: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
         padding: "20px",
         boxSizing: "border-box",
         width: "100%",
         maxWidth: "1200px",
         margin: "0 auto",
         zIndex: 2,
+        minHeight: "100vh"
     },
     background: {
         position: "relative",
         width: "100%",
-        height: "100%",
+        minHeight: "100vh",
         background: "linear-gradient(180deg, #f88721 50%, white 50%)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflowY: "auto",
         overflow: "hidden",
     },
     curveTop: {

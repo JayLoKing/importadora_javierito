@@ -52,28 +52,31 @@ export function userRegisterForm(){
     
     
 
-    const handleSubmit = async () => {
-        if (!formRef.current) return;
-
+    const handleSubmit = async (onSuccess?: () => void) => {
+        if (!formRef.current) return false;
+    
         try {
             formValue.userName = 'user-text1';
             formValue.role = 'Customer';
             const isValid = await formRef.current.check();
-            if(isValid){
+            if (isValid) {
                 console.log('Formulario Valido', formValue);
-                const res = await registerClientAsync(formValue);
-                    if (res !== null) {
-                    console.log('Formulario Valido', formValue);
-                    resetForm();
-                }
+                // const res = await registerClientAsync(formValue);
+                // if (res !== null) {
+                //     console.log('Registro exitoso:', formValue);
+                //     resetForm();
+                //     if (onSuccess) onSuccess(); // Llama al callback
+                // }
+                if (onSuccess) onSuccess();
+                resetForm();
                 return true;
             }
-            
         } catch (error) {
             console.error('Fallo en la validacion del Formulario: ', error);
         }
         return false;
-    }
+    };
+    
 
     function resetForm() {
         if (formRef.current) { 
