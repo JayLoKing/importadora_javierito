@@ -1,4 +1,4 @@
-import { CSSProperties, FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Panel, Form, Button, VStack, Text, Image, InputGroup, useToaster, Message } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
@@ -12,61 +12,7 @@ import { RiLockPasswordFill } from 'react-icons/ri';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { authenticateAsync } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
-
-const styles: Record<string, CSSProperties> = {
-    panel: {
-        width: '100%',
-        maxWidth: '400px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        borderRadius: '8px',
-        background: 'white'
-    },
-    button: {
-        marginTop: '10px',
-    },
-    link: {
-        color: '#f88721',
-        fontWeight: 'bold',
-        cursor: 'pointer'
-    },
-    title: {
-        textAlign: 'center',
-        fontSize: '25px',
-        padding: '10px'
-    },
-    subtitle: {
-        textAlign: 'center',
-        fontSize: '14px',
-        fontWeight: 'bold',
-        marginBottom: '10px'
-    },
-    logo: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '10px'
-    },
-    signUpSection: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: '10px',
-        flexWrap: 'wrap',
-    },
-    signUpText: {
-        marginRight: '5px',
-        fontSize: '14px',
-        color: '#757575',
-    },
-    forgotPasswordText: {
-        color: '#f88721',
-        display: 'block',
-        marginTop: '-15px',
-        marginBottom: '15px',
-        textAlign: 'right',
-        cursor: 'pointer'
-    }
-};
+import "../styles/styles.css"
 
 export default function Login() {
 
@@ -99,15 +45,15 @@ export default function Login() {
     }
 
     return (
-        <Panel bordered style={styles.panel}>
+        <Panel bordered className='panel' >
             <div>
-                <Text weight='bold' style={styles.title}>¡Bienvenido!</Text>
+                <Text weight='bold' className='title' >¡Bienvenido!</Text>
             </div>
-            <div style={styles.logo}>
+            <div className='logo'>
                 <Image circle src={LOGO} alt='Importadora Javierito' width={100} />
             </div>
             <div>
-                <Text style={styles.subtitle}>Por seguridad jamás revele sus datos.</Text>
+                <Text className='subtitle' >Por seguridad jamás revele sus datos.</Text>
             </div>
             <Form fluid>
                 <FormGroup>
@@ -135,7 +81,7 @@ export default function Login() {
                     </InputGroup>
                 </FormGroup>
 
-                <a style={styles.forgotPasswordText}>
+                <a className='forgotPasswordText' >
                     ¿Olvidaste tu contraseña?
                 </a>
 
@@ -149,9 +95,9 @@ export default function Login() {
                 </VStack>
             </Form>
 
-            <div style={styles.signUpSection}>
-                <Text style={styles.signUpText}>¿No tienes una cuenta?</Text>
-                <a onClick={() => navigate('/register')} style={styles.link}>Registrarse</a>
+            <div className='signUpSection' >
+                <Text className='signUpText' >¿No tienes una cuenta?</Text>
+                <a onClick={() => navigate('/register')} className='link' >Registrarse</a>
             </div>
         </Panel>
     );
