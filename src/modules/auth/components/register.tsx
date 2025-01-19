@@ -57,21 +57,16 @@ const styles: Record<string, CSSProperties> = {
     },
 };
 
-
-
-
-
 export default function Register() {
     const toaster = useToaster();
     const navigate = useNavigate();
 
-
     const showSuccessMessage = () => {
         toaster.push(
-            <Message showIcon type="success" duration={5000}>
+            <Message closable showIcon type="success" >
                 Registro exitoso
             </Message>,
-            { placement: 'topCenter' }
+            { placement: 'topCenter', duration: 3000 }
         );
     };
 
@@ -89,10 +84,10 @@ export default function Register() {
         const success = await handleSubmit(showSuccessMessage);
         if (!success) {
             toaster.push(
-                <Message showIcon type="error" duration={5000}>
+                <Message closable showIcon type="error">
                     Hubo un error en el registro
                 </Message>,
-                { placement: 'topCenter' }
+                { placement: 'topCenter', duration: 3000 }
             );
         }
     };
