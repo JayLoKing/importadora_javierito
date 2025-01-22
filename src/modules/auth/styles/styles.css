@@ -1,0 +1,180 @@
+/* Container  */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+    min-height: 100vh;
+}
+
+.background {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f88721 50%, white 50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    overflow: hidden;
+}
+
+.curveTop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #f88721;
+    border-bottom-right-radius: 50% 20%;
+    z-index: 1;
+}
+
+.curveBottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    border-top-left-radius: 50% 20%;
+    z-index: 1;
+}
+
+/* Login */
+
+.panel {
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: white;
+}
+
+.button {
+    margin-top: 10px;
+}
+
+.link {
+    color: #f88721;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.link:hover {
+    color: orange;
+}
+
+.title {
+    text-align: center;
+    font-size: 25px;
+    padding: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.signUpSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    flex-wrap: wrap;
+}
+
+.signUpText {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #757575;
+}
+
+.forgotPasswordText {
+    color: #f88721;
+    display: block;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    text-align: right;
+    cursor: pointer;
+}
+
+.forgotPasswordText:hover {
+    color: orange;
+}
+
+/* Register */
+
+.button_center {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.buttonCustom {
+    width: 200px;
+    border-radius: 35px;
+    font-size: 16px;
+    height: 45px;
+}
+
+.formGroup {
+    margin-bottom: 25px;
+}
+
+.formControl {
+    width: 100% !important;
+    border-radius: 30px;
+    background-color: #F5F5F5 !important;
+    height: 45px;
+}
+
+.colMargin {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+    align-items: center;
+}
+
+.gridContainer {
+    width: 100%;
+    padding: 20px;
+}
+
+.marginContainer {
+    margin: 35px;
+}
+
+.linkCustom {
+    color: #F88721;
+    cursor: pointer;
+    margin-left: 3px;
+}
+
+.linkCustom:hover {
+    color: orange;
+}
+
+.customInput {
+    background-color: transparent !important;
+    border-radius: 30px !important;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    height: 45px !important;
+}
