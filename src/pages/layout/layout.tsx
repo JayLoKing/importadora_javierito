@@ -1,16 +1,12 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Text, Image, Divider, InputGroup, Input, Carousel, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Grid, Row, Col, Button } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack,  Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover,  } from "rsuite";
 import { useEffect, useState } from "react";
 //import { useNavigate } from "react-router-dom";
 import { Icon } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag,  FaEllipsisV, FaAngleRight } from "react-icons/fa";
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag,  FaEllipsisV } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
-import a from '../../assets/1.jpg';
-import b from '../../assets/2.jpg';
-import c from '../../assets/3.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
 import "../layout/styles/styles.css";
-import FormControl from "rsuite/esm/FormControl";
 
 const Layout = () => {
   const [expand, setExpand] = useState(true);
@@ -137,7 +133,7 @@ const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void
     );
 };
 
-const Brand = ({ expand}: { expand: boolean }) => {
+const Brand = ({}: { expand: boolean }) => {
     return (
       <HStack className="pagebrand" >
         <div style={{borderRadius:"50%", backgroundColor:"#f08b33" }} >
