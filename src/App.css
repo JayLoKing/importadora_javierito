@@ -2,4 +2,8 @@
     --rs-primary-500: #f08b33;
     --rs-primary-600: #de7214;
     --rs-primary-700: #c46715;
+    --rs-gray-0: transparent;
+    --rs-gray-0: white;
+    --rs-gray-50: black;
+
 }

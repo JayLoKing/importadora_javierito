@@ -4,6 +4,7 @@ import { RegisterUserDTO } from "../models/register.user.model";
 export async function registerClientAsync(client: RegisterUserDTO) {
     try{
         const response = await httpClient.post('/users/createClientUser', client);
+        
         if(response.status === 200){
             return response.data;
         }
