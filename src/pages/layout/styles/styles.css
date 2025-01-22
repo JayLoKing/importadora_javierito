@@ -1,6 +1,5 @@
 .container {
-    display: flex;
-    height: 100vh;
+    
     overflow: hidden;
   }
   .navbar {
@@ -9,21 +8,26 @@
     border-radius: 0px 0px 20px 20px;
     margin-left: 10px;
     margin-right: 10px;
-    width: 70%;
+  }
+  .navbar2{
+    background: #EFEDEC;
+    padding: 21px;
+    border-radius: 0px 0px 20px 20px;
+    margin-right: 13px;
   }
   .headerNav {
     font-weight: bolder;
     font-size: 18px;
     margin: 0;
-    
   }
   .headerLeft {
     display: flex;
     align-items: center;
   }
   .content {
-    flex: 1;
-    padding: 20px;
+    border-radius: 20px;
+    background-color: #de7214;
+
   }
   .categories {
     margin-top: 20px;
@@ -33,6 +37,8 @@
     color: black;
     height: 100vh;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     position: relative;
     font-size: 20px;
@@ -80,12 +86,10 @@
   }
   .toggleButton {
     margin-right: 10px;
+    color: #de7214;
   }
   .navToggle{
     border-radius: 8px;
-    display:flex;
-    align-items: end; 
-    justify-content: end;
   }
   .centerMenu {
     position: absolute;
@@ -95,8 +99,8 @@
   .notificationIcon {
     width: 40px;
     align-content: center;
-    margin-right: 10px;
-    font-size: 18px;
+    margin-right: 20px;
+    font-size: 20px;
   }
   .pagebrand{
     display: flex;
