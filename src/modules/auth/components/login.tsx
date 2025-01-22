@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, Form, Button, VStack, Text, Image, FlexboxGrid } from 'rsuite';
+import { Panel, Form, Button, VStack, Text, Image } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
 import FormGroup from 'rsuite/esm/FormGroup';
