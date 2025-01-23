@@ -17,7 +17,7 @@
   }
   .headerNav {
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 20px;
     margin: 0;
   }
   .headerLeft {
@@ -97,15 +97,14 @@
     transform: translateX(-50%);
   }
   .notificationIcon {
-    width: 40px;
-    align-content: center;
     margin-right: 20px;
-    font-size: 20px;
+    font-size: 22px;
   }
   .pagebrand{
     display: flex;
     justify-content: center;
   }
+  
 
   
   
