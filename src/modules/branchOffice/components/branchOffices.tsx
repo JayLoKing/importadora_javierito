@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { FaMapPin } from "react-icons/fa6";
-import { Button, Card, Image } from "rsuite";
+import { Button, Table } from "rsuite";
 import { BranchOffice } from "../models/branchOffice.model";
 import { getBranchOfficesAsync } from "../services/branchOfficeService";
+import Column from "rsuite/esm/Table/TableColumn";
+import { Cell, HeaderCell } from "rsuite-table";
+import BranchOfficeModal from "./branchOfficeModal";
 
 export default function BranchOffices() {
 
-    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([])
+    const [showModal, setShowModal] = useState<boolean>(false)
 
     useEffect(() => {
         loadBranchOffices();
@@ -17,27 +20,43 @@ export default function BranchOffices() {
         setBranchOffices(data);
     }
 
+    function handleModal(hidde: boolean): void {
+        setShowModal(hidde);
+    }
+
     return (
-        <div>
-            <h1>Sucursales</h1>
-            <div className="d-flex flex-wrap">
-                {branchOffices.map(branchOffice => (
-                    <Card width={320} shaded>
-                        <Image />
-                        <Card.Header>
-                            {branchOffice.name}
-                        </Card.Header>
-                        <Card.Body>
-                            {branchOffice.address}
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button>
-                                <FaMapPin /> Ver ubicación
-                            </Button>
-                        </Card.Footer>
-                    </Card>
-                ))}
-            </div>
+        <div style={{ padding: 25 }}>
+            <Button appearance="primary" onClick={() => handleModal(true)}>
+                Añadir
+            </Button>
+            <Table
+                height={400}
+                data={branchOffices}
+                style={{ marginTop: 20 }}>
+                {false && (
+                    <Column fixed>
+                        <HeaderCell>id</HeaderCell>
+                        <Cell dataKey="id"></Cell>
+                    </Column>
+                )}
+
+                <Column>
+                    <HeaderCell>Nombre</HeaderCell>
+                    <Cell dataKey="name" />
+                </Column>
+
+                <Column>
+                    <HeaderCell>Dirección</HeaderCell>
+                    <Cell dataKey="address" />
+                </Column>
+
+                <Column>
+                    <HeaderCell>Fecha de registro</HeaderCell>
+                    <Cell dataKey="registerDate" />
+                </Column>
+            </Table>
+
+            <BranchOfficeModal open={showModal} hiddeModal={() => handleModal(false)} />
         </div>
     );
 }

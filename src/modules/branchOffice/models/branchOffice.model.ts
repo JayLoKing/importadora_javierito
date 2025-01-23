@@ -4,6 +4,6 @@ export interface BranchOffice {
     address: string;
     latitude: string;
     longitude: string;
-    registerDate: Date;
+    registerDate: string;
     images: string[];
 }

@@ -3,8 +3,9 @@ import { BranchOffice } from "../models/branchOffice.model";
 
 export async function getBranchOfficesAsync() {
     try {
-        const res = await httpClient.get("/api/branchOffice/getAll")
+        const res = await httpClient.get("/branchOffice/getAll")
         if (res.status === 200) {
+            console.log(res.data);
             return res.data;
         }
     } catch (error) {
@@ -14,7 +15,7 @@ export async function getBranchOfficesAsync() {
 
 export async function getBranchOfficeByIdAsync(id: number) {
     try {
-        const res = await httpClient.get(`/api/branchOffice/getById/${id}`)
+        const res = await httpClient.get(`/branchOffice/getById/${id}`)
         if (res.status === 200) {
             return res.data;
         }
@@ -25,7 +26,7 @@ export async function getBranchOfficeByIdAsync(id: number) {
 
 export async function newBranchOfficeAsync(branchOffice: BranchOffice) {
     try {
-        const res = await httpClient.post("/api/branchOffice/createBranchOffice", branchOffice)
+        const res = await httpClient.post("/branchOffice/createBranchOffice", branchOffice)
         if (res.status === 200) {
             return res.data;
         }

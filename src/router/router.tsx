@@ -3,13 +3,16 @@ import AuthContainer from "../modules/auth/components/authContainer";
 import Login from "../modules/auth/components/login";
 import Register from "../modules/auth/components/register";
 import Layout from "../pages/layout/layout";
-
+import HomeContainer from "../modules/home/homeContainer";
+import BranchOffices from "../modules/branchOffice/components/branchOffices";
 
 export default function Routing() {
     return (
         <Routes>
-            <Route index element={<Layout />} />
+            <Route index element={<Layout titleComponent={'REPUESTOS'} children={<HomeContainer />} />} />
+            <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />
+            <Route path="/login" element={<AuthContainer children={<Login />} />} />
         </Routes>
     )
 }
