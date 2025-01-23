@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Table } from "rsuite";
+import { Button, IconButton, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice } from "../models/branchOffice.model";
 import { getBranchOfficesAsync } from "../services/branchOfficeService";
+import BranchOfficeModal from "./branchOfficeModal";
+import { FaEdit, FaMapPin, FaTrash } from "react-icons/fa";
+import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
-import BranchOfficeModal from "./branchOfficeModal";
 
 export default function BranchOffices() {
 
@@ -27,35 +29,46 @@ export default function BranchOffices() {
     return (
         <div style={{ padding: 25 }}>
             <Button appearance="primary" onClick={() => handleModal(true)}>
-                Añadir
+                Crear sucursal
             </Button>
-            <Table
-                height={400}
-                data={branchOffices}
-                style={{ marginTop: 20 }}>
+            <Table data={branchOffices} rowHeight={65} style={{ textAlign: 'center' }}>
+                <Column width={250} fixed>
+                    <HeaderCell>
+                        <strong>Acciones</strong>
+                    </HeaderCell>
+                    <Cell>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Editar</Tooltip>}>
+                                <IconButton icon={<FaEdit />} style={{ width: 50, margin: 3 }} appearance="primary" />
+                            </Whisper>
+                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Ubicación</Tooltip>}>
+                                <IconButton icon={<FaMapPin />} style={{ width: 50, margin: 3 }} appearance="primary" />
+                            </Whisper>
+                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Eliminar</Tooltip>}>
+                                <IconButton icon={<FaTrash />} style={{ width: 50, margin: 3 }} appearance="primary" />
+                            </Whisper>
+                        </div>
+                    </Cell>
+                </Column>
                 {false && (
-                    <Column fixed>
-                        <HeaderCell>id</HeaderCell>
-                        <Cell dataKey="id"></Cell>
+                    <Column align="center" width={100}>
+                        <HeaderCell>ID</HeaderCell>
+                        <Cell dataKey="id" />
                     </Column>
                 )}
-
-                <Column>
-                    <HeaderCell>Nombre</HeaderCell>
+                <Column width={200} resizable>
+                    <HeaderCell>Nombre de la sucursal</HeaderCell>
                     <Cell dataKey="name" />
                 </Column>
-
-                <Column>
+                <Column width={100} resizable>
                     <HeaderCell>Dirección</HeaderCell>
                     <Cell dataKey="address" />
                 </Column>
-
-                <Column>
+                <Column width={150} resizable>
                     <HeaderCell>Fecha de registro</HeaderCell>
                     <Cell dataKey="registerDate" />
                 </Column>
             </Table>
-
             <BranchOfficeModal open={showModal} hiddeModal={() => handleModal(false)} />
         </div>
     );
