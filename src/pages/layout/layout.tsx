@@ -1,6 +1,5 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack,  Image, Divider, Badge, Navbar, Whisper,  Dropdown, Popover, Button, Carousel, FlexboxGrid,  } from "rsuite";
-import { useEffect, useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack,  Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col,  } from "rsuite";
+import { FC, useEffect, useState, useRef } from "react";
 import { Icon } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag,  FaEllipsisV, FaUser, FaMapPin, FaFacebook, FaInstagram, FaWhatsapp, FaEnvelope, FaTiktok } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
@@ -17,7 +16,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ titleComponent, children }: LayoutProps) => {
+const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const [expand, setExpand] = useState(true);
   const [expandRight, setExpandRight] = useState(true);
   const [searchVisible, setSearchVisible] = useState(false);
@@ -25,14 +24,45 @@ const Layout = ({ titleComponent, children }: LayoutProps) => {
   const [activeKey, setActiveKey] = useState<string>("1");
   const [visible, setVisible] = useState(false);
   const handleVisibility = () => setVisible(!visible);
-  //const navigate = useNavigate();
+
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth < 768) {
+        setExpand(false);
+      }
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const handleSelect = (key: string) => {
+    setActiveKey(key);
+    const selectedItem = document.querySelector(`#nav-item-${key}`);
+
+    if (selectedItem && navRef.current) {
+      selectedItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center', // Centrar ítem seleccionado
+      });
+    }
+  };
+  
+  const navItems = [
+    { key: '1', icon: FaHome, label: 'Inicio' },
+    { key: '2', icon: FaShoppingCart, label: 'Carrito' },
+    { key: '3', icon: FaWrench, label: 'Inventario' },
+    { key: '4', icon: FaShop, label: 'Sucursales' },
+    { key: '5', icon: FaFileAlt, label: 'Reportes' },
+    { key: '6', icon: FaElementor, label: 'Movimientos' },
+    { key: '7', icon: FaUsers, label: 'Vendedores' },
+    { key: '8', icon: FaTrash, label: 'Papelera' },
+  ];
+  
   const handleGoogleMaps = () => {
     window.open('https://maps.app.goo.gl/ouHB1jvoa9gGgYEFA');
   };
@@ -54,6 +84,7 @@ const Layout = ({ titleComponent, children }: LayoutProps) => {
 
   function signOut() {}
 
+  if(!isMobile){
   return (
     <Container >
       <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#f5f5f5', borderRight: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
@@ -197,8 +228,39 @@ const Layout = ({ titleComponent, children }: LayoutProps) => {
       </Container>
     </Container>
   );
-}
+  }else {
+    return (
+      <Container className="container-mobile">
+        <Grid>
+          <Row>
+            <Col sm={24} xs={24}></Col>
+            <Col sm={24} xs={24}></Col>
+            <Col sm={24} xs={24}>
+              <Navbar appearance="subtle" className="navbarM">
+                <div className="navbar-containerMF">
+                  <Nav className="navM">
+                    {navItems.map((item) => (
+                      <Nav.Item 
+                        id={`nav-item-${item.key}`}
+                        key={item.key}
+                        icon={<Icon as={item.icon}  />} 
+                        onSelect={() => handleSelect(item.key)}
+                        className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
+                      >
+                        {item.label}
+                      </Nav.Item>
+                    ))}
+                  </Nav>
+                </div>
+              </Navbar>
+            </Col>
+          </Row>
+        </Grid>
+      </Container>
 
+      );
+    }
+  }
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
     return (
       <Stack className="navToggle" >

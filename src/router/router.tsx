@@ -5,13 +5,12 @@ import Register from "../modules/auth/components/register";
 import Layout from "../pages/layout/layout";
 import HomeContainer from "../modules/home/homeContainer";
 
-
 export default function Routing() {
     return (
         <Routes>
             <Route index element={<Layout titleComponent={'REPUESTOS'} children={<HomeContainer/>}/>}/>
-            <Route path="/login" element={<AuthContainer children={<Login />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />
+            <Route path="/login" element={<AuthContainer children={<Login/>}/>} />
         </Routes>
     )
 }
