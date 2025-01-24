@@ -1,6 +1,6 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col, } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col, Avatar, } from "rsuite";
 import { FC, useEffect, useState, useRef } from "react";
-import { Icon } from '@rsuite/icons';
+import { Icon, Search } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaMapPin, FaFacebook, FaInstagram, FaWhatsapp, FaEnvelope, FaTiktok } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
@@ -11,6 +11,7 @@ import a from '../../assets/1.jpg'
 import b from '../../assets/2.jpg'
 import c from '../../assets/3.jpg'
 import { useNavigate } from "react-router-dom";
+import Column from "rsuite/esm/Table/TableColumn";
 
 interface LayoutProps {
   titleComponent: React.ReactNode;
@@ -234,9 +235,28 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     return (
       <Container className="container-mobile">
         <Grid>
-          <Row>
-            <Col sm={24} xs={24}></Col>
-            <Col sm={24} xs={24}></Col>
+          <Row style={{height: '100vh'}} >
+            <Col sm={24} xs={24} >
+              <div className="container-header-mobile">
+                <div className="container-logo-header-mobile">
+                  <Image circle src="src\assets\LogoJavier.jpg" width={65}/>
+                </div>
+                <div className="container-search-custom">
+                  <div className="container-icon-search">
+                    <Search style={{fontSize:"24px", color: "white"}} />
+                  </div>
+                  <div>
+                    <input className="search-input" placeholder="Buscar repuesto"/>
+                  </div>
+                </div>
+                <div className="container-icon-user-mobile">
+                  <Avatar size="lg" circle/>
+                </div>
+              </div>  
+            </Col>
+            <Col sm={24} xs={24}>
+              
+            </Col>
             <Col sm={24} xs={24}>
               <Navbar appearance="subtle" className="navbarM">
                 <div className="navbar-containerMF">
@@ -246,7 +266,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                         id={`nav-item-${item.key}`}
                         key={item.key}
                         icon={<Icon as={item.icon} />}
-                        onSelect={() => handleSelect(item.key)}
+                        onClick={() => handleSelect(item.key)}
                         className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
                       >
                         {item.label}
