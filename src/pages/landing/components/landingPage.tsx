@@ -1,0 +1,100 @@
+import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton, Carousel } from "rsuite";
+import NavItem from "rsuite/esm/Nav/NavItem";
+import "../styles/styles.css"
+import LOGO from '../../../assets/LogoJavier.jpg';
+import DropdownMenu from "rsuite/esm/Dropdown/DropdownMenu";
+import DropdownItem from "rsuite/esm/Dropdown/DropdownItem";
+import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "react-icons/fa";
+import a from '../../../assets/1.jpg';
+import b from '../../../assets/2.jpg';
+import c from '../../../assets/3.jpg';
+
+export default function LandingPage(){
+    return(
+        <Container>
+            <Header >
+                <Navbar className="navbar" appearance="inverse" style={{ display: "flex", justifyContent: "space-between",  padding: "20px", alignItems: "center", borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
+                    <div style={{display:"flex", alignItems:"center"}}>
+                        <Image circle src={LOGO} style={{ width: "90px", height: "90px", objectFit: "cover" }} />
+                        <Divider vertical style={{fontSize:"400%"}}/>
+                        <label style={{fontSize:"28px", fontWeight:"bold"}}>IMPORTADORA JAVIERITO</label>
+                    </div>
+                    <Nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                    <IconButton icon={<FaWrench style={{marginRight:"5px"}}/>} style={{ fontSize:"20px", fontWeight:"bold", color:"white", background:"transparent"}}>Catálogo de Repuestos</IconButton>
+                    <Dropdown className="dropdown" title="Categorías" trigger="click" placement="bottomStart" style={{fontSize:"20px"}} >
+                        <Dropdown.Item>Puertas</Dropdown.Item>
+                        <Dropdown.Item>Cajas</Dropdown.Item>
+                        <Dropdown.Item>Motores</Dropdown.Item>
+                        <Dropdown.Item>Inyectores</Dropdown.Item>
+                        <Dropdown.Item>Aros</Dropdown.Item>
+                        <Dropdown.Item>Sensores</Dropdown.Item>
+                        <Dropdown.Item>Faroles</Dropdown.Item>
+                        <Dropdown.Item>Frontales</Dropdown.Item>
+                        <Dropdown.Item disabled>Y mucho mas..</Dropdown.Item>
+                    </Dropdown>
+                    <Dropdown title="Empresa" trigger="hover" placement="bottomStart" style={{fontSize:"20px"}} >
+                        <Dropdown.Item>Sobre Nosotros</Dropdown.Item>
+                        <Dropdown.Item>Contacto</Dropdown.Item>
+                    </Dropdown>
+                    </Nav>
+                    <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
+                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}}>Iniciar Sesión</IconButton>
+                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a"}}>Registrarse</Button>
+                        <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }}>Contactar con Ventas</Button>
+                    </div>
+                </Navbar>
+            </Header>
+            <Content>
+                {/* <Carousel style={{width:"100%", height:"100vh"}} shape="bar" autoplay>
+                    <div>
+                        <img src={a} alt="Sucursal 1" style={{ width: '100%', height: '100%' }} />
+                        <div className="carousel-caption">
+                            <h2>Sucursal 1</h2>
+                            <p>Marca Modelo 1</p>
+                            <Button appearance="primary">Cotizar con Vendedor</Button>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={b} alt="Sucursal 2" style={{ width: '100%', height: '100%' }} />
+                        <div className="carousel-caption">
+                            <h2>Sucursal 2</h2>
+                            <p>Marca Modelo 2</p>
+                            <Button appearance="primary">Cotizar con Vendedor</Button>
+                        </div>
+                    </div>
+                    <div>
+                        <img src={c} alt="Sucursal 3" style={{ width: '100%', height: '100%' }} />
+                        <div className="carousel-caption">
+                            <h2>Sucursal 3</h2>
+                            <p>Marca Modelo 3</p>
+                            <Button appearance="primary">Cotizar con Vendedor</Button>
+                        </div>
+                    </div>
+                </Carousel> */}
+            </Content>
+            <Footer style={{ padding: "20px", backgroundColor: "#f8f8f8", borderTop: "1px solid #e5e5e5" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
+                <Divider></Divider>
+                <div style={{ display: "flex", gap: "15px", alignItems:"center"}}>
+                    <label style={{fontSize:"18px"}}>¿No encontraste lo que buscabas? <strong>Contáctanos:</strong></label>
+                    <IconButton style={{fontSize:"30px"}} icon={<FaFacebook />} appearance="subtle" />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaWhatsapp />} appearance="subtle" />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaTiktok />} appearance="subtle" />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaEnvelope />} appearance="subtle" />
+                </div>
+                <div style={{ display: "flex", alignItems:"center"}}>
+                    <label style={{fontSize:"20px", fontWeight:"bold",}}>IMPORTADORA JAVIERITO</label>
+                    <Divider vertical style={{fontSize:"400%"}}/>
+                    <Image circle src={LOGO} style={{ width: "70px", height: "70px", objectFit: "cover" }} />
+                </div>
+                <Divider></Divider>
+            </div>
+            <div style={{ textAlign: "center" }}>        
+                <p>©2025 Importadora Javierito. Todos los derechos reservados.</p>
+            </div>
+            </Footer>
+        </Container>
+    )
+    
+}
+
