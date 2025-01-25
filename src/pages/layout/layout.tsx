@@ -1,19 +1,14 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col, Avatar, Footer, } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, } from "rsuite";
 import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
 import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
 import { FC, useEffect, useState, useRef } from "react";
 import { Icon, Search } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaMapPin, FaFacebook, FaInstagram, FaWhatsapp, FaEnvelope, FaTiktok, FaHistory } from "react-icons/fa";
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch,  FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
 import "../layout/styles/styles.css";
-import SidenavBody from "rsuite/esm/Sidenav/SidenavBody";
-import a from '../../assets/1.jpg'
-import b from '../../assets/2.jpg'
-import c from '../../assets/3.jpg'
 import { useNavigate } from "react-router-dom";
-import Column from "rsuite/esm/Table/TableColumn";
 
 interface LayoutProps {
   titleComponent: React.ReactNode;

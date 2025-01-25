@@ -181,7 +181,7 @@ export default function Register() {
                                         <Button className="buttonCustom" color="orange" appearance="primary" type="submit">Registrarse</Button>
                                     </div>
                                     <Text muted style={{ textAlign: 'center', marginTop: '7px' }}>
-                                        ¿Ya tienes una cuenta? <a onClick={() => navigate('/')} className="linkCustom">Iniciar Sesión</a>
+                                        ¿Ya tienes una cuenta? <a onClick={() => navigate('/login')} className="linkCustom">Iniciar Sesión</a>
                                     </Text>
                                 </Col>
                             </Row>

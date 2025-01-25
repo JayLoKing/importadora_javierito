@@ -3,7 +3,6 @@ import AuthContainer from "../modules/auth/components/authContainer";
 import Login from "../modules/auth/components/login";
 import Register from "../modules/auth/components/register";
 import Layout from "../pages/layout/layout";
-import HomeContainer from "../modules/home/components/homeContainer";
 import LandingPage from "../pages/landing/components/landingPage";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 
