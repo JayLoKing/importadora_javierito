@@ -79,7 +79,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     { key: '7', icon: FaUsers, label: 'Vendedores' },
     { key: '8', icon: FaTrash, label: 'Papelera' },
   ];
-  
+
   // const handleGoogleMaps = () => {
   //   window.open('https://maps.app.goo.gl/ouHB1jvoa9gGgYEFA');
   // };
@@ -100,153 +100,153 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   // };
 
   function signOut() { }
-  if(!isMobile){
-  return (
-    <Container  style={{display:"flex", height: '100vh'}}>
-      <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#f5f5f5', borderRight: '1px solid #e5e5e5', borderBottom:"1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
-        <Sidenav.Header style={{backgroundColor: '#f5f5f5', padding:"10px", marginTop:"10px"}}>
-          <Brand expand={expand} />
-        </Sidenav.Header>
-        <Divider style={{height:'0px'}}></Divider>
-        <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow:"auto" }} >
-          <Sidenav.Body style={{flexGrow: 1, fontSize:"20px"}}>
-            <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >                  
-              <Nav.Item eventKey="1" style={{borderRadius:"5px", }} icon={<Icon as={FaHome} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
-              <Nav.Item eventKey="2" style={{borderRadius:"5px", }} icon={<Icon as={FaShoppingCart} style={{height:"20px", width:"20px"}} />} className={`navItem ${expand? "": "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-              <Nav.Item eventKey="3" style={{borderRadius:"5px", }} icon={<Icon as={FaWrench} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-              <Nav.Item eventKey="4" style={{borderRadius:"5px", }} icon={<Icon as={FaShop} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
-              <Nav.Item eventKey="5" style={{borderRadius:"5px"}} icon={<Icon as={FaFileAlt} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
-              <Nav.Menu eventKey="6" placement="rightStart" title="Movimientos"  icon={<Icon as={FaHistory} style={{height:"20px", width:"20px"}}/>}  >
-                <Nav.Item eventKey="6-1" style={{borderRadius:"5px", }} icon={<Icon as={FaShoppingBag} style={{marginRight:"7px", height:"18px", width:"18px"}}/>} className={`navmenu ${expand? "": "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
-                <Nav.Item eventKey="6-2" style={{borderRadius:"5px", }} icon={<Icon as={FaPersonCircleCheck} style={{marginRight:"7px", height:"18px", width:"18px"}}/>} className={`navmenu ${expand? "": "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
-              </Nav.Menu>
-              <Nav.Item eventKey="7" style={{borderRadius:"5px", }} icon={<Icon as={FaUsers} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Vendedores</Nav.Item>
-              <Nav.Item eventKey="8" style={{borderRadius:"5px", }} icon={<Icon as={FaTrash} style={{height:"20px", width:"20px"}}/>} className={`navItem ${expand? "": "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
-            </Nav>
-          </Sidenav.Body>
-        </Sidenav>
-        <Divider style={{height:'2px', color:'black'}}></Divider>
-        <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
-      </Sidebar>
-      
-      <Container style={{ flex:1, display:"flex", flexDirection:"column"}}>
-        <Header >
-          <Navbar appearance="inverse" className="navbar1" style={{ borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
-            <Nav >
-              <NavItem disabled className="headerNav" style={{color:"white"}}>{titleComponent}</NavItem>
-            </Nav>
-            <Nav pullRight style={{position:"relative"}}>
-            {isMobile ? (
-              <Dropdown trigger="click" placement="bottomEnd" icon={<FaEllipsisV style={{color:"black"}}/>} noCaret>
-                <Dropdown.Item onClick={() => setSearchVisible(!searchVisible)}>
-                  <FaSearch style={{ marginRight: 8 }} />
-                  Buscar
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Badge >
-                    <FaRegBell style={{ marginRight: 8 }} />
-                  </Badge>
-                  Notificaciones
-                </Dropdown.Item>
-                <Dropdown.Item onClick={signOut}>
-                  <FaUser style={{ marginRight: 8 }} />
-                  Perfil
-                </Dropdown.Item>
-                </Dropdown>
-            ) : (
-            <>
-              
-              <Whisper trigger="click" placement="bottomEnd" speaker={
-                <Popover title="Notificaciones">
-                  <div style={{ padding: "10px" }}>
-                    <p><strong>Notificación 1:</strong> Pedido recibido</p>
-                    <Divider></Divider>
-                    <p><strong>Notificación 2:</strong> Inventario actualizado</p>
-                    <Divider></Divider>
-                    <p><strong>Notificación 3:</strong> Juan Registro un motor</p>
-                  </div>
-                </Popover>
-              }
-              open={visible}
-              onClick={() => setVisible(false)} 
-              >
-              <IconButton className="navItem" style={{ marginRight:"20px", fontSize:'24px'}} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility}/>
-              </Whisper>
-                <Whisper trigger="click" placement="bottomEnd" speaker={
-                  <Popover title="Perfil">
-                  </Popover>
-                }
-                >
-                  <IconButton icon={<FaUser />} appearance="ghost" style={{borderRadius:"20px", fontSize:'20px', color:"white", borderColor:"white" }}/>
-                </Whisper>
-              </>
-              )}
-            </Nav>
-          </Navbar>
-        </Header>
-        <Content style={{ margin:"5px 10px 0px 10px", borderRadius:"20px 20px 0px 0px", background:"#f5f5f5", height:"100vh", overflow:"hidden"}}>
-          {children}
-        </Content>
-        <Footer style={{ textAlign:"center",  fontSize:"16px", fontWeight:"bold",marginLeft:"10px", marginRight:"10px", borderRadius:"0px 0px 20px 20px", background:'#f5f5f5'}}>IMPORTADORA JAVIERITO ®</Footer>
-      </Container>
-    </Container>
-  );
-  }else {
+  if (!isMobile) {
     return (
-        <Container >
-          <Grid fluid>
-            <Row>
-              <Col xs={24} >
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'70px', marginTop: '5px', position: 'fixed', left: '0'}}>
-                  <div className="container-logo-header-mobile">
-                    <Image circle src="src\assets\LogoJavier.jpg" width={10}/>
-                  </div>
-                  <div className="container-search-custom">
-                    <div className="container-icon-search">
-                      <Search style={{fontSize:"24px", color: "white"}} />
-                    </div>
-                    <div>
-                      <input className="search-input" placeholder="Buscar repuesto"/>
-                    </div>
-                  </div>
-                  <div className="container-icon-user-mobile">
-                    <Avatar size="lg" circle/>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Row >
-              <Col xs={24}>
-                <div style={{position: 'fixed', left:'0', marginTop:'95px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "white", width:' 100%', height:'80vh'}}>
-                  {children}
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={24}>
-                <div style={{ overflow:'hidden',flexWrap:'nowrap', display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'85px', marginTop: '5px', position: 'fixed', left: '0', bottom:'0',backgroundColor: 'white'}} >
-                    <Navbar appearance="subtle" className="navbarM">
-                    <div className="navbar-containerMF">
-                      <Nav className="navM">
-                        {navItems.map((item) => (
-                          <Nav.Item
-                            id={`nav-item-${item.key}`}
-                            key={item.key}
-                            icon={<Icon as={item.icon} />}
-                            onClick={() => handleSelect(item.key)}
-                            className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
-                          >
-                            {item.label}
-                          </Nav.Item>
-                        ))}
-                      </Nav>
-                    </div>
-                  </Navbar>
-                </div>
-              </Col>
-            </Row>
-          </Grid>
+      <Container style={{ display: "flex", height: '100vh' }}>
+        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#f5f5f5', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+          <Sidenav.Header style={{ backgroundColor: '#f5f5f5', padding: "10px", marginTop: "10px" }}>
+            <Brand expand={expand} />
+          </Sidenav.Header>
+          <Divider style={{ height: '0px' }}></Divider>
+          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
+            <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
+              <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
+                <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
+                <Nav.Item eventKey="2" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
+                <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
+                <Nav.Menu eventKey="6" placement="rightStart" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
+                  <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
+                  <Nav.Item eventKey="6-2" style={{ borderRadius: "5px", }} icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
+                </Nav.Menu>
+                <Nav.Item eventKey="7" style={{ borderRadius: "5px", }} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Vendedores</Nav.Item>
+                <Nav.Item eventKey="8" style={{ borderRadius: "5px", }} icon={<Icon as={FaTrash} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
+              </Nav>
+            </Sidenav.Body>
+          </Sidenav>
+          <Divider style={{ height: '2px', color: 'black' }}></Divider>
+          <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
+        </Sidebar>
+
+        <Container style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <Header >
+            <Navbar appearance="inverse" className="navbar1" style={{ borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+              <Nav >
+                <NavItem disabled className="headerNav" style={{ color: "white" }}>{titleComponent}</NavItem>
+              </Nav>
+              <Nav pullRight style={{ position: "relative" }}>
+                {isMobile ? (
+                  <Dropdown trigger="click" placement="bottomEnd" icon={<FaEllipsisV style={{ color: "black" }} />} noCaret>
+                    <Dropdown.Item onClick={() => setSearchVisible(!searchVisible)}>
+                      <FaSearch style={{ marginRight: 8 }} />
+                      Buscar
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <Badge >
+                        <FaRegBell style={{ marginRight: 8 }} />
+                      </Badge>
+                      Notificaciones
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={signOut}>
+                      <FaUser style={{ marginRight: 8 }} />
+                      Perfil
+                    </Dropdown.Item>
+                  </Dropdown>
+                ) : (
+                  <>
+
+                    <Whisper trigger="click" placement="bottomEnd" speaker={
+                      <Popover title="Notificaciones">
+                        <div style={{ padding: "10px" }}>
+                          <p><strong>Notificación 1:</strong> Pedido recibido</p>
+                          <Divider></Divider>
+                          <p><strong>Notificación 2:</strong> Inventario actualizado</p>
+                          <Divider></Divider>
+                          <p><strong>Notificación 3:</strong> Juan Registro un motor</p>
+                        </div>
+                      </Popover>
+                    }
+                      open={visible}
+                      onClick={() => setVisible(false)}
+                    >
+                      <IconButton className="navItem" style={{ marginRight: "20px", fontSize: '24px' }} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
+                    </Whisper>
+                    <Whisper trigger="click" placement="bottomEnd" speaker={
+                      <Popover title="Perfil">
+                      </Popover>
+                    }
+                    >
+                      <IconButton icon={<FaUser />} appearance="ghost" style={{ borderRadius: "20px", fontSize: '20px', color: "white", borderColor: "white" }} />
+                    </Whisper>
+                  </>
+                )}
+              </Nav>
+            </Navbar>
+          </Header>
+          <Content style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}>
+            {children}
+          </Content>
+          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", marginLeft: "10px", marginRight: "10px", borderRadius: "0px 0px 20px 20px", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
+      </Container>
+    );
+  } else {
+    return (
+      <Container >
+        <Grid fluid>
+          <Row>
+            <Col xs={24} >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", width: '100%', height: '70px', marginTop: '5px', position: 'fixed', left: '0' }}>
+                <div className="container-logo-header-mobile">
+                  <Image circle src="src\assets\LogoJavier.jpg" width={10} />
+                </div>
+                <div className="container-search-custom">
+                  <div className="container-icon-search">
+                    <Search style={{ fontSize: "24px", color: "white" }} />
+                  </div>
+                  <div>
+                    <input className="search-input" placeholder="Buscar repuesto" />
+                  </div>
+                </div>
+                <div className="container-icon-user-mobile">
+                  <Avatar size="lg" circle />
+                </div>
+              </div>
+            </Col>
+          </Row>
+          <Row >
+            <Col xs={24}>
+              <div style={{ position: 'fixed', left: '0', marginTop: '95px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "white", width: ' 100%', height: '80vh' }}>
+                {children}
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={24}>
+              <div style={{ overflow: 'hidden', flexWrap: 'nowrap', display: 'flex', alignItems: 'center', justifyContent: "center", width: '100%', height: '85px', marginTop: '5px', position: 'fixed', left: '0', bottom: '0', backgroundColor: 'white' }} >
+                <Navbar appearance="subtle" className="navbarM">
+                  <div className="navbar-containerMF">
+                    <Nav className="navM">
+                      {navItems.map((item) => (
+                        <Nav.Item
+                          id={`nav-item-${item.key}`}
+                          key={item.key}
+                          icon={<Icon as={item.icon} />}
+                          onClick={() => handleSelect(item.key)}
+                          className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
+                        >
+                          {item.label}
+                        </Nav.Item>
+                      ))}
+                    </Nav>
+                  </div>
+                </Navbar>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      </Container>
     );
   }
 }
@@ -256,11 +256,11 @@ const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void
       <IconButton style={{ fontSize: "22px" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaCaretRight /> : <FaCaretLeft />} />
     </Stack>
   );
-    return (
-      <Stack >
-        <IconButton style={{fontSize:"22px", marginBottom:"10px", marginLeft:"50%" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <ArrowLeftLineIcon /> : <ArrowRightLineIcon />} />
-      </Stack>
-    );
+  return (
+    <Stack >
+      <IconButton style={{ fontSize: "22px", marginBottom: "10px", marginLeft: "50%" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <ArrowLeftLineIcon /> : <ArrowRightLineIcon />} />
+    </Stack>
+  );
 };
 
 const Brand = ({ }: { expand: boolean }) => {
