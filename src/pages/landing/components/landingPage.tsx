@@ -1,13 +1,10 @@
-import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton, Carousel } from "rsuite";
-import NavItem from "rsuite/esm/Nav/NavItem";
+import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton } from "rsuite";
+
 import "../styles/styles.css"
 import LOGO from '../../../assets/LogoJavier.jpg';
-import DropdownMenu from "rsuite/esm/Dropdown/DropdownMenu";
-import DropdownItem from "rsuite/esm/Dropdown/DropdownItem";
+
 import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "react-icons/fa";
-import a from '../../../assets/1.jpg';
-import b from '../../../assets/2.jpg';
-import c from '../../../assets/3.jpg';
+
 import { useNavigate } from "react-router-dom";
 
 
