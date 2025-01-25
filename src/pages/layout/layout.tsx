@@ -95,7 +95,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
           <Divider style={{ height: '0px' }}></Divider>
-          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100%', overflow: 'hidden' }}>
+          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100%', overflow: '' }}>
             <Sidenav.Body style={{ flexGrow: 1, }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
                 <Nav.Item eventKey="1" style={{ borderRadius: "10px" }} icon={<Icon as={FaHome} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
@@ -164,9 +164,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                       >
                         <IconButton className="notificationIcon" icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
                       </Whisper>
-                      {/* <Whisper trigger={'hover'} placement="left" speaker={<Tooltip>Cerrar sesión</Tooltip>}>
-                  <IconButton icon={<FaSignOutAlt />} onClick={() => signOut()} appearance="ghost" className="toggleButton" aria-label="Toggle Sidebar"/>
-                </Whisper> */}
                       <Whisper trigger="click" placement="bottomEnd" speaker={
                         <Popover title="Perfil">
                         </Popover>
