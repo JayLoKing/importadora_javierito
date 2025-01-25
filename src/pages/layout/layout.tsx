@@ -1,13 +1,19 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack,  Image, Divider, Badge, Navbar, Whisper,  Dropdown, Popover, Grid, Row, Col, Footer,  } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col, Avatar, Footer, } from "rsuite";
 import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
 import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
 import { FC, useEffect, useState, useRef } from "react";
-import { Icon } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag,  FaEllipsisV, FaUser, FaHistory } from "react-icons/fa";
+import { Icon, Search } from '@rsuite/icons';
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaMapPin, FaFacebook, FaInstagram, FaWhatsapp, FaEnvelope, FaTiktok, FaHistory } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
 import "../layout/styles/styles.css";
+import SidenavBody from "rsuite/esm/Sidenav/SidenavBody";
+import a from '../../assets/1.jpg'
+import b from '../../assets/2.jpg'
+import c from '../../assets/3.jpg'
+import { useNavigate } from "react-router-dom";
+import Column from "rsuite/esm/Table/TableColumn";
 
 interface LayoutProps {
   titleComponent: React.ReactNode;
@@ -21,6 +27,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const [activeKey, setActiveKey] = useState<string>("1");
   const [visible, setVisible] = useState(false);
   const handleVisibility = () => setVisible(!visible);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -40,6 +47,24 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     setActiveKey(key);
     const selectedItem = document.querySelector(`#nav-item-${key}`);
 
+    switch (key) {
+      case '1':
+        navigate('/');
+        break;
+      case '2':
+        navigate('/buys');
+        break;
+      case '3':
+        navigate('/inventory');
+        break;
+      case '4':
+        navigate('/branchOffice');
+        break;
+      default:
+        break;
+    }
+
+
     if (selectedItem && navRef.current) {
       selectedItem.scrollIntoView({
         behavior: 'smooth',
@@ -48,7 +73,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
       });
     }
   };
-  
+
   const navItems = [
     { key: '1', icon: FaHome, label: 'Inicio' },
     { key: '2', icon: FaShoppingCart, label: 'Carrito' },
@@ -79,8 +104,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   //   window.open('https://www.tiktok.com/@importjavierito?is_from_webapp=1&sender_device=pc');
   // };
 
-  function signOut() {}
-
+  function signOut() { }
   if(!isMobile){
   return (
     <Container  style={{display:"flex", height: '100vh'}}>
@@ -174,38 +198,69 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   );
   }else {
     return (
-      <Container className="container-mobile">
-        <Grid>
-          <Row>
-            <Col sm={24} xs={24}></Col>
-            <Col sm={24} xs={24}></Col>
-            <Col sm={24} xs={24}>
-              <Navbar appearance="subtle" className="navbarM">
-                <div className="navbar-containerMF">
-                  <Nav className="navM">
-                    {navItems.map((item) => (
-                      <Nav.Item 
-                        id={`nav-item-${item.key}`}
-                        key={item.key}
-                        icon={<Icon as={item.icon}  />} 
-                        onSelect={() => handleSelect(item.key)}
-                        className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
-                      >
-                        {item.label}
-                      </Nav.Item>
-                    ))}
-                  </Nav>
+        <Container >
+          <Grid fluid>
+            <Row>
+              <Col xs={24} >
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'70px', marginTop: '5px', position: 'fixed', left: '0'}}>
+                  <div className="container-logo-header-mobile">
+                    <Image circle src="src\assets\LogoJavier.jpg" width={10}/>
+                  </div>
+                  <div className="container-search-custom">
+                    <div className="container-icon-search">
+                      <Search style={{fontSize:"24px", color: "white"}} />
+                    </div>
+                    <div>
+                      <input className="search-input" placeholder="Buscar repuesto"/>
+                    </div>
+                  </div>
+                  <div className="container-icon-user-mobile">
+                    <Avatar size="lg" circle/>
+                  </div>
                 </div>
-              </Navbar>
-            </Col>
-          </Row>
-        </Grid>
-      </Container>
-
-      );
-    }
+              </Col>
+            </Row>
+            <Row >
+              <Col xs={24}>
+                <div style={{position: 'fixed', left:'0', marginTop:'95px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "white", width:' 100%', height:'80vh'}}>
+                  {children}
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={24}>
+                <div style={{ overflow:'hidden',flexWrap:'nowrap', display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'85px', marginTop: '5px', position: 'fixed', left: '0', bottom:'0',backgroundColor: 'white'}} >
+                    <Navbar appearance="subtle" className="navbarM">
+                    <div className="navbar-containerMF">
+                      <Nav className="navM">
+                        {navItems.map((item) => (
+                          <Nav.Item
+                            id={`nav-item-${item.key}`}
+                            key={item.key}
+                            icon={<Icon as={item.icon} />}
+                            onClick={() => handleSelect(item.key)}
+                            className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
+                          >
+                            {item.label}
+                          </Nav.Item>
+                        ))}
+                      </Nav>
+                    </div>
+                  </Navbar>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
+        </Container>
+    );
   }
+}
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
+  return (
+    <Stack className="navToggle" >
+      <IconButton style={{ fontSize: "22px" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaCaretRight /> : <FaCaretLeft />} />
+    </Stack>
+  );
     return (
       <Stack >
         <IconButton style={{fontSize:"22px", marginBottom:"10px", marginLeft:"50%" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <ArrowLeftLineIcon /> : <ArrowRightLineIcon />} />
@@ -213,15 +268,15 @@ const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void
     );
 };
 
-const Brand = ({}: { expand: boolean }) => {
-    return (
-      <HStack className="pagebrand" >
-        <div style={{borderRadius:"50%", backgroundColor:"#f08b33" }} >
-          <Image circle src={LOGO} width={120} style={{padding:"3px", cursor:"pointer"}} />
-        </div>
-        {/* {expand && <Text style={{fontWeight:"bold", textAlign:"left", color:"black"}}>IMPORTADORA JAVIERITO</Text>} */}
-      </HStack>
-    );
-  };
-  
+const Brand = ({ }: { expand: boolean }) => {
+  return (
+    <HStack className="pagebrand" >
+      <div style={{ borderRadius: "50%", backgroundColor: "#f08b33" }} >
+        <Image circle src={LOGO} width={120} style={{ padding: "3px", cursor: "pointer" }} />
+      </div>
+      {/* {expand && <Text style={{fontWeight:"bold", textAlign:"left", color:"black"}}>IMPORTADORA JAVIERITO</Text>} */}
+    </HStack>
+  );
+};
+
 export default Layout;
