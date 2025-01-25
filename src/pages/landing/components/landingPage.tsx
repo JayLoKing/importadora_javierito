@@ -8,8 +8,11 @@ import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "
 import a from '../../../assets/1.jpg';
 import b from '../../../assets/2.jpg';
 import c from '../../../assets/3.jpg';
+import { useNavigate } from "react-router-dom";
+
 
 export default function LandingPage(){
+    const navigate = useNavigate()
     return(
         <Container>
             <Header >
@@ -38,8 +41,8 @@ export default function LandingPage(){
                     </Dropdown>
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
-                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}}>Iniciar Sesión</IconButton>
-                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a"}}>Registrarse</Button>
+                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}} onClick={()=> navigate("/login")}>Iniciar Sesión</IconButton>
+                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> navigate("/register")}>Registrarse</Button>
                         <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }}>Contactar con Ventas</Button>
                     </div>
                 </Navbar>
