@@ -146,6 +146,7 @@
   overflow: hidden;
 }
 
+
 .navbar-containerMF {
   width: 100%;
   height: 100%;
@@ -287,3 +288,5 @@
   color: #757575;
   flex-grow: 1;
 }
+
+

@@ -46,6 +46,24 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     setActiveKey(key);
     const selectedItem = document.querySelector(`#nav-item-${key}`);
 
+    switch (key) {
+      case '1':
+        navigate('/');
+        break;
+      case '2':
+        navigate('/buys');
+        break;
+      case '3':
+        navigate('/inventory');
+        break;
+      case '4':
+        navigate('/branchOffice');
+        break;
+      default:
+        break;
+    }
+
+
     if (selectedItem && navRef.current) {
       selectedItem.scrollIntoView({
         behavior: 'smooth',
@@ -233,53 +251,60 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     );
   } else {
     return (
-      <Container className="container-mobile">
-        <Grid>
-          <Row style={{height: '100vh'}} >
-            <Col sm={24} xs={24} >
-              <div className="container-header-mobile">
-                <div className="container-logo-header-mobile">
-                  <Image circle src="src\assets\LogoJavier.jpg" width={65}/>
-                </div>
-                <div className="container-search-custom">
-                  <div className="container-icon-search">
-                    <Search style={{fontSize:"24px", color: "white"}} />
+        <Container >
+          <Grid fluid>
+            <Row>
+              <Col xs={24} >
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'70px', marginTop: '5px', position: 'fixed', left: '0'}}>
+                  <div className="container-logo-header-mobile">
+                    <Image circle src="src\assets\LogoJavier.jpg" width={10}/>
                   </div>
-                  <div>
-                    <input className="search-input" placeholder="Buscar repuesto"/>
+                  <div className="container-search-custom">
+                    <div className="container-icon-search">
+                      <Search style={{fontSize:"24px", color: "white"}} />
+                    </div>
+                    <div>
+                      <input className="search-input" placeholder="Buscar repuesto"/>
+                    </div>
+                  </div>
+                  <div className="container-icon-user-mobile">
+                    <Avatar size="lg" circle/>
                   </div>
                 </div>
-                <div className="container-icon-user-mobile">
-                  <Avatar size="lg" circle/>
+              </Col>
+            </Row>
+            <Row >
+              <Col xs={24}>
+                <div style={{position: 'fixed', left:'0', marginTop:'95px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: "white", width:' 100%', height:'80vh'}}>
+                  {children}
                 </div>
-              </div>  
-            </Col>
-            <Col sm={24} xs={24}>
-              
-            </Col>
-            <Col sm={24} xs={24}>
-              <Navbar appearance="subtle" className="navbarM">
-                <div className="navbar-containerMF">
-                  <Nav className="navM">
-                    {navItems.map((item) => (
-                      <Nav.Item
-                        id={`nav-item-${item.key}`}
-                        key={item.key}
-                        icon={<Icon as={item.icon} />}
-                        onClick={() => handleSelect(item.key)}
-                        className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
-                      >
-                        {item.label}
-                      </Nav.Item>
-                    ))}
-                  </Nav>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={24}>
+                <div style={{ overflow:'hidden',flexWrap:'nowrap', display: 'flex', alignItems: 'center', justifyContent: "center", width:'100%', height:'85px', marginTop: '5px', position: 'fixed', left: '0', bottom:'0',backgroundColor: 'white'}} >
+                    <Navbar appearance="subtle" className="navbarM">
+                    <div className="navbar-containerMF">
+                      <Nav className="navM">
+                        {navItems.map((item) => (
+                          <Nav.Item
+                            id={`nav-item-${item.key}`}
+                            key={item.key}
+                            icon={<Icon as={item.icon} />}
+                            onClick={() => handleSelect(item.key)}
+                            className={`nav-itemM ${activeKey === item.key ? 'active' : ''}`}
+                          >
+                            {item.label}
+                          </Nav.Item>
+                        ))}
+                      </Nav>
+                    </div>
+                  </Navbar>
                 </div>
-              </Navbar>
-            </Col>
-          </Row>
-        </Grid>
-      </Container>
-
+              </Col>
+            </Row>
+          </Grid>
+        </Container>
     );
   }
 }
