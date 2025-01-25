@@ -3,7 +3,7 @@ import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
 import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
 import { FC, useEffect, useState, useRef } from "react";
 import { Icon, Search } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory } from "react-icons/fa";
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory } from "react-icons/fa";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
@@ -251,11 +251,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   }
 }
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
-  return (
-    <Stack className="navToggle" >
-      <IconButton style={{ fontSize: "22px" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaCaretRight /> : <FaCaretLeft />} />
-    </Stack>
-  );
   return (
     <Stack >
       <IconButton style={{ fontSize: "22px", marginBottom: "10px", marginLeft: "50%" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <ArrowLeftLineIcon /> : <ArrowRightLineIcon />} />
