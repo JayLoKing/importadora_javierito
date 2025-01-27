@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { RegisterUserDTO } from "../models/register.user.model";
 import { registerClientAsync } from "../services/registerUserService";
-import { validationFormModel } from "../utils/validations/user/validation_form";
+import { validationUserFormModel } from "../utils/validations/user/validation_form";
 
 export function userRegisterForm(){
     const [visible, setVisible] = useState(false);
@@ -22,7 +22,7 @@ export function userRegisterForm(){
         phoneNumber: '',
     });
 
-    const model = validationFormModel;
+    const model = validationUserFormModel;
 
     const handleSubmit = async (onSuccess?: () => void) => {
         if (!formRef.current) return false;
