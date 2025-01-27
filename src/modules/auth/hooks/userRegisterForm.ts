@@ -4,9 +4,7 @@ import { registerClientAsync } from "../services/registerUserService";
 import { validationUserFormModel } from "../utils/validations/user/validation_form";
 
 export function userRegisterForm(){
-    const [visible, setVisible] = useState(false);
     const formRef = useRef<any>();
-    const togglePasswordVisibility = () => setVisible(!visible);
 
 
     const [formValue, setFormValue] = useState<RegisterUserDTO>({
@@ -24,11 +22,29 @@ export function userRegisterForm(){
 
     const model = validationUserFormModel;
 
+    const generateUsername = () => {
+        const firstInitial = formValue.lastName.charAt(0).toLowerCase();
+        const secondPart = formValue.secondLastName
+            ? formValue.secondLastName.charAt(0).toLowerCase()
+            : formValue.name.charAt(0).toLowerCase();
+        const randomNumbers = Math.floor(1000000 + Math.random() * 9000000);
+        return `${firstInitial}${secondPart}${randomNumbers}`;
+    };
+
+    const generatePassword = () => {
+        const firstInitial = formValue.lastName.charAt(0).toLowerCase();
+        const secondPart = formValue.secondLastName
+            ? formValue.secondLastName.charAt(0).toLowerCase()
+            : formValue.name.charAt(0).toLowerCase();
+        return `${firstInitial}${secondPart}${formValue.ci}`;
+    };
+
     const handleSubmit = async (onSuccess?: () => void) => {
         if (!formRef.current) return false;
     
         try {
-            formValue.userName = 'user-text1';
+            formValue.userName = generateUsername();
+            formValue.password = generatePassword();
             formValue.role = 'Customer';
             const isValid = await formRef.current.check();
             if (isValid) {
@@ -78,7 +94,5 @@ export function userRegisterForm(){
         formRef,
         model,
         handleSubmit,
-        visible,
-        togglePasswordVisibility
     };
 }
