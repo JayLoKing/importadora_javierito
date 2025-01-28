@@ -1,10 +1,5 @@
-import { Container, Grid, Button, Carousel, IconButton } from "rsuite";
+import { Container } from "rsuite";
 import "../styles/styles.css"
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { MouseEventHandler } from "react";
-import a from '../../../assets/1.jpg';
-import b from '../../../assets/2.jpg';
-import c from '../../../assets/3.jpg';
 
 export default function HomeContainer(){
     return(

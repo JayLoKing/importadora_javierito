@@ -2,7 +2,7 @@ import { Schema } from "rsuite";
 
 const {StringType} = Schema.Types;
 
-export const validationFormModel = Schema.Model({
+export const validationUserFormModel = Schema.Model({
     name: StringType()
             .isRequired('El nombre es requerido')
             .minLength(3, 'El nombre debe tener al menos 3 caracteres.'),

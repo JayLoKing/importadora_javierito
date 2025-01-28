@@ -1,9 +1,8 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Tooltip, Dropdown, Popover, Button, Carousel, Grid, Row, Col, Avatar, Footer, } from "rsuite";
-import ArrowLeftLineIcon from '@rsuite/icons/ArrowLeftLine';
-import ArrowRightLineIcon from '@rsuite/icons/ArrowRightLine';
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle,  } from "rsuite";
 import { FC, useEffect, useState, useRef } from "react";
 import { Icon, Search } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaSignOutAlt, FaCaretRight, FaCaretLeft, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaMapPin, FaFacebook, FaInstagram, FaWhatsapp, FaEnvelope, FaTiktok, FaHistory } from "react-icons/fa";
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
@@ -108,7 +107,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
             <Brand expand={expand} />
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
-          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
+          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow:"auto" }} >
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
                 <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
@@ -116,7 +115,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
                 <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
-                <Nav.Menu eventKey="6" placement="rightStart" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
+                <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
                   <Nav.Item eventKey="6-2" style={{ borderRadius: "5px", }} icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
                 </Nav.Menu>
@@ -125,14 +124,15 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-          <Divider style={{ height: '2px', color: 'black' }}></Divider>
-          <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
+          {/* <Divider style={{ height: '2px', color: 'black' }}></Divider> */}
+          
         </Sidebar>
 
         <Container style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Header >
             <Navbar appearance="inverse" className="navbar1" style={{ borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-              <Nav >
+              <Nav style={{display:"flex", justifyContent:"space-between"}}>
+                <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
                 <NavItem disabled className="headerNav" style={{ color: "white" }}>{titleComponent}</NavItem>
               </Nav>
               <Nav pullRight style={{ position: "relative" }}>
@@ -155,7 +155,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                   </Dropdown>
                 ) : (
                   <>
-
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover title="Notificaciones">
                         <div style={{ padding: "10px" }}>
@@ -166,17 +165,30 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                           <p><strong>Notificación 3:</strong> Juan Registro un motor</p>
                         </div>
                       </Popover>
-                    }
-                      open={visible}
-                      onClick={() => setVisible(false)}
-                    >
-                      <IconButton className="navItem" style={{ marginRight: "20px", fontSize: '24px' }} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
+                    }>
+                      <IconButton style={{ marginRight: "15px", fontSize: '24px', background:"transparent", color:"white"}} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
                     </Whisper>
                     <Whisper trigger="click" placement="bottomEnd" speaker={
-                      <Popover title="Perfil">
+                      <Popover style={{textAlign:"center"}}>
+                        <div style={{ padding: "5px", fontSize:"13px"}}>
+                          <Toggle style={{background:"white", fontSize:"13px", padding:"3px", }}>Modo Oscuro</Toggle>
+                        </div>
                       </Popover>
-                    }
-                    >
+                    }>
+                      <IconButton style={{ marginRight: "20px", fontSize: '25px', background:"transparent", color:"white"}} icon={<IoMdSettings/>} appearance="subtle" onClick={handleVisibility} />
+                    </Whisper>
+                    <Whisper trigger="click" placement="bottomEnd" speaker={
+                      <Popover >
+                        <div style={{ padding: "5px", fontSize:"13px"}}>
+                          <p>Hij77777777</p>
+                          <strong>Administrador</strong>
+                          <hr />
+                          <IconButton icon={<FaEdit style={{marginRight:"5px", fontSize:"12px"}}/>} style={{background:"white", fontSize:"13px", padding:"3px", textAlign:"center"}}>Editar Perfil</IconButton>
+                          <hr />
+                          <IconButton icon={<FaPowerOff style={{marginRight:"5px", fontSize:"12px"}}/>} style={{background:"white", fontSize:"13px", padding:"3px", textAlign:"center"}}>Cerrar Sesión</IconButton>
+                        </div>
+                      </Popover>
+                    }>
                       <IconButton icon={<FaUser />} appearance="ghost" style={{ borderRadius: "20px", fontSize: '20px', color: "white", borderColor: "white" }} />
                     </Whisper>
                   </>
@@ -206,7 +218,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                     <Search style={{ fontSize: "24px", color: "white" }} />
                   </div>
                   <div>
-                    <input className="search-input" placeholder="Buscar repuesto" />
+                    <input className="search-input" placeholder="Buscar repuesto..." />
                   </div>
                 </div>
                 <div className="container-icon-user-mobile">
@@ -252,13 +264,8 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
 }
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
   return (
-    <Stack className="navToggle" >
-      <IconButton style={{ fontSize: "22px" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaCaretRight /> : <FaCaretLeft />} />
-    </Stack>
-  );
-  return (
     <Stack >
-      <IconButton style={{ fontSize: "22px", marginBottom: "10px", marginLeft: "50%" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <ArrowLeftLineIcon /> : <ArrowRightLineIcon />} />
+      <IconButton style={{ fontSize: "22px", background:"transparent", color:"white" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaAngleLeft /> : <FaAngleRight />} />
     </Stack>
   );
 };

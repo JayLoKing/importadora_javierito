@@ -1,18 +1,12 @@
-import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton, Carousel } from "rsuite";
-import NavItem from "rsuite/esm/Nav/NavItem";
+import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton } from "rsuite";
 import "../styles/styles.css"
 import LOGO from '../../../assets/LogoJavier.jpg';
-import DropdownMenu from "rsuite/esm/Dropdown/DropdownMenu";
-import DropdownItem from "rsuite/esm/Dropdown/DropdownItem";
 import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "react-icons/fa";
-import a from '../../../assets/1.jpg';
-import b from '../../../assets/2.jpg';
-import c from '../../../assets/3.jpg';
-import { useNavigate } from "react-router-dom";
-
 
 export default function LandingPage(){
-    const navigate = useNavigate()
+    const handleWhatsapp = () => {
+        window.open('https://api.whatsapp.com/send?phone=%2B59165517570&context=ARAOgxZu0AlTjE3D0HiYiy6wqAptPW-HWrQppSrFkc7mtYLCdmhNaqf7Bd_sihzOz9aK-A515Oj4k_VXhSUpEKx7QADXlr6nT7KVaWeYYshysnyGPnEyDtEujhMEbvDbb1vumPu-0hs5AUrn4xEL_PB_Ag&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwY2xjawH-ahZleHRuA2FlbQIxMAABHWNUxixkD1GxddjQcxR5Zid36ff7zroZOTgkZP9CliakbGdhq_R8CDvqnw_aem_J_W1zcNSJZiWnSz-wp_wQA');
+    };
     return(
         <Container>
             <Header >
@@ -41,9 +35,9 @@ export default function LandingPage(){
                     </Dropdown>
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
-                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}} onClick={()=> navigate("/login")}>Iniciar Sesión</IconButton>
-                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> navigate("/register")}>Registrarse</Button>
-                        <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }}>Contactar con Ventas</Button>
+                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
+                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> window.open("/register", "_blank", "noopener,noreferrer")}>Registrarse</Button>
+                        <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
                     </div>
                 </Navbar>
             </Header>
