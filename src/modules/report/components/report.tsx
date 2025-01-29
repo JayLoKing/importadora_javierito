@@ -1,5 +1,5 @@
-import { FaEdit, FaMapPin, FaPlus, FaTrash } from "react-icons/fa";
-import { Button, DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Table, Tooltip, Whisper } from "rsuite";
+import { FaPlus } from "react-icons/fa";
+import { Button, DatePicker, FlexboxGrid, Form, InputGroup, Table, Tooltip, Whisper } from "rsuite";
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
 import FormGroup from "rsuite/esm/FormGroup";
 import Column from "rsuite/esm/Table/TableColumn";

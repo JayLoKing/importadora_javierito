@@ -1,4 +1,4 @@
-import {Loader, Stack, IconButton, Table, Whisper, Tooltip, Container} from "rsuite";
+import {Loader, Stack, IconButton, Table, Whisper, Tooltip} from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaEdit, FaTrash} from "react-icons/fa";
