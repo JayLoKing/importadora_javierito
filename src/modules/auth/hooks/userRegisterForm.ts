@@ -27,25 +27,19 @@ export function userRegisterForm(){
         const secondPart = formValue.secondLastName
             ? formValue.secondLastName.charAt(0).toLowerCase()
             : formValue.name.charAt(0).toLowerCase();
-        const randomNumbers = Math.floor(1000000 + Math.random() * 9000000);
-        return `${firstInitial}${secondPart}${randomNumbers}`;
-    };
-
-    const generatePassword = () => {
-        const firstInitial = formValue.lastName.charAt(0).toLowerCase();
-        const secondPart = formValue.secondLastName
-            ? formValue.secondLastName.charAt(0).toLowerCase()
-            : formValue.name.charAt(0).toLowerCase();
-        return `${firstInitial}${secondPart}${formValue.ci}`;
+        const thirdPart = formValue.secondLastName
+        ? formValue.secondLastName.charAt(0).toLowerCase()
+        : formValue.name.charAt(1).toLowerCase();
+        return `${firstInitial}${secondPart}${thirdPart}`;
     };
 
     const handleSubmit = async (onSuccess?: () => void) => {
         if (!formRef.current) return false;
     
         try {
-            formValue.userName = generateUsername();
-            formValue.password = generatePassword();
-            formValue.role = 'Customer';
+            formValue.userName = generateUsername() + formValue.ci;
+            formValue.password = formValue.ci;
+            formValue.role = 'Employee';
             const isValid = await formRef.current.check();
             if (isValid) {
                 const res = await registerClientAsync(formValue);
