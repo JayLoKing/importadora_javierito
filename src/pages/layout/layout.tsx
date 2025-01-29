@@ -1,4 +1,4 @@
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle,  } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle, } from "rsuite";
 import { FC, useEffect, useState, useRef } from "react";
 import { Icon, Search } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
@@ -107,13 +107,13 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
             <Brand expand={expand} />
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
-          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow:"auto" }} >
+          <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
                 <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
                 <Nav.Item eventKey="2" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`} onClick={() => navigate('/items')}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`} onClick={() => navigate('/branchOffice')}>Sucursales</Nav.Item>
                 <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
@@ -125,13 +125,13 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
             </Sidenav.Body>
           </Sidenav>
           {/* <Divider style={{ height: '2px', color: 'black' }}></Divider> */}
-          
+
         </Sidebar>
 
         <Container style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Header >
             <Navbar appearance="inverse" className="navbar1" style={{ borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-              <Nav style={{display:"flex", justifyContent:"space-between"}}>
+              <Nav style={{ display: "flex", justifyContent: "space-between" }}>
                 <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
                 <NavItem disabled className="headerNav" style={{ color: "white" }}>{titleComponent}</NavItem>
               </Nav>
@@ -166,26 +166,26 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                         </div>
                       </Popover>
                     }>
-                      <IconButton style={{ marginRight: "15px", fontSize: '24px', background:"transparent", color:"white"}} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
+                      <IconButton style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
                     </Whisper>
                     <Whisper trigger="click" placement="bottomEnd" speaker={
-                      <Popover style={{textAlign:"center"}}>
-                        <div style={{ padding: "5px", fontSize:"13px"}}>
-                          <Toggle style={{background:"white", fontSize:"13px", padding:"3px", }}>Modo Oscuro</Toggle>
+                      <Popover style={{ textAlign: "center" }}>
+                        <div style={{ padding: "5px", fontSize: "13px" }}>
+                          <Toggle style={{ background: "white", fontSize: "13px", padding: "3px", }}>Modo Oscuro</Toggle>
                         </div>
                       </Popover>
                     }>
-                      <IconButton style={{ marginRight: "20px", fontSize: '25px', background:"transparent", color:"white"}} icon={<IoMdSettings/>} appearance="subtle" onClick={handleVisibility} />
+                      <IconButton style={{ marginRight: "20px", fontSize: '25px', background: "transparent", color: "white" }} icon={<IoMdSettings />} appearance="subtle" onClick={handleVisibility} />
                     </Whisper>
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover >
-                        <div style={{ padding: "5px", fontSize:"13px"}}>
+                        <div style={{ padding: "5px", fontSize: "13px" }}>
                           <p>Hij77777777</p>
                           <strong>Administrador</strong>
                           <hr />
-                          <IconButton icon={<FaEdit style={{marginRight:"5px", fontSize:"12px"}}/>} style={{background:"white", fontSize:"13px", padding:"3px", textAlign:"center"}}>Editar Perfil</IconButton>
+                          <IconButton icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
                           <hr />
-                          <IconButton icon={<FaPowerOff style={{marginRight:"5px", fontSize:"12px"}}/>} style={{background:"white", fontSize:"13px", padding:"3px", textAlign:"center"}}>Cerrar Sesión</IconButton>
+                          <IconButton icon={<FaPowerOff style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Cerrar Sesión</IconButton>
                         </div>
                       </Popover>
                     }>
@@ -265,7 +265,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
   return (
     <Stack >
-      <IconButton style={{ fontSize: "22px", background:"transparent", color:"white" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaAngleLeft /> : <FaAngleRight />} />
+      <IconButton style={{ fontSize: "22px", background: "transparent", color: "white" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaAngleLeft /> : <FaAngleRight />} />
     </Stack>
   );
 };
