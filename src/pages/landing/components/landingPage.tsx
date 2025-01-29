@@ -4,9 +4,19 @@ import LOGO from '../../../assets/LogoJavier.jpg';
 import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "react-icons/fa";
 
 export default function LandingPage(){
-    const handleWhatsapp = () => {
-        window.open('https://api.whatsapp.com/send?phone=%2B59165517570&context=ARAOgxZu0AlTjE3D0HiYiy6wqAptPW-HWrQppSrFkc7mtYLCdmhNaqf7Bd_sihzOz9aK-A515Oj4k_VXhSUpEKx7QADXlr6nT7KVaWeYYshysnyGPnEyDtEujhMEbvDbb1vumPu-0hs5AUrn4xEL_PB_Ag&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwY2xjawH-ahZleHRuA2FlbQIxMAABHWNUxixkD1GxddjQcxR5Zid36ff7zroZOTgkZP9CliakbGdhq_R8CDvqnw_aem_J_W1zcNSJZiWnSz-wp_wQA');
-    };
+    const handleFacebook = () => {
+    window.open('https://www.facebook.com/Importadora.Javierito');
+  };
+  const handleWhatsapp = () => {
+    window.open('https://api.whatsapp.com/send?phone=%2B59165517570&context=ARAOgxZu0AlTjE3D0HiYiy6wqAptPW-HWrQppSrFkc7mtYLCdmhNaqf7Bd_sihzOz9aK-A515Oj4k_VXhSUpEKx7QADXlr6nT7KVaWeYYshysnyGPnEyDtEujhMEbvDbb1vumPu-0hs5AUrn4xEL_PB_Ag&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwY2xjawH-ahZleHRuA2FlbQIxMAABHWNUxixkD1GxddjQcxR5Zid36ff7zroZOTgkZP9CliakbGdhq_R8CDvqnw_aem_J_W1zcNSJZiWnSz-wp_wQA');
+  };
+  const handleTikTok = () => {
+    window.open('https://www.tiktok.com/@importjavierito?is_from_webapp=1&sender_device=pc');
+  };
+  const handleEmail = () => {
+    window.open('https://www.tiktok.com/@importjavierito?is_from_webapp=1&sender_device=pc');
+  };
+
     return(
         <Container>
             <Header >
@@ -74,10 +84,10 @@ export default function LandingPage(){
                 <Divider></Divider>
                 <div style={{ display: "flex", gap: "15px", alignItems:"center"}}>
                     <label style={{fontSize:"18px"}}>¿No encontraste lo que buscabas? <strong>Contáctanos:</strong></label>
-                    <IconButton style={{fontSize:"30px"}} icon={<FaFacebook />} appearance="subtle" />
-                    <IconButton style={{fontSize:"30px"}} icon={<FaWhatsapp />} appearance="subtle" />
-                    <IconButton style={{fontSize:"30px"}} icon={<FaTiktok />} appearance="subtle" />
-                    <IconButton style={{fontSize:"30px"}} icon={<FaEnvelope />} appearance="subtle" />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaFacebook />} appearance="subtle" onClick={handleFacebook} />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaWhatsapp />} appearance="subtle" onClick={handleWhatsapp} />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaTiktok />} appearance="subtle" onClick={handleTikTok} />
+                    <IconButton style={{fontSize:"30px"}} icon={<FaEnvelope />} appearance="subtle" onClick={handleEmail} />
                 </div>
                 <div style={{ display: "flex", alignItems:"center"}}>
                     <label style={{fontSize:"20px", fontWeight:"bold",}}>IMPORTADORA JAVIERITO</label>

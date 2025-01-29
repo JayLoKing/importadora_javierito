@@ -196,11 +196,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
-          <Stack style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}  justifyContent="center" alignItems="center">
-            <Content >
+          
+            <Content style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}>
               {children}
             </Content>
-          </Stack>
+          
           <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", marginLeft: "10px", marginRight: "10px", borderRadius: "0px 0px 20px 20px", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>

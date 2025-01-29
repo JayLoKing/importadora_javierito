@@ -1,4 +1,4 @@
-import {Loader, Stack, IconButton, Table, Whisper, Tooltip} from "rsuite";
+import {Loader, Stack, IconButton, Table, Whisper, Tooltip, Container} from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaEdit, FaTrash} from "react-icons/fa";
@@ -29,7 +29,7 @@ export default function Item() {
     // }
 
     return (
-        <>
+        <div style={{padding:25}}>
                 <Stack spacing={2} justifyContent="space-between">
                     <IconButton
                         icon={<PlusIcon />}
@@ -90,6 +90,6 @@ export default function Item() {
                     </div>
                 )}
                 <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
-        </>
+        </div>
     );    
 }
