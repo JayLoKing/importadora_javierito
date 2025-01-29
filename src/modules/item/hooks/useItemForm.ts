@@ -7,7 +7,9 @@ import { CreateItemAsync } from "../services/itemService";
 export function ItemRegisterForm(){
     const formRef = useRef<any>();
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState("");
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
     const [formValue, setFormValue] = useState<ItemDTO>({
         name: '',
         alias: '',
@@ -25,11 +27,15 @@ export function ItemRegisterForm(){
         pathItems: [],
         branchOfficeID: 0,
         quantity: 0,
-        barcodes: [],
         acronym: ''
     });
 
     const model = validationItemFormModel;
+
+    const handleChangeLimit = (datakey : number) => {
+        setPage(1);
+        setLimit(datakey);
+    };
 
     const handleSubmit = async (onSuccess?: () => void) => {
         if (!formRef.current) return false;
@@ -72,7 +78,6 @@ export function ItemRegisterForm(){
             pathItems: [],
             branchOfficeID: 0,
             quantity: 0,
-            barcodes: [],
             acronym: ''
         });
     };
@@ -82,7 +87,6 @@ export function ItemRegisterForm(){
                 ...prevValues,
                 [field]: value,
             }));
-            setInputValue(value);
     };
 
     function handleModal(hidde: boolean){
@@ -97,6 +101,11 @@ export function ItemRegisterForm(){
         formRef,
         model,
         handleSubmit,
-        inputValue,
+        handleChangeLimit,
+        limit,
+        page,
+        setPage,
+        searchTerm,
+        setSearchTerm
     };
 }

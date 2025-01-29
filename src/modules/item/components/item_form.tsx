@@ -65,7 +65,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         formRef,
         model,
         handleSubmit,
-        inputValue,
        
     } = ItemRegisterForm();
 
@@ -223,7 +222,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                             <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
                                                 <SelectPicker label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
-                                            <Form.Group controlId={'branchOfficeID'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                            <Form.Group controlId={'branchOfficeID'}>
                                                 <Form.ControlLabel>Sucursales</Form.ControlLabel>
                                                 <SelectPicker label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
                                             </Form.Group>
@@ -259,7 +258,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                        
-                                       <Form.Group controlId={'description'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                       <Form.Group controlId={'description'}>
                                             <Form.ControlLabel>Descripcion del Repuesto</Form.ControlLabel>
                                                <InputGroup inside>
                                                    <InputGroup.Addon>
@@ -273,7 +272,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                        
                                    </Col>  
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
-                                        <Form.Group controlId={'pathItems'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                        <Form.Group controlId={'pathItems'}>
                                             <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
                                                 <Uploader multiple listType="picture-text" action="//jsonplaceholder.typicode.com/posts/">
                                                     <button>

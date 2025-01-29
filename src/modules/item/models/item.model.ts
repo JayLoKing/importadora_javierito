@@ -15,18 +15,24 @@ export interface ItemDTO {
     pathItems: string[];
     branchOfficeID: number;
     quantity: number;
-    barcodes: string[];
     acronym: string;
 }
 
 export interface GetItems {
+    itemID: number;
     name: string;
     description: string;
-    price1: number;
-    price2: number;
-    price3: number;
-    stock: number;
-    sucursal: string;
+    model: string;
+    price: number;
+    wholesalePrice: number;
+    barePrice: number;
+    brand: string;
+    category: string;
+    subCategory: string;
+    dateManufacture: string;
+    itemImage: string;
+    address: string;
+    totalStock: number;
 }
 
 export interface ItemAddress {
