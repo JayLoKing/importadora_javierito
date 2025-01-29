@@ -1,11 +1,10 @@
-import {Loader, Text, Stack, IconButton, Table, Whisper, Tooltip} from "rsuite";
+import {Loader, Stack, IconButton, Table, Whisper, Tooltip} from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaEdit, FaTrash} from "react-icons/fa";
 import { GetItems } from "../models/item.model";
 import { ItemRegisterForm } from "../hooks/useItemForm";
 import ItemForm from "./item_form";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -13,7 +12,7 @@ const urlFetchItem = "/items/getAllItems";
 
 
 export default function Item() {
-    const { data, error, loading } = FetchDataAsync<GetItems[]>(urlFetchItem);
+    const { data, loading } = FetchDataAsync<GetItems[]>(urlFetchItem);
     
     const {handleModal, showModal} = ItemRegisterForm();
 
@@ -93,8 +92,4 @@ export default function Item() {
                 <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
         </>
     );    
-}
-
-function mockUsers(arg0: number) {
-    throw new Error("Function not implemented.");
 }
