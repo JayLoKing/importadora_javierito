@@ -1,18 +1,55 @@
-import { FaAlignJustify, FaCalendar, FaCamera, FaCode, FaDollarSign, FaUser, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, TagInput, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader } from "rsuite";
+import { FaAlignJustify, FaBarcode, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { ItemRegisterForm } from "../hooks/useItemForm";
+import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
+import { FetchDataAsync } from "../services/itemService";
+import "../styles/styles.css";
+import { forwardRef } from "react";
+import { Brand, ItemAddress, SubCategory } from "../models/item.model";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
 }
 
+const urlFetchBranchOffice = "/branchOffices/getAll";
+const urlFetchBrands = "/brands/getAllBrands";
+const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
+const urlFetchSubCategories = "/subCategories/getAllSubCategories";
+
 export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const toaster = useToaster();
+    const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
+    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
+    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
+    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
 
+    const Textarea = forwardRef<HTMLTextAreaElement>((props, ref) =>
+        <Input {...props} as="textarea"  rows={5} placeholder="Descripcion del repuesto" ref={ref} />);
+
+    const branchOfficeOptions = dataBranchOffice?.map(branch => ({
+       label: branch.name,
+       value: branch.id 
+    })) || [];
+
+    const brandsOptions = dataBrands?.map(brand => ({
+        label: brand.name,
+        value: brand.id 
+     })) || [];
+
+     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({
+        label: itemAddress.name,
+        value: itemAddress.id 
+     })) || [];
+
+     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({
+        label: subCategory.name,
+        value: subCategory.id 
+     })) || [];
+    
     const showSuccessMessage = () => {
         toaster.push(
             <Message closable showIcon type="success" >
@@ -28,6 +65,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         formRef,
         model,
         handleSubmit,
+        inputValue,
        
     } = ItemRegisterForm();
 
@@ -53,62 +91,49 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 </ModalTitle>
                 <ModalBody>
                     <Grid fluid>
-                        <Stack spacing={24} alignItems="flex-start" justifyContent="center">
-                            <Form ref={formRef} model={model} formValue={formValue} onSubmit={handleFormSubmit}>
+                        <Stack spacing={24} direction="row" alignItems="flex-start" justifyContent="center">
+                            <Form ref={formRef} model={model} formValue={formValue} onSubmit={handleFormSubmit} fluid>
                                 <Row>
-                                    <Col xs={24} md={12}>
+                                    <Col xs={24} md={8}>
                                             <Form.Group controlId={'name'}>
+                                                <Form.ControlLabel>Nombre del Repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
-                                                        <FaUser />
+                                                        <FaCog />
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="name"
-                                                        placeholder="Nombre del respuesto"
                                                         onChange={(value) => handleInputChange('name', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'alias'}>
+                                                <Form.ControlLabel>Alias del repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
-                                                        <FaUser />
+                                                        <FaTag />
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="alias"
-                                                        placeholder="Sobrenombre/Alias del repuesto"
                                                         onChange={(value) => handleInputChange('alias', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
-
-                                            <Form.Group controlId={'description'}>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaAlignJustify />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="description"
-                                                        placeholder="Descripción del repuesto"
-                                                        onChange={(value) => handleInputChange('description', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-
                                             <Form.Group controlId={'model'}>
+                                                <Form.ControlLabel>Modelo del repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
-                                                        <FaUser />
+                                                        <FaCubes />
                                                     </InputGroup.Addon>
-                                                    <Form.Control
+                                                    <Form.Control 
                                                         name="model"
-                                                        placeholder="Modelo del repuesto"
                                                         onChange={(value) => handleInputChange('model', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
                                             <Form.Group controlId={'price'}>
+                                                <Form.ControlLabel>Precio del Repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaDollarSign />
@@ -116,12 +141,12 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="price"
                                                         type="number"
-                                                        placeholder="Precio del repuesto"
                                                         onChange={(value) => handleInputChange('price', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
                                             <Form.Group controlId={'wholesalePrice'}>
+                                                <Form.ControlLabel>Precio al por mayor</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaDollarSign />
@@ -129,13 +154,14 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="wholesalePrice"
                                                         type="number"
-                                                        placeholder="Precio al por mayor"
                                                         onChange={(value) => handleInputChange('wholesalePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
-
-                                            <Form.Group controlId={'barePrice'}>
+                                    </Col>
+                                    <Col xs={24} md={8}>
+                                        <Form.Group controlId={'barePrice'}>
+                                            <Form.ControlLabel >Precio base</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaDollarSign />
@@ -143,46 +169,39 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="barePrice"
                                                         type="number"
-                                                        placeholder="Precio base"
                                                         onChange={(value) => handleInputChange('barePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'brandID'}>
-                                                <Form.Control
-                                                    name="brandID"
-                                                    type="number"
-                                                    placeholder="ID de la marca"
-                                                    onChange={(value) => handleInputChange('brandID', value)}
-                                                />
+                                                <Form.ControlLabel>Marca del Repuesto</Form.ControlLabel>
+                                                <SelectPicker label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
                                             </Form.Group>
-                                    </Col>
-                                    <Col xs={24} md={12}>
+
+
                                             <Form.Group controlId={'subCategoryID'}>
-                                                <Form.Control
-                                                    name="subCategoryID"
-                                                    type="number"
-                                                    placeholder="ID de la subcategoría"
-                                                    onChange={(value) => handleInputChange('subCategoryID', value)}
-                                                />
+                                                <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
+                                                <SelectPicker label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'weight'}>
+                                                <Form.ControlLabel>Peso del repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
+                                                   
                                                     <InputGroup.Addon>
                                                         <FaWeight />
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="weight"
                                                         type="number"
-                                                        placeholder="Peso del repuesto"
                                                         onChange={(value) => handleInputChange('weight', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'dateManufacture'}>
+                                                <Form.ControlLabel>Fecha de la Fabricacion</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaCalendar />
@@ -190,63 +209,44 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="dateManufacture"
                                                         type="date"
-                                                        placeholder="Fecha de fabricación"
                                                         onChange={(value) => handleInputChange('dateManufacture', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
-                                            <Form.Group controlId={'itemAddressID'}>
-                                                <Form.Control
-                                                    name="itemAddressID"
-                                                    type="number"
-                                                    placeholder="ID de la dirección del artículo"
-                                                    onChange={(value) => handleInputChange('itemAddressID', value)}
-                                                />
+                                          
+
+                                           
+                                    </Col> 
+                                    <Col xs={24} md={8}>
+                                        <Form.Group controlId={'itemAddressID'}>
+                                            <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
+                                                <SelectPicker label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
-                                            
-                                            <Form.Group controlId={'branchOfficeID'}>
-                                                <Form.Control
-                                                    name="branchOfficeID"
-                                                    type="number"
-                                                    placeholder="ID de la sucursal"
-                                                    onChange={(value) => handleInputChange('branchOfficeID', value)}
-                                                />
+                                            <Form.Group controlId={'branchOfficeID'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                                <Form.ControlLabel>Sucursales</Form.ControlLabel>
+                                                <SelectPicker label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'quantity'}>
-                                                <Form.Control
-                                                    name="quantity"
-                                                    type="number"
-                                                    placeholder="Cantidad del artículo"
-                                                    onChange={(value) => handleInputChange('quantity', value)}
-                                                />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'barcodes'}>
-                                                {/* <Form.Control
-                                                    name="barcodes"
-                                                    accepter={TagInput}
-                                                    placeholder="Códigos de barras del artículo"
-                                                    onChange={(value) => handleInputChange('barcodes', value)}
-                                                    multiple
-                                                /> */}
-                                                <TagInput
-                                                    name="barcodes"
-                                                    trigger={['Enter', 'Space', 'Comma']}
-                                                    placeholder="Codigo de barra"
-                                                    style={{ width: 300 }}
-                                                    menuStyle={{ width: 300 }}
-                                                    onCreate={(value, item) => {
-                                                        console.log(value, item);
-                                                    }}
-                                                    />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'acronym'}>
+                                                <Form.ControlLabel>Cantidad del Repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
-                                                        <FaCode />
+                                                        <FaBoxOpen />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        defaultValue={111}
+                                                        name="quantity"
+                                                        type="number"
+                                                        onChange={(value) => handleInputChange('quantity', value)}
+                                                    />
+                                                </InputGroup>
+                                            </Form.Group>
+                                            <Form.Group controlId={'acronym'}>
+                                                <Form.ControlLabel>Acronimo del Articulo</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaSignature />
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="acronym"
@@ -255,26 +255,34 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
-                                    </Col> 
-                                </Row>
-                                <Row>
+                                    
+                                    </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
-                                        <Form.Group controlId={'pathItems'}>
+                                       
+                                       <Form.Group controlId={'description'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                            <Form.ControlLabel>Descripcion del Repuesto</Form.ControlLabel>
+                                               <InputGroup inside>
+                                                   <InputGroup.Addon>
+                                                       <FaAlignJustify />
+                                                   </InputGroup.Addon>
+                                                   <Form.Control
+                                                       name="textarea"  accepter={Textarea}   style={{ resize: "none", height: "100%" }}
+                                                   />
+                                               </InputGroup>
+                                           </Form.Group>
+                                       
+                                   </Col>  
+                                    <Col xs={24} md={24} style={{marginTop:'12px'}}>
+                                        <Form.Group controlId={'pathItems'} className={`floating-label-group ${inputValue ? "filled" : ""}`}>
+                                            <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
                                                 <Uploader multiple listType="picture-text" action="//jsonplaceholder.typicode.com/posts/">
                                                     <button>
                                                         <FaCamera />
-                                                        Subir Fotos
                                                     </button>
                                                 </Uploader>
-                                                {/* <Form.Control
-                                                    name="pathItems"
-                                                    accepter={TagInput}
-                                                    placeholder="Ruta de la imagen del artículo"
-                                                    onChange={(value) => handleInputChange('pathItems', value)}
-                                                    multiple
-                                                /> */}
+                                                <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
                                         </Form.Group>
-                                    </Col>
+                                    </Col>          
                                 </Row>
                             </Form>    
                         </Stack>
@@ -282,7 +290,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 </ModalBody>
                 <ModalFooter>
                     <Button type="submit" appearance="primary">Registrar</Button>
-                    <Button onClick={() => hiddeModal(open)} appearance="primary" color="red">Cancelar</Button>
+                    <Button onClick={() => hiddeModal(open)} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>
         </>

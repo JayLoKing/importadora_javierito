@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {httpClient} from "../../../api/httpClient.ts";
 import { ItemDTO } from "../models/item.model.ts";
 
-type Data<T> = T | null;
+type Data<T> = T | [];
 type ErrorType = Error | null;
 
 interface Params<T> {
@@ -11,17 +11,21 @@ interface Params<T> {
     error: ErrorType;
 }
 
-export const FetchItemsAsync = <T>(url: string) : Params<T> => {
-    const [data, setData] = useState<Data<T>>(null);
+export const FetchDataAsync = <T>(url: string) : Params<T> => {
+    const [data, setData] = useState<Data<T>>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorType>(null);
 
     useEffect(() => {
+        const controller = new AbortController();
+        setLoading(true);
+
         const fetchData = async () => {
             try {
-                const response = await httpClient.get(url);
+                const response = await httpClient.get(url,  controller);
                 if(response.status === 200){
                     setData(response.data);
+                    setError(null);
                 } else {
                     throw new Error(response.statusText);
                 }

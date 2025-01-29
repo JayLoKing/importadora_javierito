@@ -112,8 +112,8 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
                 <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
                 <Nav.Item eventKey="2" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="3" onClick={() => navigate('/items')} style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" onClick={() => navigate('/branchOffice')}style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`} onClick={() => navigate('/report')}>Reportes</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
@@ -196,9 +196,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
-          <Content style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}>
-            {children}
-          </Content>
+          <Stack style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}  justifyContent="center" alignItems="center">
+            <Content >
+              {children}
+            </Content>
+          </Stack>
           <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", marginLeft: "10px", marginRight: "10px", borderRadius: "0px 0px 20px 20px", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>
