@@ -242,20 +242,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
-
-                                            <Form.Group controlId={'barcodes'} >
-                                                <Form.ControlLabel>Codigo de Barra</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                        <InputGroup.Addon>
-                                                            <FaBarcode />
-                                                        </InputGroup.Addon>
-                                                        <Form.Control
-                                                            name="barcodes"
-                                                            type="text"
-                                                            onChange={(value) => handleInputChange('barcodes', value)}
-                                                        />
-                                                 </InputGroup>
-                                            </Form.Group>
                                             <Form.Group controlId={'acronym'}>
                                                 <Form.ControlLabel>Acronimo del Articulo</Form.ControlLabel>
                                                 <InputGroup inside>
