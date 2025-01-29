@@ -1,5 +1,5 @@
 export interface AuthUser {
-    email: string;
-    branchOfficeId: number;
-    jwt: string;
+    id: number;
+    username: string;
+    role: string;
 }

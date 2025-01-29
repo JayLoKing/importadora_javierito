@@ -8,6 +8,9 @@ import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
 import "../layout/styles/styles.css";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/store";
+import { jwtDecoder } from "../../utils/jwtDecoder";
+import { AuthUser } from "../../modules/auth/models/auth.model";
 
 interface LayoutProps {
   titleComponent: React.ReactNode;
@@ -23,7 +26,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const handleVisibility = () => setVisible(!visible);
   const navigate = useNavigate();
 
+  const jwt = useAuthStore(state => state.jwt);
+  const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
+
   useEffect(() => {
+    getRoleNUsername();
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth < 768) {
@@ -34,6 +41,31 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  function getRoleNUsername() {
+    if (jwt) {
+      let decode = jwtDecoder(jwt);
+      decode.role = setRole(decode.role)
+      setUser({
+        id: decode.id,
+        username: decode.sub,
+        role: decode.role
+      })
+    } else {
+      console.error("User authentication token is null");
+    }
+  }
+
+  function setRole(role: string): string {
+    if (role === 'ROLE_Admin') {
+      role = 'Administrador';
+    } else if (role === 'ROLE_Owner') {
+      role = 'Dueño';
+    } else {
+      role = 'Vendedor';
+    }
+    return role
+  }
 
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -110,11 +142,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
           <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
-                <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`}>Inicio</Nav.Item>
+                <Nav.Item eventKey="1" style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
                 <Nav.Item eventKey="2" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`} onClick={() => navigate('/items')}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`} onClick={() => navigate('/branchOffice')}>Sucursales</Nav.Item>
-                <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
+                <Nav.Item eventKey="3" onClick={() => navigate('/items')} style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" onClick={() => navigate('/branchOffice')} style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="5" style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`} onClick={() => navigate('/report')}>Reportes</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
                   <Nav.Item eventKey="6-2" style={{ borderRadius: "5px", }} icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
@@ -180,8 +212,8 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover >
                         <div style={{ padding: "5px", fontSize: "13px" }}>
-                          <p>Hij77777777</p>
-                          <strong>Administrador</strong>
+                          <p>{user.username}</p>
+                          <strong>{user.role}</strong>
                           <hr />
                           <IconButton icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
                           <hr />
@@ -196,9 +228,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
+
           <Content style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "hidden" }}>
             {children}
           </Content>
+
           <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", marginLeft: "10px", marginRight: "10px", borderRadius: "0px 0px 20px 20px", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>

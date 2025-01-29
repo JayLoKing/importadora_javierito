@@ -7,8 +7,7 @@ import { CreateItemAsync } from "../services/itemService";
 export function ItemRegisterForm(){
     const formRef = useRef<any>();
     const [showModal, setShowModal] = useState<boolean>(false);
-
-
+    const [inputValue, setInputValue] = useState("");
     const [formValue, setFormValue] = useState<ItemDTO>({
         name: '',
         alias: '',
@@ -83,6 +82,7 @@ export function ItemRegisterForm(){
                 ...prevValues,
                 [field]: value,
             }));
+            setInputValue(value);
     };
 
     function handleModal(hidde: boolean){
@@ -97,5 +97,6 @@ export function ItemRegisterForm(){
         formRef,
         model,
         handleSubmit,
+        inputValue,
     };
 }

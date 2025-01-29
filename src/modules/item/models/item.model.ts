@@ -28,3 +28,18 @@ export interface GetItems {
     stock: number;
     sucursal: string;
 }
+
+export interface ItemAddress {
+    id: number;
+    name: string;
+}
+
+export interface Brand{
+    id: number;
+    name: string;
+}
+
+export interface SubCategory {
+    id: number;
+    name: string;
+}
