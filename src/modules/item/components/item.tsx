@@ -14,7 +14,6 @@ const urlFetchItem = "/items/getAllItems";
 export default function Item() {
     const { data, loading } = FetchDataAsync<GetItems[]>(urlFetchItem);
     const {handleModal, showModal, limit, page, setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
-
     const regex = new RegExp(searchTerm, "i"); 
 
     const filteredData = data.filter(item =>
@@ -43,23 +42,23 @@ export default function Item() {
         },
       };
 
-    const ImageCell = ({ dataKey, ...props }: { dataKey: string }) => (
+      const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
         <Cell {...props} style={{ padding: 0 }}>
-          <div
-            style={{
-              width: 40,
-              height: 40,
-              background: '#f5f5f5',
-              borderRadius: 6,
-              marginTop: 2,
-              overflow: 'hidden',
-              display: 'inline-block'
-            }}
-          >
-            <img src={dataKey} width="40" />
-          </div>
+            <div
+                style={{
+                    width: 40,
+                    height: 40,
+                    background: '#f5f5f5',
+                    borderRadius: 6,
+                    marginTop: 2,
+                    overflow: 'hidden',
+                    display: 'inline-block'
+                }}
+            >
+                <img src={rowData.itemImage} width="40" />
+            </div>
         </Cell>
-      );
+    );
 
 
     if (loading) {
@@ -179,7 +178,7 @@ export default function Item() {
                         
                             <Column align="center" flexGrow={1} minWidth={150}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
-                                <ImageCell dataKey="itemImage" />
+                                <ImageCell  rowData={(rowData: any ) => rowData}/>
                             </Column>
                             {/* <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Operaciones Stock</HeaderCell>

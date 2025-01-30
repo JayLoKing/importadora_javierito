@@ -15,6 +15,7 @@ export interface ItemDTO {
     pathItems: string[];
     branchOfficeID: number;
     quantity: number;
+    barcodes?: string[];
     acronym: string;
 }
 

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
 import { CreateItemAsync } from "../services/itemService";
-import { fileUpload } from "../services/storageService";
+import { useAuthStore } from "../../../store/store";
+import { AuthUser } from "../../auth/models/auth.model";
+import { jwtDecoder } from "../../../utils/jwtDecoder";
 
 export function ItemRegisterForm(){
     const formRef = useRef<any>();
@@ -11,6 +13,8 @@ export function ItemRegisterForm(){
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const jwt = useAuthStore(state => state.jwt);
+    const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
     const [formValue, setFormValue] = useState<ItemDTO>({
         name: '',
         alias: '',
@@ -38,46 +42,47 @@ export function ItemRegisterForm(){
         setLimit(datakey);
     };
 
-     useEffect(() => {
+    useEffect(() => {
         const checkScreenSize = () => {
           setIsMobile(window.innerWidth < 768);
         };
         checkScreenSize();
         window.addEventListener('resize', checkScreenSize);
         return () => window.removeEventListener('resize', checkScreenSize);
-      }, []);
+      }, [formValue]);
 
-      const handleFileChange = async (files: File[]) => {
-        const urls = [];
-        for (const file of files) {
-            const url = await fileUpload(file);
-            if (url) {
-                urls.push(url);
-            }
+    useEffect(() => {
+         if (jwt) {
+            let decode = jwtDecoder(jwt);
+            setUser({
+                id: decode.id,
+                username: decode.sub,
+                role: decode.role
+            })
+
+            formValue.userID = user.id;
+        } else {
+              console.error("User authentication token is null");
         }
-        handleInputChange('pathItems', urls);
-    };
+    }, [formValue]);
 
-    const handleSubmit = async (onSuccess?: () => void) => {
-        if (!formRef.current) return false;
-        
-        try {
-            const isValid = await formRef.current.check();
-            if (isValid) {
-                console.log('Registro exitoso:', formValue);
-                const res = await CreateItemAsync(formValue);
-                if (res !== null) {
-                    console.log('Registro exitoso:', formValue);
-                    resetForm();
-                    if (onSuccess) onSuccess();
-                    return true;
+        const handleSubmit = async (onSuccess?: () => void) => {
+            if (!formRef.current) return false;
+            try {
+                const isValid = await formRef.current.check();
+                if (isValid) {
+                    // const res = await CreateItemAsync(formValue);
+                    // if (res !== null) {
+                    //     resetForm();
+                    //     if (onSuccess) onSuccess();
+                    //     return true;
+                    // }
                 }
+            } catch (error) {
+                console.error('Fallo en la validacion del Formulario: ', error);
             }
-        } catch (error) {
-            console.error('Fallo en la validacion del Formulario: ', error);
-        }
-        return false;
-    };
+            return false;
+        };
     
     function resetForm() {
         if (formRef.current) { 
@@ -105,6 +110,7 @@ export function ItemRegisterForm(){
     };
 
     function handleInputChange(field: keyof ItemDTO, value: any) {
+        console.log("Campo actualizado:", field, "Valor:", value);
         setFormValue((prevValues) => ({
                 ...prevValues,
                 [field]: value,
@@ -130,6 +136,5 @@ export function ItemRegisterForm(){
         searchTerm,
         setSearchTerm,
         isMobile,
-        handleFileChange
     };
 }
