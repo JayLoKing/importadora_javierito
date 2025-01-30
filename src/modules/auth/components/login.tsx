@@ -13,6 +13,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import { authenticateAsync } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import "../styles/styles.css"
+import { useAuthStore } from '../../../store/store';
 
 export default function Login() {
 
@@ -20,6 +21,8 @@ export default function Login() {
     const { formValues, handleInputChange, resetForm } = useLoginForm({ username: '', password: '' });
     const toaster = useToaster();
     const navigate = useNavigate();
+
+    const setUserAuth = useAuthStore(state => state.setAuthUser);
 
     function showErrorMessage() {
         toaster.push(
@@ -39,7 +42,9 @@ export default function Login() {
         if (res === null) {
             showErrorMessage();
         } else {
-            console.log(res);
+            setUserAuth(res.token);
+            localStorage.setItem('jwt', res.token);
+            navigate('/branchOffice');
         }
         resetForm();
     }
