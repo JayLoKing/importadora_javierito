@@ -6,7 +6,7 @@ import LandingPage from "../pages/landing/components/landingPage";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 import Layout from "../pages/layout/layout";
 import Item from "../modules/item/components/item.tsx";
-import HomeContainer from "../modules/home/components/homeContainer.tsx";
+// import HomeContainer from "../modules/home/components/homeContainer.tsx";
 import Report from "../modules/report/components/report.tsx";
 
 export default function Routing() {

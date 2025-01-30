@@ -30,7 +30,7 @@ export default function BranchOffices() {
     return (
         <div className="container-offices">
             <div className="header-container">
-                <Heading level={3}>Lista de sucursales</Heading>
+                <Heading level={3} style={{color:"black"}}>Lista de sucursales</Heading>
                 <div className="button-container">
                     <IconButton
                         icon={<PlusIcon />}

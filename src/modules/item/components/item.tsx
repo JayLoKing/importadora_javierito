@@ -79,22 +79,16 @@ export default function Item() {
     if(!isMobile){
         return (
             <div style={{padding:25, overflowX: "auto"}}>
-                    <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={2} style={{marginTop:"-7px"}}>Lista de Repuestos</Heading></Stack>
+                    <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack>
                     <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "20px", marginTop:"-4px"}}>
-                                <InputGroup style={{ width: 250 }}>
-                                    <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={setSearchTerm}/>
-                                    <InputGroup.Addon>
-                                        <FaSearch />
-                                    </InputGroup.Addon>
-                                </InputGroup>
-                                    <IconButton
-                                        icon={<PlusIcon />}
-                                        appearance="primary"
-                                        onClick={() => handleModal(true)}
-                                    >
-                                        Nuevo Repuesto
-                                    </IconButton>
-                                </Stack>
+                        <InputGroup style={{ width: 250 }}>
+                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={setSearchTerm}/>
+                                <InputGroup.Addon>
+                                    <FaSearch />
+                                </InputGroup.Addon>
+                            </InputGroup>
+                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true)}> Nuevo Repuesto </IconButton>
+                    </Stack>
                     {filteredData.length > 0 ? (
                        <>
                         <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>

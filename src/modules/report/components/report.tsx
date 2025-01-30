@@ -1,4 +1,4 @@
-import { DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Table, Tooltip, Whisper } from "rsuite";
+import { DatePicker, FlexboxGrid, Form, Heading, IconButton, InputGroup, Stack, Table, Tooltip, Whisper } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
 import FormGroup from "rsuite/esm/FormGroup";
@@ -44,7 +44,7 @@ export default function Report(){
     }, [])
     return(
         <div style={{padding:25}}>
-            <h4 style={{fontWeight:"bold", color:"black", display:"flex", justifyContent:"center"}}> CREACIÓN DE REPORTES EXCEL - CSV </h4>            
+            <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Creación de reportes Excel - CSV</Heading></Stack>            
             <Form fluid style={{marginBottom:30}}>
                 <FlexboxGrid style={{ display:"flex", justifyContent:"center", gap:"10px", fontSize:"15px" }} >
                     <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }} >
