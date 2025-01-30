@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, IconButton, Table, Tooltip, Whisper } from "rsuite";
+import { Heading, IconButton, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice } from "../models/branchOffice.model";
 import { getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
-import { FaEdit, FaMapPin, FaPlus, FaTrash } from "react-icons/fa";
+import { FaEdit, FaMapPin, FaTrash } from "react-icons/fa";
+import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
@@ -28,52 +29,48 @@ export default function BranchOffices() {
 
     return (
         <div className="container-offices">
-            <div className="button-container">
-                <Button
-                    endIcon={<FaPlus />}
-                    appearance="primary"
-                    onClick={() => handleModal(true)}
-                    className="create-button">
-                    Crear sucursal
-                </Button>
+            <div className="header-container">
+                <Heading level={3}>Lista de sucursales</Heading>
+                <div className="button-container">
+                    <IconButton
+                        icon={<PlusIcon />}
+                        appearance="primary"
+                        onClick={() => handleModal(true)}>
+                        Nueva sucursal
+                    </IconButton>
+                </div>
             </div>
-            <Table data={branchOffices} rowHeight={65} className="table" onRowClick={rowData => {
-                console.log(rowData);
-            }}>
-                <Column width={250}>
-                    <HeaderCell style={{ textAlign: 'center' }}>
-                        <strong>Acciones</strong>
-                    </HeaderCell>
+
+            <Table style={{ borderRadius: "15px", background: "white" }} height={750} data={branchOffices} rowHeight={65} onRowClick={rowData => console.log(rowData)} >
+                <Column align="center" flexGrow={1} minWidth={100}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
-                        <div className="action-buttons">
-                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Editar</Tooltip>}>
-                                <IconButton icon={<FaEdit />} className="icon-button" appearance="primary" />
+                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                <IconButton icon={<FaEdit />} style={{ width: 40, margin: 3 }} appearance="primary" />
                             </Whisper>
-                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Ubicación</Tooltip>}>
-                                <IconButton icon={<FaMapPin />} className="icon-button" appearance="primary" />
+                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
+                                <IconButton icon={<FaMapPin />} style={{ width: 40, margin: 3 }} appearance="primary" />
                             </Whisper>
-                            <Whisper placement="top" trigger={"hover"} speaker={<Tooltip>Eliminar</Tooltip>}>
-                                <IconButton icon={<FaTrash />} className="icon-button" appearance="primary" />
+                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                <IconButton icon={<FaTrash />} style={{ width: 40, margin: 3 }} appearance="primary" />
                             </Whisper>
-                        </div>
+                        </Stack>
                     </Cell>
                 </Column>
-                {false && (
-                    <Column width={200} resizable>
-                        <HeaderCell>ID</HeaderCell>
-                        <Cell dataKey="id" />
-                    </Column>
-                )}
-                <Column width={305} resizable>
-                    <HeaderCell>Nombre de la sucursal</HeaderCell>
+
+                <Column align="center" flexGrow={1} minWidth={140}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
                     <Cell dataKey="name" />
                 </Column>
-                <Column width={400} resizable>
-                    <HeaderCell>Dirección</HeaderCell>
+
+                <Column align="center" flexGrow={1} minWidth={120}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
                     <Cell dataKey="address" />
                 </Column>
-                <Column width={150}>
-                    <HeaderCell>Fecha de registro</HeaderCell>
+
+                <Column align="center" flexGrow={1} minWidth={140}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
                     <Cell>
                         {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
                     </Cell>
