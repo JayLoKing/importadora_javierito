@@ -60,3 +60,9 @@ export const validationItemFormModel = Schema.Model({
         .isRequired('El acrónimo es requerido')
         .minLength(2, 'El acrónimo debe tener al menos 2 caracteres.'),
 });
+
+export const validationItemUpdateStockModel = Schema.Model({
+    quantity: NumberType()
+        .isRequired('La cantidad es requerida')
+        .min(0, 'La cantidad debe ser un número positivo.'),
+});

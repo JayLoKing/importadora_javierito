@@ -1,5 +1,5 @@
 import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input } from "rsuite";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input, InputNumber } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
@@ -15,7 +15,7 @@ interface ItemModalParams {
     hiddeModal: (hide: boolean) => void;
 }
 
-const urlFetchBranchOffice = "/branchOffices/getAll";
+const urlFetchBranchOffice = "/branchOffice/getAll";
 const urlFetchBrands = "/brands/getAllBrands";
 const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
 const urlFetchSubCategories = "/subCategories/getAllSubCategories";
@@ -26,6 +26,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
+    const {handleFileChange} = ItemRegisterForm();
 
     const Textarea = forwardRef<HTMLTextAreaElement>((props, ref) =>
         <Input {...props} as="textarea"  rows={5} placeholder="Descripcion del repuesto" ref={ref} />);
@@ -65,7 +66,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         formRef,
         model,
         handleSubmit,
-       
     } = ItemRegisterForm();
 
     const handleFormSubmit = async () => {
@@ -191,11 +191,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <InputGroup.Addon>
                                                         <FaWeight />
                                                     </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="weight"
-                                                        type="number"
-                                                        onChange={(value) => handleInputChange('weight', value)}
-                                                    />
+                                                    <InputNumber name="weight" defaultValue={100} formatter={value => `${value} kg`}  onChange={(value) => handleInputChange('weight', value)}/>
                                                 </InputGroup>
                                             </Form.Group>
 
@@ -265,7 +261,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                        <FaAlignJustify />
                                                    </InputGroup.Addon>
                                                    <Form.Control
-                                                       name="textarea"  accepter={Textarea}   style={{ resize: "none", height: "100%" }}
+                                                       id="description" name="textarea"  accepter={Textarea}   style={{ resize: "none", height: "100%" }}
                                                    />
                                                </InputGroup>
                                            </Form.Group>
@@ -274,7 +270,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                         <Form.Group controlId={'pathItems'}>
                                             <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
-                                                <Uploader multiple listType="picture-text" action="//jsonplaceholder.typicode.com/posts/">
+                                                <Uploader id="fileImage" autoUpload={false} multiple listType="picture-text" action="/" onChange={(files) => handleFileChange(files as File[])}>
                                                     <button>
                                                         <FaCamera />
                                                     </button>
