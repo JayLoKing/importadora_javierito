@@ -7,3 +7,11 @@ export interface BranchOffice {
     registerDate: string;
     images: string[];
 }
+
+export interface NewBranchOfficeDTO {
+    name: string;
+    address: string;
+    latitude: string;
+    longitude: string;
+    images: string[];
+}
