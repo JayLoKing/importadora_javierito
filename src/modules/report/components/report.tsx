@@ -44,7 +44,7 @@ export default function Report(){
     }, [])
     return(
         <div style={{padding:25}}>
-            <h4 style={{fontWeight:"bold", color:"black", display:"flex", justifyContent:"center"}}> CREACIÓN DE REPORTES EXCEL - CSV</h4>            
+            <h4 style={{fontWeight:"bold", color:"black", display:"flex", justifyContent:"center"}}> CREACIÓN DE REPORTES EXCEL - CSV </h4>            
             <Form fluid style={{marginBottom:30}}>
                 <FlexboxGrid style={{display:"flex", justifyContent:"center", gap:"10px", fontSize:"15px"}} >
                     <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }}>
@@ -84,7 +84,7 @@ export default function Report(){
                 </FlexboxGrid>
             </Form>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Table data={data} rowHeight={65} style={{ textAlign: 'center', borderRadius:"10px", fontSize:"14px", width:"100%", maxWidth:900}}>
+                <Table data={data} rowHeight={65} style={{ textAlign: 'center', borderRadius:"15px", fontSize:"14px", width:"100%", maxWidth:900}} >
                     {false && (
                         <Column align="center" width={100}>
                             <HeaderCell>ID</HeaderCell>

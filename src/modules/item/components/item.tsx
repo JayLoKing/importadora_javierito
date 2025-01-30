@@ -95,7 +95,7 @@ export default function Item() {
                 </Stack>
                 {filteredData.length > 0 ? (
                    <>
-                    <Table style={{borderRadius:"15px", background: "white"}} height={750} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={60}>
+                    <Table style={{borderRadius:"15px", background: "white"}} height={750} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={60} >
                         <Column align="center" flexGrow={1} minWidth={100}>
                             <HeaderCell>...</HeaderCell>
                             <Cell>
