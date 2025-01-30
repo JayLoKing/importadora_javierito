@@ -18,7 +18,7 @@ export default function Routing() {
             <Route path="/report" element={<Layout titleComponent={'REPORTES'} children={<Report />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />
             <Route path="/login" element={<AuthContainer children={<Login />} />} />
-            <Route path="/items" element={<Layout titleComponent={'REPUESTOS'} children={<Item />} />} />
+            <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<Item />} />} />
         </Routes>
     )
 }

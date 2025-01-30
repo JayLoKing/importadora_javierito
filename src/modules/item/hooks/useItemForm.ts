@@ -1,14 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
 import { CreateItemAsync } from "../services/itemService";
-
+import { fileUpload } from "../services/storageService";
 
 export function ItemRegisterForm(){
     const formRef = useRef<any>();
     const [showModal, setShowModal] = useState<boolean>(false);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
+    const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [formValue, setFormValue] = useState<ItemDTO>({
         name: '',
@@ -37,12 +38,33 @@ export function ItemRegisterForm(){
         setLimit(datakey);
     };
 
+     useEffect(() => {
+        const checkScreenSize = () => {
+          setIsMobile(window.innerWidth < 768);
+        };
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+      }, []);
+
+      const handleFileChange = async (files: File[]) => {
+        const urls = [];
+        for (const file of files) {
+            const url = await fileUpload(file);
+            if (url) {
+                urls.push(url);
+            }
+        }
+        handleInputChange('pathItems', urls);
+    };
+
     const handleSubmit = async (onSuccess?: () => void) => {
         if (!formRef.current) return false;
-    
+        
         try {
             const isValid = await formRef.current.check();
             if (isValid) {
+                console.log('Registro exitoso:', formValue);
                 const res = await CreateItemAsync(formValue);
                 if (res !== null) {
                     console.log('Registro exitoso:', formValue);
@@ -106,6 +128,8 @@ export function ItemRegisterForm(){
         page,
         setPage,
         searchTerm,
-        setSearchTerm
+        setSearchTerm,
+        isMobile,
+        handleFileChange
     };
 }
