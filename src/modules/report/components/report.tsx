@@ -44,7 +44,7 @@ export default function Report(){
     }, [])
     return(
         <div style={{padding:25}}>
-            <h4 style={{fontWeight:"bold", color:"black", display:"flex", justifyContent:"center"}}> CREACIÓN DE REPORTES EXCEL / CSV</h4>            
+            <h4 style={{fontWeight:"bold", color:"black", display:"flex", justifyContent:"center"}}> CREACIÓN DE REPORTES EXCEL - CSV</h4>            
             <Form fluid style={{marginBottom:30}}>
                 <FlexboxGrid style={{display:"flex", justifyContent:"center", gap:"10px", fontSize:"15px"}} >
                     <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }}>
