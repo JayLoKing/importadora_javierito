@@ -81,7 +81,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
         navigate('/buys');
         break;
       case '3':
-        navigate('/inventory');
+        navigate('/items');
         break;
       case '4':
         navigate('/branchOffice');
@@ -237,11 +237,23 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     );
   } else {
     return (
-      <Container >
+      <Container>
         <Grid fluid>
           <Row>
-            <Col xs={24} >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", width: '100%', height: '70px', marginTop: '5px', position: 'fixed', left: '0' }}>
+            <Col xs={24}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: "center",
+                width: '100%',
+                height: '70px',
+                position: 'fixed',
+                paddingTop:"3px",
+                left: '0',
+                top: '0',
+                backgroundColor: 'white', 
+                zIndex: 1000, 
+              }}>
                 <div className="container-logo-header-mobile">
                   <Image circle src="src\assets\LogoJavier.jpg" width={10} />
                 </div>
@@ -259,16 +271,35 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </div>
             </Col>
           </Row>
-          <Row >
+          <Row>
             <Col xs={24}>
-              <div style={{marginTop: "5rem"}}>
+              <div style={{
+                marginTop: '70px', 
+                marginBottom: '85px', 
+                padding: '10px', 
+                overflowY: 'hidden', 
+                height: 'calc(100vh - 155px)', 
+              }}>
                 {children}
               </div>
             </Col>
           </Row>
           <Row>
             <Col xs={24}>
-              <div style={{ overflow: 'hidden', flexWrap: 'nowrap', display: 'flex', alignItems: 'center', justifyContent: "center", width: '100%', height: '85px', marginTop: '5px', position: 'fixed', left: '0', bottom: '0', backgroundColor: 'white' }} >
+              <div style={{
+                overflow: 'hidden',
+                flexWrap: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: "center",
+                width: '100%',
+                height: '85px',
+                position: 'fixed',
+                left: '0',
+                bottom: '0',
+                backgroundColor: 'white',
+                zIndex: 1000, 
+              }}>
                 <Navbar appearance="subtle" className="navbarM">
                   <div className="navbar-containerMF">
                     <Nav className="navM">

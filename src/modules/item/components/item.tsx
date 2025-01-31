@@ -1,10 +1,11 @@
-import {Loader, Stack, IconButton, Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup} from "rsuite";
+import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit} from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { GetItems } from "../models/item.model";
 import { ItemRegisterForm } from "../hooks/useItemForm";
 import ItemForm from "./item_form";
+import { ComponentType, FC } from "react";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -42,7 +43,7 @@ export default function Item() {
         },
       };
 
-      const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
+    const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
         <Cell {...props} style={{ padding: 0 }}>
             <div
                 style={{
@@ -59,6 +60,25 @@ export default function Item() {
             </div>
         </Cell>
     );
+
+    interface FieldProps {
+        label: string;
+        as: ComponentType<any>;
+        defaultValue: any;
+        [key: string]: any;
+    }
+
+    const Field: FC<FieldProps> = ({ label, as: Component, defaultValue, ...rest }) => {
+        return (
+            <Stack direction="row">
+                <label style={{ width: 70, display: 'inline-block', color: 'var(--rs-text-secondary)' }}>
+                    {label}
+                </label>
+                <InlineEdit disabled defaultValue={defaultValue} />
+                <Component style={{ width: 20 }} {...rest} />
+            </Stack>
+        );
+    };
 
 
     if (loading) {
@@ -77,11 +97,11 @@ export default function Item() {
 
     if(!isMobile){
         return (
-            <div style={{padding:25, overflowX: "auto"}}>
+            <div style={{padding:25, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
                     <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack>
                     <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "20px", marginTop:"-4px"}}>
                         <InputGroup style={{ width: 250 }}>
-                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={setSearchTerm}/>
+                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => setSearchTerm(value)}/>
                                 <InputGroup.Addon>
                                     <FaSearch />
                                 </InputGroup.Addon>
@@ -90,7 +110,7 @@ export default function Item() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
+                        <Table style={{flex: 1,borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
                             <Column align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -220,41 +240,100 @@ export default function Item() {
         );   
     } else {
         return (
-            <div style={{padding:25,}}>
-                    <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={2} style={{marginTop:"-7px"}}>Lista de Repuestos</Heading></Stack>
-                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "5px", marginTop:"-4px", width:"100%", height:"100%"}}>
-                                {!isMobile ? (
-                                       <InputGroup style={{ width: 250 }}>
-                                       <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={setSearchTerm}/>
-                                       <InputGroup.Addon>
-                                           <FaSearch />
-                                       </InputGroup.Addon>
-                                   </InputGroup>
-                                   
-                                ): (
-                                    <IconButton
-                                    icon={<PlusIcon />}
-                                    appearance="primary"
-                                    onClick={() => handleModal(true)}
-                                    >
-                                    Nuevo Repuesto
-                                </IconButton>
-                                )}
-                                   
-                    </Stack>
-                    {filteredData.length > 0 ? (
-                       <>
-                        <Text>Cargar lista en cards aqui para moviles</Text>
-                       </>
-                    
-                    ) : (
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            No se encontraron registros
-                        </div>
-                    )}
-                    <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
+            <div style={{ overflow: "hidden", backgroundColor: "transparent", height: "100%", display: "flex", flexDirection: "column" }}>
+              <div style={{ flexShrink: 0, position: "sticky", top: 0, zIndex: 1, paddingBottom: "10px", backgroundColor: "white" }}>
+                <Stack direction="row" justifyContent="flex-start" alignItems="center">
+                  <Heading level={2}>Lista de Repuestos</Heading>
+                </Stack>
+                <Stack spacing={2} direction="row-reverse"  justifyContent="space-between" style={{ marginBottom: "5px", width: "100%" }}>
+                  {!isMobile ? (
+                    <InputGroup style={{ width: 250 }}>
+                      <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => setSearchTerm(value)} />
+                      <InputGroup.Addon>
+                        <FaSearch />
+                      </InputGroup.Addon>
+                    </InputGroup>
+                  ) : (
+                    <IconButton
+                        icon={<PlusIcon />}
+                        appearance="primary"
+                        onClick={() => handleModal(true)}
+                        >
+                        Nuevo Repuesto
+                        </IconButton>
+                  )}
+                </Stack>
+              </div>
+              <div style={{ overflowY: "auto", flex: 1, paddingBottom: "20px" }}>
+                {filteredData.length > 0 ? (
+                  <Grid fluid>
+                    <Row>
+                      {data.map((item) => (
+                        <Col key={item.itemID} xs={24} sm={24} md={24}>
+                          <Card bordered style={{ marginBottom: "16px" }}>
+                            <Card.Header>
+                              <Heading level={4}>{item.name}</Heading>
+                            </Card.Header>
+                            <Card.Body>
+                              <Row style={{ display: "flex", flexDirection: "row" }}>
+                                <Col xs={24} md={12}>
+                                  <Field label="Marca" as={Text} defaultValue={item.brand} />
+                                  <Field label="Categoria" as={Text} defaultValue={item.category} />
+                                  <Field label="Sub-Categoria" as={Text} defaultValue={item.subCategory} />
+                                  <Field label="Modelo" as={Text} defaultValue={item.model} />
+                                  <Field label="Fecha de Fabricacion" as={Text} defaultValue={item.dateManufacture} />
+                                  <Field label="Precio" as={Text} defaultValue={item.price} />
+                                  <Field label="Precio por Mayor" as={Text} defaultValue={item.wholesalePrice} />
+                                  <Field label="Precio Base" as={Text} defaultValue={item.barePrice} />
+                                  <Field label="Cantidad Actual" as={Text} defaultValue={item.totalStock} />
+                                </Col>
+                                <Col xs={24} md={12} style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                                  <Stack direction="column" justifyContent="center" alignItems="center">
+                                    <Image
+                                      rounded
+                                      src="https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?w=265"
+                                      alt="brown french bulldog puppy lying on yellow textile"
+                                      width={140}
+                                    />
+                                  </Stack>
+                                </Col>
+                              </Row>
+                              <Row style={{ display: "flex", flexDirection: "row" }}>
+                                <Col xs={24} md={24}>
+                                  <Field label="Descripcion" as={Text} defaultValue={item.description} />
+                                </Col>
+                              </Row>
+                            </Card.Body>
+                            <Card.Footer>
+                              <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                  <IconButton icon={<FaEdit style={{ width: 22, height: 22 }} />} style={{ width: 40, background: "transparent", color: "#f08b33" }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                  <IconButton icon={<FaTrash style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "red" }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
+                                  <IconButton icon={<FaSync style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "green" }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
+                                  <IconButton icon={<FaBarcode style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "black" }} appearance="primary" />
+                                </Whisper>
+                              </Stack>
+                            </Card.Footer>
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Grid>
+                ) : (
+                  <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    No se encontraron registros
+                  </div>
+                )}
+              </div>
+              <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
             </div>
-        );   
+          );
     }
 
      
