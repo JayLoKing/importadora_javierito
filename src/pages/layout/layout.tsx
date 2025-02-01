@@ -255,7 +255,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 zIndex: 1000, 
               }}>
                 <div className="container-logo-header-mobile">
-                  <Image circle src="src\assets\LogoJavier.jpg" width={10} />
+                  <Image circle src="src\assets\LogoJavier.jpg" width={5} />
                 </div>
                 <div className="container-search-custom">
                   <div className="container-icon-search">
