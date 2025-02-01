@@ -155,13 +155,13 @@
 
 .nav-itemM.active {
   color: white !important;
-  background-color: black !important;
+  background-color: #f08b33 !important;
   border-radius: 25px;
 }
 
 .nav-itemM:hover {
   color: white !important;
-  background-color: black !important;
+  background-color: #f08b33 !important;
 }
 
 /* Header Mobile */
@@ -189,8 +189,8 @@
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 50%; 
-  width: 70px; 
-  height: 70px; 
+  width: 60px; 
+  height: 60px; 
   transition: width 0.3s ease, height 0.3s ease; 
 }
 
@@ -214,8 +214,8 @@
   margin-right: 5px;
   width: 220px;
   max-width: auto;
-  height: 40px;
-  border-radius: 50px;
+  height: 35px;
+  border-radius: 15px;
   background-color: #F5F5F5;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -224,10 +224,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 100px;
+  border-radius: 18px;
   background-color: #de7214;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   flex-shrink: 0;
 }
 
