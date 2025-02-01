@@ -6,14 +6,14 @@ import LandingPage from "../pages/landing/components/landingPage";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 import Layout from "../pages/layout/layout";
 import Item from "../modules/item/components/item.tsx";
-// import HomeContainer from "../modules/home/components/homeContainer.tsx";
+import Home from "../modules/home/components/homeContainer.tsx";
 import Report from "../modules/report/components/report.tsx";
 
 export default function Routing() {
     return (
         <Routes>
             <Route index element={<LandingPage />} />
-            {/* <Route index element={<Layout titleComponent={'INICIO'} children={<HomeContainer/>}/>}/> */}
+            <Route path="/home" element={<Layout titleComponent={'INICIO'} children={<Home/>}/>}/>
             <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
             <Route path="/report" element={<Layout titleComponent={'REPORTES'} children={<Report />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />

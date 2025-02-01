@@ -41,7 +41,7 @@ export default function BranchOffices() {
                 </div>
             </div>
 
-            <Table style={{ borderRadius: "15px", background: "white" }} height={750} data={branchOffices} rowHeight={65} onRowClick={rowData => console.log(rowData)} >
+            <Table style={{ borderRadius: "15px", background: "white", overflow:"hidden" }} height={650} data={branchOffices} rowHeight={65} onRowClick={rowData => console.log(rowData)} >
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>

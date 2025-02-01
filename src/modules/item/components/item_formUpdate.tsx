@@ -1,5 +1,5 @@
-import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker,Input, InputNumber } from "rsuite";
+import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
@@ -21,14 +21,14 @@ const urlFetchBrands = "/brands/getAllBrands";
 const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
 const urlFetchSubCategories = "/subCategories/getAllSubCategories";
 
-export default function ItemForm({open, hiddeModal} : ItemModalParams){
+export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
     const toaster = useToaster();
     const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
     const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
-    const [pathList, setPathList] = useState();
+   
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
@@ -115,7 +115,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow>
                 <ModalTitle>
                     <Stack justifyContent="center" alignItems="center">
-                        <strong>Nuevo Respuesto</strong>
+                        <strong>Editar Respuesto</strong>
                     </Stack>   
                 </ModalTitle>
                 <ModalBody>
@@ -214,17 +214,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                 <SelectPicker onChange={(value) => handleInputChange('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
                                             </Form.Group>
 
-                                            <Form.Group controlId={'weight'}>
-                                                <Form.ControlLabel>Peso del repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                   
-                                                    <InputGroup.Addon>
-                                                        <FaWeight />
-                                                    </InputGroup.Addon>
-                                                    <InputNumber name="weight" defaultValue={100} formatter={value => `${value} kg`}  onChange={(value) => handleInputChange('weight', value)}/>
-                                                </InputGroup>
-                                            </Form.Group>
-
                                             <Form.Group controlId={'dateManufacture'}>
                                                 <Form.ControlLabel>Fecha de la Fabricacion</Form.ControlLabel>
                                                 <InputGroup inside>
@@ -241,7 +230,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     </Col> 
                                     <Col xs={24} md={8}>
                                         <Form.Group controlId={'itemAddressID'}>
-                                            <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
+                                            <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
                                                 <SelectPicker onChange={(value) => handleInputChange('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
                                             <Form.Group controlId={'branchOfficeID'}>
@@ -264,7 +253,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                 </InputGroup>
                                             </Form.Group>
                                             <Form.Group controlId={'acronym'}>
-                                                <Form.ControlLabel>Acronimo del Articulo</Form.ControlLabel>
+                                                <Form.ControlLabel>Acrónimo del Artículo</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaSignature />
@@ -280,12 +269,12 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                     <Form.Group controlId={'description'}>
-                                        <Form.ControlLabel>Descripcion del Repuesto</Form.ControlLabel>
+                                        <Form.ControlLabel>Descripción del Repuesto</Form.ControlLabel>
                                         <InputGroup inside>
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />
                                             </InputGroup.Addon>
-                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formValue.description}  placeholder="Descripcion del repuesto" id="description" name="description" onChange={(e) => handleInputChange('description', e.target.value)} rows={5}  >
+                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formValue.description}  placeholder="Descripción del repuesto" id="description" name="description" onChange={(e) => handleInputChange('description', e.target.value)} rows={5}  >
 
                                             </textarea>
                                         </InputGroup>
@@ -294,14 +283,8 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                    </Col>  
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                         <Form.Group controlId={'pathItems'}>
-                                            <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
-                                                <Uploader 
-                                                id="fileImage" 
-                                                autoUpload={false}
-                                                 multiple 
-                                                 listType="picture-text" 
-                                                 action="/" 
-                                                 onChange={
+                                            <Form.ControlLabel>Imágenes del Repuesto</Form.ControlLabel>
+                                                <Uploader id="fileImage" autoUpload={false} multiple listType="picture-text" action="/" onChange={
                                                     async (filesList) => {
                                                         const files = filesList.map(file => file.blobFile).filter(Boolean) as File[];
                                                         await handleFileChange(files)
@@ -312,7 +295,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                         <FaCamera />
                                                     </button>
                                                 </Uploader>
-                                                <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
+                                                <Form.HelpText>Máximo 5 Imagenes</Form.HelpText>
                                         </Form.Group>
                                     </Col>          
                                 </Row>
@@ -321,7 +304,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                     </Grid>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={(e) => handleFormSubmit(e)} type="submit" appearance="primary">Registrar</Button>
+                    <Button  type="submit" appearance="primary">Guardar</Button>
                     <Button onClick={() => hiddeModal(open)} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>

@@ -4,17 +4,25 @@ import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { GetItems } from "../models/item.model";
 import { ItemRegisterForm } from "../hooks/useItemForm";
+import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
-import { ComponentType, FC } from "react";
+import ItemUpdate from "./item_formUpdate";
+import { ComponentType, FC, useState } from "react";
+import ItemDelete from "./item_fomDelete";
 
 const { Column, HeaderCell, Cell } = Table;
-
 const urlFetchItem = "/items/getAllItems";
-
 
 export default function Item() {
     const { data, loading } = FetchDataAsync<GetItems[]>(urlFetchItem);
     const {handleModal, showModal, limit, page, setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
+    const {handleModalUpdate, showModalUpdate} = ItemFormUpdate();
+    const [showModalDelete, setShowModal] = useState<boolean>(false)
+
+    function handleModalDelete(hidde: boolean): void{
+        setShowModal(hidde);
+    }
+
     const regex = new RegExp(searchTerm, "i"); 
 
     const filteredData = data.filter(item =>
@@ -110,16 +118,16 @@ export default function Item() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{flex: 1,borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
-                            <Column align="center" flexGrow={3.7} minWidth={130}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
+                            <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
                                     <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                            <IconButton icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
+                                            <IconButton onClick={() => handleModalUpdate(true)} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
                                         </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                            <IconButton icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
+                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
+                                            <IconButton onClick={() => handleModalDelete(true)} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
                                         </Whisper>
                                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
                                             <IconButton icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
@@ -209,6 +217,7 @@ export default function Item() {
                                 </Cell>
                             </Column> */}
                         </Table>
+
                         <Pagination
                             prev
                             next
@@ -236,6 +245,8 @@ export default function Item() {
                         </div>
                     )}
                     <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
+                    <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
             </div>
         );   
     } else {
@@ -332,6 +343,8 @@ export default function Item() {
                 )}
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
+              <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
             </div>
           );
     }
