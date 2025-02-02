@@ -14,5 +14,5 @@ export interface NewBranchOfficeDTO {
     address: string;
     latitude: string;
     longitude: string;
-    images: string[];
+    pathImages: string[];
 }

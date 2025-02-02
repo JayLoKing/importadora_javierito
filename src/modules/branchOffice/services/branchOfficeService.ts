@@ -1,5 +1,5 @@
 import { httpClient } from "../../../api/httpClient";
-import { BranchOffice } from "../models/branchOffice.model";
+import { BranchOffice, NewBranchOfficeDTO } from "../models/branchOffice.model";
 
 export async function getBranchOfficesAsync() {
     try {
@@ -24,7 +24,7 @@ export async function getBranchOfficeByIdAsync(id: number) {
     }
 }
 
-export async function newBranchOfficeAsync(branchOffice: BranchOffice) {
+export async function newBranchOfficeAsync(branchOffice: NewBranchOfficeDTO) {
     try {
         const res = await httpClient.post("/branchOffice/createBranchOffice", branchOffice)
         if (res.status === 200) {

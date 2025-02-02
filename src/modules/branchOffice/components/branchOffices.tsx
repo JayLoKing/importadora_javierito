@@ -42,7 +42,7 @@ export default function BranchOffices() {
     return (
         <div className="container-offices">
             <div className="header-container">
-                <Heading level={3} style={{color:"black"}}>Lista de sucursales</Heading>
+                <Heading level={3} style={{ color: "black" }}>Lista de sucursales</Heading>
                 <div className="button-container">
                     <IconButton
                         icon={<PlusIcon />}
@@ -53,7 +53,7 @@ export default function BranchOffices() {
                 </div>
             </div>
 
-            <Table style={{ borderRadius: "15px", background: "white", overflow:"hidden" }} height={650} data={branchOffices} rowHeight={65} onRowClick={rowData => console.log(rowData)} >
+            <Table style={{ borderRadius: "15px", background: "white", overflow: "hidden" }} height={650} data={branchOffices} rowHeight={65} onRowClick={rowData => console.log(rowData)} >
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
@@ -105,7 +105,7 @@ export default function BranchOffices() {
                 </Column>
             </Table>
 
-            <BranchOfficeModal open={showModal} hiddeModal={() => handleModal(false)} />
+            <BranchOfficeModal open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false)} />
             <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
         </div>
     );
