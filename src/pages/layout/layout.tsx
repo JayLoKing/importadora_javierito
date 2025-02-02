@@ -212,7 +212,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover >
                         <div style={{ padding: "5px", fontSize: "13px" }}>
-                          <p>{user.username}</p>
+                          <p>{user.userName}</p>
                           <strong>{user.role}</strong>
                           <hr />
                           <IconButton icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
@@ -248,11 +248,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 width: '100%',
                 height: '70px',
                 position: 'fixed',
-                paddingTop:"3px",
+                paddingTop: "3px",
                 left: '0',
                 top: '0',
-                backgroundColor: 'white', 
-                zIndex: 1000, 
+                backgroundColor: 'white',
+                zIndex: 1000,
               }}>
                 <div className="container-logo-header-mobile">
                   <Image circle src="src\assets\LogoJavier.jpg" width={5} />
@@ -274,11 +274,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
           <Row>
             <Col xs={24}>
               <div style={{
-                marginTop: '70px', 
-                marginBottom: '85px', 
-                padding: '10px', 
-                overflowY: 'hidden', 
-                height: 'calc(100vh - 155px)', 
+                marginTop: '70px',
+                marginBottom: '85px',
+                padding: '10px',
+                overflowY: 'hidden',
+                height: 'calc(100vh - 155px)',
               }}>
                 {children}
               </div>
@@ -298,7 +298,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 left: '0',
                 bottom: '0',
                 backgroundColor: 'white',
-                zIndex: 1000, 
+                zIndex: 1000,
               }}>
                 <Navbar appearance="subtle" className="navbarM">
                   <div className="navbar-containerMF">
