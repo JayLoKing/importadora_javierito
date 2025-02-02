@@ -34,3 +34,14 @@ export async function newBranchOfficeAsync(branchOffice: BranchOffice) {
         throw error;
     }
 }
+
+export async function removeBranchOfficeAsync(id: number) {
+    try {
+        const res = await httpClient.delete(`/branchOffice/removeBranchOffice/${id}`)
+        if (res.status === 204) {
+            return true;
+        }
+    } catch (error) {
+        throw error;
+    }
+}

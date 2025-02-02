@@ -8,11 +8,15 @@ import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
+import RemoveOfficeModal from "./removeOfficeModal";
 
 export default function BranchOffices() {
 
     const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([])
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
+
+    const [removeOffice, setRemoveOffice] = useState<{ id: number, name: string }>({ id: 0, name: '' })
 
     useEffect(() => {
         loadBranchOffices();
@@ -25,6 +29,14 @@ export default function BranchOffices() {
 
     function handleModal(hidde: boolean): void {
         setShowModal(hidde)
+    }
+
+    function handleModalDelete(hidde: boolean): void {
+        setShowModalDelete(hidde);
+    }
+
+    function remove(id: number, name: string) {
+        setRemoveOffice({ id: id, name: name });
     }
 
     return (
@@ -45,19 +57,35 @@ export default function BranchOffices() {
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
-                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                <IconButton icon={<FaEdit />} style={{ width: 40, margin: 3 }} appearance="primary" />
-                            </Whisper>
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
-                                <IconButton icon={<FaMapPin />} style={{ width: 40, margin: 3 }} appearance="primary" />
-                            </Whisper>
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                <IconButton icon={<FaTrash />} style={{ width: 40, margin: 3 }} appearance="primary" />
-                            </Whisper>
-                        </Stack>
+                        {(rowData) => (
+                            <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                    <IconButton icon={<FaEdit />} style={{ width: 40, margin: 3 }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
+                                    <IconButton icon={<FaMapPin />} style={{ width: 40, margin: 3 }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                    <IconButton
+                                        icon={<FaTrash />}
+                                        style={{ width: 40, margin: 3 }}
+                                        appearance="primary"
+                                        onClick={() => {
+                                            remove(rowData.id, rowData.name)
+                                            handleModalDelete(true);
+                                        }} />
+                                </Whisper>
+                            </Stack>
+                        )}
                     </Cell>
                 </Column>
+
+                {false && (
+                    <Column>
+                        <HeaderCell>Id</HeaderCell>
+                        <Cell dataKey="id" />
+                    </Column>
+                )}
 
                 <Column align="center" flexGrow={1} minWidth={140}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
@@ -78,6 +106,7 @@ export default function BranchOffices() {
             </Table>
 
             <BranchOfficeModal open={showModal} hiddeModal={() => handleModal(false)} />
+            <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
         </div>
     );
 }
