@@ -18,7 +18,7 @@ export const FetchDataAsync = <T>(url: string) : Params<T> => {
 
     useEffect(() => {
         const controller = new AbortController();
-        setLoading(true);
+        //setLoading(true);
 
         const fetchData = async () => {
             try {

@@ -28,7 +28,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
-    const [pathList, setPathList] = useState();
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,

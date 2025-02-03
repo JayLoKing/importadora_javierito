@@ -7,15 +7,15 @@ import { ItemRegisterForm } from "../hooks/useItemForm";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
-import { ComponentType, FC, useState } from "react";
+import { ComponentType, FC, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
 
 const { Column, HeaderCell, Cell } = Table;
 const urlFetchItem = "/items/getAllItems";
 
 export default function Item() {
-    const { data, loading } = FetchDataAsync<GetItems[]>(urlFetchItem);
-    const {handleModal, showModal, limit, page, setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
+    const {handleModal, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
+    const { data, loading } = FetchDataAsync<GetItems[]>(`${urlFetchItem}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate} = ItemFormUpdate();
     const [showModalDelete, setShowModal] = useState<boolean>(false)
 
@@ -23,24 +23,31 @@ export default function Item() {
         setShowModal(hidde);
     }
 
-    const regex = new RegExp(searchTerm, "i"); 
+    const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
-    const filteredData = data.filter(item =>
-        regex.test(item.name) ||
-        regex.test(item.description) ||
-        regex.test(item.model) ||
-        regex.test(item.brand) ||
-        regex.test(item.category)
-    );
+    const filteredData = useMemo(() => {
+        return data.filter(item =>
+            regex.test(item.name) ||
+            regex.test(item.description) ||
+            regex.test(item.model) ||
+            regex.test(item.brand) ||
+            regex.test(item.category)
+        );
+    }, [data, regex]);
 
-    const controlData = filteredData.filter((_,i) => {
-        const start = limit * (page -1);
+    const controlData = useMemo(() => {
+        const start = limit * (page - 1);
         const end = start + limit;
-        return i >= start && i < end;
-    });
+        return filteredData.slice(start, end);
+    }, [filteredData, limit, page]);
 
-    const localeES = {
-        total: "Total de filas: {0}",
+
+    const tableLoadingES = {
+      loading: "Cargando Registros..."
+    };
+
+    const paginationLocaleES = {
+        total: "Total de Registros: {0}",
         limit: "{0} / página",
         skip: "Ir a la página {0}",
         pager: {
@@ -91,9 +98,15 @@ export default function Item() {
 
     if (loading) {
         return (
-            <Stack justifyContent="center" alignItems="center" direction="column">
-                    <Loader content="Cargando..." vertical />
-            </Stack>
+            <Grid fluid>
+              <Row>
+                  <Col xs={24} md={24} sm={24}>
+                    <Stack justifyContent="center" alignItems="center" direction="column">
+                      <Loader content="Cargando..." vertical />
+                    </Stack>
+                  </Col>
+              </Row>
+            </Grid>
         );
     }
 
@@ -109,7 +122,7 @@ export default function Item() {
                     <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack>
                     <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "20px", marginTop:"-4px"}}>
                         <InputGroup style={{ width: 250 }}>
-                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => setSearchTerm(value)}/>
+                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                 <InputGroup.Addon>
                                     <FaSearch />
                                 </InputGroup.Addon>
@@ -118,7 +131,7 @@ export default function Item() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} height={610} data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -229,12 +242,12 @@ export default function Item() {
                             size="xs"
                             layout={['total', '-', 'limit', '|', 'pager', 'skip']}
                             total={data.length}
-                            limitOptions={[10, 30, 50]}
+                            limitOptions={[10, 20, 30]}
                             limit={limit}
                             activePage={page}
                             onChangePage={setPage}
                             onChangeLimit={handleChangeLimit}
-                            locale={localeES}
+                            locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
                             />
                        </>

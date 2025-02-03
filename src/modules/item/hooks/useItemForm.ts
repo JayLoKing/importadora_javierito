@@ -12,6 +12,7 @@ export function ItemRegisterForm(){
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const jwt = useAuthStore(state => state.jwt);
     const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
@@ -40,6 +41,15 @@ export function ItemRegisterForm(){
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
         setLimit(datakey);
+    };
+
+    const handleSearch = (value: string) => {
+        setSearchLoading(true);
+        setSearchTerm(value);
+       
+        setTimeout(() => {
+            setSearchLoading(false);
+        }, 500); 
     };
 
     useEffect(() => {
@@ -130,6 +140,8 @@ export function ItemRegisterForm(){
         model,
         handleSubmit,
         handleChangeLimit,
+        handleSearch,
+        searchLoading,
         limit,
         page,
         setPage,
