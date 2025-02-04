@@ -17,11 +17,16 @@ export default function Item() {
     const {handleModal, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
     const { data, loading } = FetchDataAsync<GetItems[]>(`${urlFetchItem}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate} = ItemFormUpdate();
-    const [showModalDelete, setShowModal] = useState<boolean>(false)
 
-    function handleModalDelete(hidde: boolean): void{
-        setShowModal(hidde);
-    }
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<{ id: number; name: string } | null>(null);
+
+    const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
+      if (item) {
+          setSelectedItem(item);
+      }
+      setShowModalDelete(open);
+  };
 
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
@@ -131,24 +136,26 @@ export default function Item() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} onRowClick={rowData => console.log(rowData)} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
-                                    <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                            <IconButton onClick={() => handleModalUpdate(true)} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
-                                        </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
-                                            <IconButton onClick={() => handleModalDelete(true)} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
-                                        </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                            <IconButton icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
-                                        </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
-                                            <IconButton icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                                        </Whisper>
-                                    </Stack>
+                                    { rowData => (
+                                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                                <IconButton onClick={() => handleModalUpdate(true)} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
+                                                <IconButton onClick={() => handleModalDelete(true, { id: rowData.itemID, name: rowData.name })} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
+                                                <IconButton icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
+                                                <IconButton icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                            </Whisper>
+                                        </Stack>
+                                    )}
                                 </Cell>
                             </Column>
                             {false && (
@@ -259,7 +266,9 @@ export default function Item() {
                     )}
                     <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
                     <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={0} name={""} refreshList={function (): Promise<void> {
+              throw new Error("Function not implemented.");
+            } } userID={0} />
             </div>
         );   
     } else {
@@ -357,7 +366,9 @@ export default function Item() {
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
               <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={0} name={""} refreshList={function (): Promise<void> {
+              throw new Error("Function not implemented.");
+            } } userID={0} />
             </div>
           );
     }

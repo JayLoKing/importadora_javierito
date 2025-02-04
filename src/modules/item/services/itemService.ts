@@ -62,3 +62,18 @@ export async function UpdateStockItemAsync(itemStock: UpdateStockItem){
         throw error;
     }
 }
+
+
+export async function DeleteItemAsync(id: number, userID: number){
+    try {
+        const response = await httpClient.delete("/items/removeItem", {
+            data: { id: id, userID: userID}
+        })
+        if (response.status === 200) {
+            return true;
+        }
+    } catch (error) {
+        console.error("Error al eliminar el item:", error);
+        throw error;
+    }
+}
