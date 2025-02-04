@@ -27,7 +27,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const navigate = useNavigate();
 
   const jwt = useAuthStore(state => state.jwt);
-  const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
+  const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
 
   useEffect(() => {
     getRoleNUsername();
@@ -45,10 +45,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   function getRoleNUsername() {
     if (jwt) {
       let decode = jwtDecoder(jwt);
+      console.log(decode)
       decode.role = setRole(decode.role)
       setUser({
         id: decode.id,
-        username: decode.sub,
+        userName: decode.sub,
         role: decode.role
       })
     } else {
