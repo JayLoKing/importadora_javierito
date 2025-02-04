@@ -1,12 +1,13 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {httpClient} from "../../../api/httpClient.ts";
 import { ItemDTO, UpdateStockItem } from "../models/item.model.ts";
 
-type Data<T> = T | [];
+type Data<T> = T | [] | null;
 type ErrorType = Error | null;
 
 interface Params<T> {
     data: Data<T>;
+    dataObject?: T;
     loading: boolean;
     error: ErrorType;
 }
@@ -39,6 +40,38 @@ export const FetchDataAsync = <T>(url: string) : Params<T> => {
     }, [url])
     return {data, error, loading};
 }
+
+export const FetchDataByIdAsync = <T>(url: string, body: any) => {
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<ErrorType>(null);
+
+    const fetchData = useCallback(async () => {
+        const abortController = new AbortController();
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await httpClient.post(url, body, {signal: abortController.signal,});
+            if (response.status === 200) {
+                setData(response.data);
+            } else {
+                throw new Error(response.statusText);
+            }
+        } catch (error) {
+            if (!abortController.signal.aborted) {
+                setError(error as Error);
+            }
+        } finally {
+            if (!abortController.signal.aborted) {
+                setLoading(false);
+            }
+        }
+        return () => {
+            abortController.abort();
+        };
+    }, [url, body]);
+    return { data, loading, error, fetchData };
+};
 
 export async function CreateItemAsync(itemDTO: ItemDTO){
     try {

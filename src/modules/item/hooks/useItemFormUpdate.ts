@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ItemDTO } from "../models/item.model";
+import { GetItemById, ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
 import { useAuthStore } from "../../../store/store";
-import { AuthUser } from "../../auth/models/auth.model";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 
 export function ItemFormUpdate(){
@@ -10,10 +9,10 @@ export function ItemFormUpdate(){
     const [showModalUpdate, setShowModal] = useState<boolean>(false);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
+    const [getID, setGetID] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const jwt = useAuthStore(state => state.jwt);
-    const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
     const [formValue, setFormValue] = useState<ItemDTO>({
         name: '',
         alias: '',
@@ -49,22 +48,6 @@ export function ItemFormUpdate(){
         window.addEventListener('resize', checkScreenSize);
         return () => window.removeEventListener('resize', checkScreenSize);
       }, [formValue]);
-
-    useEffect(() => {
-         if (jwt) {
-            let decode = jwtDecoder(jwt);
-            setUser({
-                id: decode.id,
-                username: decode.sub,
-                role: decode.role
-            })
-
-            formValue.userID = user.id;
-        } else {
-              console.error("User authentication token is null");
-        }
-    }, [formValue]);
-
         const handleSubmit = async (onSuccess?: () => void) => {
             if (!formRef.current) return false;
             try {
@@ -116,6 +99,7 @@ export function ItemFormUpdate(){
             }));
     };
 
+
     function handleModalUpdate(hidde: boolean){
         setShowModal(hidde);
     }
@@ -135,5 +119,7 @@ export function ItemFormUpdate(){
         searchTerm,
         setSearchTerm,
         isMobile,
+        getID,
+        setGetID
     };
 }

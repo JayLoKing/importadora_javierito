@@ -36,6 +36,24 @@ export interface GetItems {
     totalStock: number;
 }
 
+export interface GetItemToUpdate{
+    itemID: number;
+    name: string;
+    alias: string;
+    description: string;
+    model: string;
+    price: number;
+    wholesalePrice: number;
+    barePrice: number;
+    brandID: number;
+    subCategoryID: number;
+    weight: number;
+    dateManufacture: string;
+    itemAddressID: number;
+    userID: number;
+    itemImages: string[];
+}
+
 export interface ItemAddress {
     id: number;
     name: string;

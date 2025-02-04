@@ -120,7 +120,6 @@ export function ItemRegisterForm(){
     };
 
     function handleInputChange(field: keyof ItemDTO, value: any) {
-        console.log("Campo actualizado:", field, "Valor:", value);
         setFormValue((prevValues) => ({
                 ...prevValues,
                 [field]: value,

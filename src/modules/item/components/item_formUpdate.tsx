@@ -5,30 +5,38 @@ import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { ItemRegisterForm } from "../hooks/useItemForm";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { FetchDataAsync } from "../services/itemService";
+import { FetchDataAsync, FetchDataByIdAsync } from "../services/itemService";
 import "../styles/styles.css";
-import { FormEvent, useState } from "react";
-import { Brand, ItemAddress, SubCategory } from "../models/item.model";
+import { FormEvent, useEffect, useState } from "react";
+import { Brand, GetItemToUpdate, ItemAddress, SubCategory } from "../models/item.model";
 import { fileUpload } from "../services/storageService";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
+    id: number;
 }
 
 const urlFetchBranchOffice = "/branchOffice/getAll";
 const urlFetchBrands = "/brands/getAllBrands";
 const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
 const urlFetchSubCategories = "/subCategories/getAllSubCategories";
+const urlFetchItemById = "/items/getItemByItemID";
 
-export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
+export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
     const toaster = useToaster();
+    const { data: dataItemById, loading: loadingItemById, fetchData } = FetchDataByIdAsync<GetItemToUpdate>(urlFetchItemById, { itemID: id });
+    useEffect(() => {
+        if (open && id && !dataItemById) {
+            fetchData();
+        }
+    }, [open, id, fetchData, dataItemById]);
+    console.log("Data from API:", dataItemById);
     const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
     const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
-   
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
