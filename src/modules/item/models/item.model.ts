@@ -68,15 +68,3 @@ export interface SubCategory {
     id: number;
     name: string;
 }
-
-export interface UpdateStockItem {
-    itemID: number;
-    quantity: number;
-}
-
-export interface GetItemStock {
-    itemID: number;
-    name: string;
-    quantity: number;
-}
-

@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from "react";
 import {httpClient} from "../../../api/httpClient.ts";
-import { ItemDTO, UpdateStockItem } from "../models/item.model.ts";
+import { ItemDTO } from "../models/item.model.ts";
 
 type Data<T> = T | [] | null;
 type ErrorType = Error | null;
@@ -76,18 +76,6 @@ export const FetchDataByIdAsync = <T>(url: string, body: any) => {
 export async function CreateItemAsync(itemDTO: ItemDTO){
     try {
         const response = await httpClient.post("/items/insertItem", itemDTO)
-        if (response.status === 200) {
-            return response.data;
-        }
-    } catch (error) {
-        throw error;
-    }
-}
-
-
-export async function UpdateStockItemAsync(itemStock: UpdateStockItem){
-    try {
-        const response = await httpClient.post("/items/editItemStock", itemStock)
         if (response.status === 200) {
             return response.data;
         }

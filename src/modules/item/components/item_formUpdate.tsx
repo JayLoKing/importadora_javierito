@@ -31,12 +31,40 @@ export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
             fetchData();
         }
     }, [open, id, fetchData, dataItemById]);
-    console.log("Data from API:", dataItemById);
     const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
     const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
+    const {
+        formValue,
+        handleInputChange,
+        formRef,
+        model,
+        handleSubmit,
+    } = ItemRegisterForm();
+
+    useEffect(() => {
+        if (dataItemById && dataItemById.itemImages) {
+            handleInputChange('name', dataItemById.name);
+            handleInputChange('alias', dataItemById.alias);
+            handleInputChange('model', dataItemById.model);
+            handleInputChange('price', dataItemById.price);
+            handleInputChange('wholesalePrice', dataItemById.wholesalePrice);
+            handleInputChange('barePrice', dataItemById.barePrice);
+            handleInputChange('brandID', dataItemById.brandID);
+            handleInputChange('subCategoryID', dataItemById.subCategoryID);
+            handleInputChange('dateManufacture', dataItemById.dateManufacture);
+            handleInputChange('itemAddressID', dataItemById.itemAddressID);
+            handleInputChange('description', dataItemById.description);
+            const fileList = dataItemById.itemImages.map((url, index) => ({
+                name: `image-${index + 1}`,
+                url,
+                fileKey: url,
+            }));
+            handleInputChange('pathItems', fileList); 
+        }
+    }, [dataItemById, handleInputChange]);
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
@@ -67,13 +95,7 @@ export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
         );
     };
 
-    const {
-        formValue,
-        handleInputChange,
-        formRef,
-        model,
-        handleSubmit,
-    } = ItemRegisterForm();
+   
 
      const handleFileChange = async (files: File[]) => {
             try {
@@ -298,7 +320,11 @@ export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
                                                         await handleFileChange(files)
                                                     }
                                                 } 
-                                                 defaultFileList={[]}>
+                                                defaultFileList={formValue.pathItems.map((url, index) => ({
+                                                    name: `image-${index + 1}`, 
+                                                    url, 
+                                                }))}
+                                                 >
                                                     <button>
                                                         <FaCamera />
                                                     </button>
