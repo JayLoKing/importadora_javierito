@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
-import { CreateItemAsync } from "../services/itemService";
+import { CreateAsync } from "../services/itemService";
 import { useAuthStore } from "../../../store/store";
 import { AuthUser } from "../../auth/models/auth.model";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
@@ -81,12 +81,12 @@ export function ItemRegisterForm(){
             try {
                 const isValid = await formRef.current.check();
                 if (isValid) {
-                    // const res = await CreateItemAsync(formValue);
-                    // if (res !== null) {
-                    //     resetForm();
-                    //     if (onSuccess) onSuccess();
-                    //     return true;
-                    // }
+                    const res = await CreateAsync<ItemDTO,ItemDTO>("/users/createEmployeeUser",formValue);
+                    if (res !== null) {
+                        resetForm();
+                        if (onSuccess) onSuccess();
+                        return true;
+                    }
                 }
             } catch (error) {
                 console.error('Fallo en la validacion del Formulario: ', error);

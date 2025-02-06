@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {httpClient} from "../../../api/httpClient.ts";
+import {httpClient} from "../../api/httpClient.ts";
 
 type Data<T> = T | [] | null;
 type ErrorType = Error | null;

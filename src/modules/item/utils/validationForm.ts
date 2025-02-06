@@ -52,10 +52,6 @@ export const validationItemFormModel = Schema.Model({
     itemAddressID: NumberType()
         .isRequired('Debe seleccionar una dirección') 
         .min(1, 'Debe seleccionar una dirección válida'), 
-
-    userID: NumberType()
-        .isRequired('El ID del usuario es requerido'),
-
     pathItems: ArrayType()
         .isRequired('Debe subir al menos una imagen')
         .minLength(1, 'Debe subir al menos una imagen')
