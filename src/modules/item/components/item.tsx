@@ -9,13 +9,13 @@ import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
+import { ItemUrl } from "../urls/item.url";
 
 const { Column, HeaderCell, Cell } = Table;
-const urlFetchItem = "/items/getAllItems";
 
 export default function Item() {
     const {handleModal, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
-    const { data, loading } = FetchDataAsync<GetItems[]>(`${urlFetchItem}?offset=${page }&limit=${limit}&param=${searchTerm}`);
+    const { data, loading } = FetchDataAsync<GetItems[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
     const [showModalDelete, setShowModal] = useState<boolean>(false)
 

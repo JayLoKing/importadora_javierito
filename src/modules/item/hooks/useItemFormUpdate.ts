@@ -3,6 +3,8 @@ import { GetItemById, ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
+import { UpdateAsync } from "../services/itemService";
+import { ItemUrl } from "../urls/item.url";
 
 export function ItemFormUpdate(){
     const formRef = useRef<any>();
@@ -53,7 +55,7 @@ export function ItemFormUpdate(){
             try {
                 const isValid = await formRef.current.check();
                 if (isValid) {
-                    // const res = await CreateItemAsync(formValue);
+                    // const res = await UpdateAsync<ItemDTO, ItemDTO>(ItemUrl.update,formValue);
                     // if (res !== null) {
                     //     resetForm();
                     //     if (onSuccess) onSuccess();

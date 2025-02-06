@@ -5,6 +5,7 @@ import { CreateAsync } from "../services/itemService";
 import { useAuthStore } from "../../../store/store";
 import { AuthUser } from "../../auth/models/auth.model";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
+import { ItemUrl } from "../urls/item.url";
 
 export function ItemRegisterForm(){
     const formRef = useRef<any>();
@@ -81,7 +82,7 @@ export function ItemRegisterForm(){
             try {
                 const isValid = await formRef.current.check();
                 if (isValid) {
-                    const res = await CreateAsync<ItemDTO,ItemDTO>("/users/createEmployeeUser",formValue);
+                    const res = await CreateAsync<ItemDTO,ItemDTO>(ItemUrl.create,formValue);
                     if (res !== null) {
                         resetForm();
                         if (onSuccess) onSuccess();

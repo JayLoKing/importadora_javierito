@@ -10,23 +10,20 @@ import "../styles/styles.css";
 import { FormEvent, useState } from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
 import { fileUpload } from "../services/storageService";
+import { ItemUrl } from "../urls/item.url";
+import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
 }
 
-const urlFetchBranchOffice = "/branchOffice/getAll";
-const urlFetchBrands = "/brands/getAllBrands";
-const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
-const urlFetchSubCategories = "/subCategories/getAllSubCategories";
-
 export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const toaster = useToaster();
-    const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
-    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
-    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
-    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
+    const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(BranchOfficeUrl.getAll);
+    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(ItemUrl.getAllBrands);
+    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(ItemUrl.getAllAddresses);
+    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(ItemUrl.getAllSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
