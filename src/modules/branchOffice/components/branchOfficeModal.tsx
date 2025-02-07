@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button, Container, Form, Input, Modal, Uploader, Grid, Row, Col, InputGroup } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
@@ -9,25 +9,43 @@ import InputGroupAddon from "rsuite/esm/InputGroup/InputGroupAddon";
 import { FaCamera, FaMapPin, FaStore } from "react-icons/fa";
 import { useBranchOfficeForm } from "../hooks/useBranchOfficeForm";
 import { uploadImageToFirebase } from "../services/firebaseImageService";
-import { newBranchOfficeAsync } from "../services/branchOfficeService";
+import { newBranchOfficeAsync, updateBranchOfficeAsync } from "../services/branchOfficeService";
+import { BranchOfficeDetailsDTO } from "../models/branchOffice.model";
 
 interface BranchOfficeModalProps {
     open: boolean,
-    hiddeModal: (hide: boolean) => void,
+    hiddeModal: (hide: boolean, action: string) => void,
     refreshList: () => Promise<void>;
+    details: BranchOfficeDetailsDTO | undefined,
+    action: string
 }
 
-export default function BranchOfficeModal({ open, hiddeModal, refreshList }: BranchOfficeModalProps) {
+export default function BranchOfficeModal({ open, hiddeModal, refreshList, details, action }: BranchOfficeModalProps) {
 
-    const [files, setFiles] = useState<File[]>();
+    const [files, setFiles] = useState<File[]>([]);
 
-    const { formValues, handleInputChange, resetForm } = useBranchOfficeForm({
+    const { formValues, handleInputChange, setFormValues, resetValues } = useBranchOfficeForm({
         name: '',
         address: '',
         latitude: '',
         longitude: '',
         pathImages: []
     });
+
+    useEffect(() => {
+        if (action === 'update' && details) {
+            setFormValues({
+                name: details.name,
+                address: details.address,
+                latitude: details.latitude,
+                longitude: details.longitude,
+                pathImages: details.images.map(image => image.path)
+            });
+        } else {
+            resetValues()
+        }
+        setFiles([])
+    }, [action, details]);
 
     function handleMarkerChange(lat: number, lng: number) {
         handleInputChange('latitude', lat.toString());
@@ -36,16 +54,23 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        const urls = await handleFileUpload(files!);
-        const res = await newBranchOfficeAsync({
+        const urls = files && files.length > 0 ? await handleFileUpload(files) : [];
+        const updatedFormValues = {
             ...formValues,
-            pathImages: urls
-        });
+            pathImages: urls.length > 0 ? urls : formValues.pathImages
+        };
+        let res;
+        if (action === 'insert') {
+            res = await newBranchOfficeAsync(updatedFormValues);
+        } else {
+            res = await updateBranchOfficeAsync(details!.id, updatedFormValues);
+        }
+
         if (res !== null) {
-            hiddeModal(open);
+            hiddeModal(false, action);
             await refreshList();
         }
-        resetForm();
+        resetValues();
     }
 
     async function handleFileUpload(files: File[]): Promise<string[]> {
@@ -55,7 +80,7 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
                 return downloadURL;
             });
             const downloadURLs = await Promise.all(uploadPromises);
-            return downloadURLs
+            return downloadURLs;
         } catch (error) {
             console.error("Error al subir la imagen:", error);
             throw error;
@@ -63,10 +88,10 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
     };
 
     return (
-        <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow>
+        <Modal size={"lg"} open={open} onClose={() => hiddeModal(false, action)} overflow>
             <ModalHeader>
                 <ModalTitle>
-                    <strong>Nueva Sucursal</strong>
+                    {action === 'insert' ? <strong>Nueva Sucursal</strong> : <strong>Editar Sucursal</strong>}
                 </ModalTitle>
             </ModalHeader>
 
@@ -105,13 +130,20 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
                                 <Form.Group>
                                     <Form.ControlLabel>Imágenes de la sucursal</Form.ControlLabel>
                                     <Uploader
+                                        key={details?.id || "new"}
                                         listType="picture-text"
                                         action="/"
                                         autoUpload={false}
                                         onChange={async (fileList) => {
                                             const filesOnLoad = fileList.map(file => file.blobFile).filter(Boolean) as File[];
                                             setFiles(filesOnLoad);
-                                        }}>
+                                        }}
+                                        defaultFileList={action === 'update' && details?.images.length! > 0 ?
+                                            details?.images.map(image => ({
+                                                name: `image-${image.id}`,
+                                                url: image.path
+                                            })) :
+                                            []}>
                                         <Button appearance="default" startIcon={<FaCamera />}>Seleccionar Imágenes...</Button>
                                     </Uploader>
                                 </Form.Group>
@@ -121,7 +153,10 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
                             <Form.Group>
                                 <Form.ControlLabel>Ubicación</Form.ControlLabel>
                                 <Container>
-                                    <Map onMarkerChange={handleMarkerChange} />
+                                    <Map
+                                        latFromParent={formValues.latitude}
+                                        lonFromParent={formValues.longitude}
+                                        onMarkerChange={handleMarkerChange} />
                                 </Container>
                             </Form.Group>
                         </Col>
@@ -130,8 +165,11 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList }: Bra
             </ModalBody>
             <ModalFooter>
                 <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
-                <Button onClick={() => hiddeModal(open)} appearance="default">Cancelar</Button>
+                <Button onClick={() => {
+                    resetValues()
+                    hiddeModal(false, action)
+                }} appearance="default">Cancelar</Button>
             </ModalFooter>
         </Modal>
-    )
+    );
 }

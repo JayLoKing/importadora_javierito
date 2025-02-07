@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Heading, IconButton, Stack, Table, Tooltip, Whisper } from "rsuite";
-import { BranchOffice } from "../models/branchOffice.model";
-import { getBranchOfficesAsync } from "../services/branchOfficeService";
+import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
+import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
 import { FaEdit, FaMapPin, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
@@ -13,6 +13,16 @@ import RemoveOfficeModal from "./removeOfficeModal";
 export default function BranchOffices() {
 
     const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([])
+    const [details, setDetails] = useState<BranchOfficeDetailsDTO>({
+        id: 0,
+        name: '',
+        address: '',
+        latitude: '',
+        longitude: '',
+        images: []
+    })
+
+    const [action, setAction] = useState<string>('')
     const [showModal, setShowModal] = useState<boolean>(false)
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
 
@@ -27,7 +37,13 @@ export default function BranchOffices() {
         setBranchOffices(data)
     }
 
-    function handleModal(hidde: boolean): void {
+    async function getBranchOfficeById(id: number) {
+        const office = await getBranchOfficeDetailsAsync(id)
+        setDetails(office)
+    }
+
+    function handleModal(hidde: boolean, act: string): void {
+        setAction(act)
         setShowModal(hidde)
     }
 
@@ -47,7 +63,7 @@ export default function BranchOffices() {
                     <IconButton
                         icon={<PlusIcon />}
                         appearance="primary"
-                        onClick={() => handleModal(true)}>
+                        onClick={() => handleModal(true, 'insert')}>
                         Nueva sucursal
                     </IconButton>
                 </div>
@@ -60,7 +76,14 @@ export default function BranchOffices() {
                         {(rowData) => (
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                    <IconButton icon={<FaEdit />} style={{ width: 40, margin: 3 }} appearance="primary" />
+                                    <IconButton
+                                        icon={<FaEdit />}
+                                        style={{ width: 40, margin: 3 }}
+                                        appearance="primary"
+                                        onClick={() => {
+                                            getBranchOfficeById(rowData.id)
+                                            handleModal(true, 'update')
+                                        }} />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
                                     <IconButton icon={<FaMapPin />} style={{ width: 40, margin: 3 }} appearance="primary" />
@@ -105,7 +128,7 @@ export default function BranchOffices() {
                 </Column>
             </Table>
 
-            <BranchOfficeModal open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false)} />
+            <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
             <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
         </div>
     );
