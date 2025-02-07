@@ -1,26 +1,47 @@
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import "../styles/styles.css";
 import "leaflet/dist/leaflet.css"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LatLng } from "leaflet";
 
 interface MapProps {
     onMarkerChange: (lat: number, lng: number) => void;
+    latFromParent: string | undefined;
+    lonFromParent: string | undefined;
 }
 
-export default function Map({ onMarkerChange }: MapProps) {
+export default function Map({ onMarkerChange, latFromParent, lonFromParent }: MapProps) {
+
+    const [initialPosition, setInitialPosition] =
+        useState<LatLng>(new LatLng(-17.389097205704896, -66.16357889088572))
+
+    useEffect(() => {
+        if (latFromParent && lonFromParent) {
+            setInitialPosition(new LatLng(parseFloat(latFromParent!), parseFloat(lonFromParent!)))
+        }
+    }, [latFromParent, lonFromParent])
+
+
     return (
-        <MapContainer center={{ lat: -17.389097205704896, lng: -66.16357889088572 }} zoom={16}>
+        <MapContainer center={initialPosition}
+            zoom={16}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <AddMarkerOnClick onMarkerChange={onMarkerChange} />
+            <AddMarkerOnClick latFromParent={latFromParent} lonFromParent={lonFromParent} onMarkerChange={onMarkerChange} />
+            <ChangeView center={initialPosition} />
         </MapContainer>
     )
 }
 
-function AddMarkerOnClick({ onMarkerChange }: MapProps) {
+function AddMarkerOnClick({ onMarkerChange, latFromParent, lonFromParent }: MapProps) {
     const [marker, setMarkers] = useState<LatLng>()
+
+    useEffect(() => {
+        if (latFromParent && lonFromParent) {
+            setMarkers(new LatLng(parseFloat(latFromParent), parseFloat(lonFromParent)))
+        }
+    }, [latFromParent, lonFromParent])
 
     useMapEvents({
         click(e) {
@@ -39,4 +60,10 @@ function AddMarkerOnClick({ onMarkerChange }: MapProps) {
             </Marker>
         )
     )
+}
+
+function ChangeView({ center }: { center: LatLng }) {
+    const map = useMap()
+    map.setView(center, map.getZoom())
+    return null;
 }
