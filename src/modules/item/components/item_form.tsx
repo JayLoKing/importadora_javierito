@@ -1,17 +1,18 @@
 import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker,Input, InputNumber } from "rsuite";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, InputNumber } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { ItemRegisterForm } from "../hooks/useItemForm";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { FetchDataAsync } from "../services/itemService";
 import "../styles/styles.css";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
 import { fileUpload } from "../services/storageService";
 import { ItemUrl } from "../urls/item.url";
 import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
+import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
+import { useItemForm } from "../hooks/useItemForm";
 
 interface ItemModalParams {
     open: boolean;
@@ -20,11 +21,14 @@ interface ItemModalParams {
 
 export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const toaster = useToaster();
+    const formRef = useRef<any>();
     const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(BranchOfficeUrl.getAll);
     const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(ItemUrl.getAllBrands);
     const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(ItemUrl.getAllAddresses);
     const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(ItemUrl.getAllSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
+    const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
+    const {handleSubmit} = useItemForm();
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
@@ -54,38 +58,35 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             { placement: 'topCenter', duration: 3000 }
         );
     };
-
-    const {
-        formValue,
-        handleInputChange,
-        formRef,
-        model,
-        handleSubmit,
-    } = ItemRegisterForm();
-
+    
      const handleFileChange = async (files: File[]) => {
-            try {
+        try {
+            const uploadPromises = files.map(async (file) => {
+                const pathImage = await fileUpload(file, formData);
+                return pathImage;
+            });
+            const pathImages = await Promise.all(uploadPromises);
+            console.log(pathImages.length);
+            if(pathImages.length > 5 || pathImages.length < 0){
+                setIsValidImgs(true);
+            } 
+            setIsValidImgs(false);
+            updateField('pathItems', [...formData.pathItems, ...pathImages]);
                 
-                const uploadPromises = files.map(async (file) => {
-                    const pathImage = await fileUpload(file, formValue);
-                    return pathImage;
-                });
-                const pathImages = await Promise.all(uploadPromises);
-                console.log(pathImages.length);
-                if(pathImages.length > 5 || pathImages.length < 0){
-                    setIsValidImgs(true);
-                } 
-                setIsValidImgs(false);
-                handleInputChange('pathItems', [...formValue.pathItems, ...pathImages]);
-                
-            } catch (error) {
-                console.error('Error al cargar archivos:', error);
-            }
-        };
+        } catch (error) {
+            console.error('Error al cargar archivos:', error);
+        }
+    };
 
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        console.log(isValidImgs);
+
+        if (!formRef.current.check()) {
+            console.error(formData);
+            console.error("El formulario no es válido");
+            return;
+        }
+
         if(isValidImgs){
             toaster.push(
                 <Message closable showIcon type="warning" >
@@ -94,7 +95,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 { placement: 'topCenter', duration: 3000 }
             );
         } else {
-            const success = await handleSubmit(showSuccessMessage);
+            const success = await handleSubmit(showSuccessMessage, formData);
             if (!success) {
                 toaster.push(
                     <Message closable showIcon type="error">
@@ -103,6 +104,8 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                     { placement: 'topCenter', duration: 3000 }
                 );
             }
+            formRef.current.reset();
+            resetForm();
         }
     };
 
@@ -117,7 +120,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 <ModalBody>
                     <Grid fluid>
                         <Stack spacing={24} direction="row" alignItems="flex-start" justifyContent="center">
-                            <Form ref={formRef} model={model} formValue={formValue} fluid>
+                            <Form ref={formRef} model={validationModel} formValue={formData} fluid>
                                 <Row>
                                     <Col xs={24} md={8}>
                                             <Form.Group controlId={'name'}>
@@ -128,7 +131,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="name"
-                                                        onChange={(value) => handleInputChange('name', value)}
+                                                        onChange={(value) => updateField('name', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -141,7 +144,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="alias"
-                                                        onChange={(value) => handleInputChange('alias', value)}
+                                                        onChange={(value) => updateField('alias', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -153,7 +156,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control 
                                                         name="model"
-                                                        onChange={(value) => handleInputChange('model', value)}
+                                                        onChange={(value) => updateField('model', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -166,7 +169,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="price"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('price', value)}
+                                                        onChange={(value) => updateField('price', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -179,7 +182,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="wholesalePrice"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('wholesalePrice', value)}
+                                                        onChange={(value) => updateField('wholesalePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -194,20 +197,20 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="barePrice"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('barePrice', value)}
+                                                        onChange={(value) => updateField('barePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'brandID'}>
                                                 <Form.ControlLabel>Marca del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
                                             </Form.Group>
 
 
                                             <Form.Group controlId={'subCategoryID'}>
                                                 <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                                <SelectPicker onChange={(value) => handleInputChange('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'weight'}>
@@ -217,7 +220,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <InputGroup.Addon>
                                                         <FaWeight />
                                                     </InputGroup.Addon>
-                                                    <InputNumber name="weight" defaultValue={100} formatter={value => `${value} kg`}  onChange={(value) => handleInputChange('weight', value)}/>
+                                                    <InputNumber name="weight" defaultValue={100} formatter={value => `${value} kg`}  onChange={(value) => updateField('weight', value)}/>
                                                 </InputGroup>
                                             </Form.Group>
 
@@ -230,7 +233,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="dateManufacture"
                                                         type="date"
-                                                        onChange={(value) => handleInputChange('dateManufacture', value)}
+                                                        onChange={(value) => updateField('dateManufacture', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -238,11 +241,11 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     <Col xs={24} md={8}>
                                         <Form.Group controlId={'itemAddressID'}>
                                             <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
                                             <Form.Group controlId={'branchOfficeID'}>
                                                 <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'quantity'}>
@@ -255,7 +258,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                         defaultValue={111}
                                                         name="quantity"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('quantity', value)}
+                                                        onChange={(value) => updateField('quantity', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -268,7 +271,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="acronym"
                                                         placeholder="Acrónimo del artículo"
-                                                        onChange={(value) => handleInputChange('acronym', value)}
+                                                        onChange={(value) => updateField('acronym', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -281,7 +284,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />
                                             </InputGroup.Addon>
-                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formValue.description}  placeholder="Descripcion del repuesto" id="description" name="description" onChange={(e) => handleInputChange('description', e.target.value)} rows={5}  >
+                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formData.description}  placeholder="Descripcion del repuesto" id="description" name="description" onChange={(e) => updateField('description', e.target.value)} rows={5}  >
 
                                             </textarea>
                                         </InputGroup>

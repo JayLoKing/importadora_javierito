@@ -3,13 +3,13 @@ import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToa
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { ItemRegisterForm } from "../hooks/useItemForm";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { FetchDataAsync, FetchDataByIdAsync } from "../services/itemService";
 import "../styles/styles.css";
 import { FormEvent, useEffect, useState } from "react";
 import { Brand, GetItemToUpdate, ItemAddress, SubCategory } from "../models/item.model";
 import { fileUpload } from "../services/storageService";
+import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 
 interface ItemModalParams {
     open: boolean;
@@ -42,7 +42,7 @@ export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
         formRef,
         model,
         handleSubmit,
-    } = ItemRegisterForm();
+    } = ItemFormUpdate();
 
     useEffect(() => {
         if (dataItemById && dataItemById.itemImages) {

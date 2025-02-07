@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { GetItemById, ItemDTO } from "../models/item.model";
+import { ItemDTO } from "../models/item.model";
 import { validationItemFormModel } from "../utils/validationForm";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
@@ -49,7 +49,7 @@ export function ItemFormUpdate(){
         checkScreenSize();
         window.addEventListener('resize', checkScreenSize);
         return () => window.removeEventListener('resize', checkScreenSize);
-      }, [formValue]);
+      }, []);
         const handleSubmit = async (onSuccess?: () => void) => {
             if (!formRef.current) return false;
             try {

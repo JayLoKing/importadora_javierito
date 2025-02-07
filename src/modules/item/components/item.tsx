@@ -3,18 +3,18 @@ import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { GetItems } from "../models/item.model";
-import { ItemRegisterForm } from "../hooks/useItemForm";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
 import { ItemUrl } from "../urls/item.url";
+import { useItemTable } from "../hooks/useItemTable";
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function Item() {
-    const {handleModal, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
+    const {handleModalCreate, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
     const { data, loading } = FetchDataAsync<GetItems[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
     const [showModalDelete, setShowModal] = useState<boolean>(false)
@@ -126,7 +126,7 @@ export default function Item() {
                                     <FaSearch />
                                 </InputGroup.Addon>
                             </InputGroup>
-                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true)}> Nuevo Repuesto </IconButton>
+                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
@@ -259,7 +259,7 @@ export default function Item() {
                             No se encontraron registros
                         </div>
                     )}
-                    <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
+                    <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
                     <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
             </div>
@@ -283,7 +283,7 @@ export default function Item() {
                     <IconButton
                         icon={<PlusIcon />}
                         appearance="primary"
-                        onClick={() => handleModal(true)}
+                        onClick={() => handleModalCreate(true)}
                         >
                         Nuevo Repuesto
                         </IconButton>
@@ -357,7 +357,7 @@ export default function Item() {
                   </div>
                 )}
               </div>
-              <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
+              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
               <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
               <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
             </div>
