@@ -2,7 +2,7 @@ import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, In
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
-import { GetItems } from "../models/item.model";
+import { Item } from "../models/item.model";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
@@ -13,9 +13,9 @@ import { useItemTable } from "../hooks/useItemTable";
 
 const { Column, HeaderCell, Cell } = Table;
 
-export default function Item() {
+export default function ItemTable() {
     const {handleModalCreate, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
-    const { data, loading } = FetchDataAsync<GetItems[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
+    const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
     const [showModalDelete, setShowModal] = useState<boolean>(false)
 

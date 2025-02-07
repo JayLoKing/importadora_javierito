@@ -1,11 +1,11 @@
 import {create} from "zustand";
-import { ItemDTO } from "../models/item.model";
-import { validationItemFormModel } from "../utils/validationForm";
+import { NewItemDTO } from "../models/item.model";
+import { validationItemCreateFormModel } from "../utils/validationForm";
 
 interface CreateItemFormStore {
-    formData: ItemDTO;
+    formData: NewItemDTO;
     resetForm: () => void;
-    updateField: (field: keyof ItemDTO, value: any) => void;
+    updateField: (field: keyof NewItemDTO, value: any) => void;
     validationModel: any;
 }
 
@@ -56,7 +56,7 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
         set((state) => ({
             formData: { ...state.formData, [field]: value },
         })),
-    validationModel: validationItemFormModel,
+    validationModel: validationItemCreateFormModel,
 }));
 
 

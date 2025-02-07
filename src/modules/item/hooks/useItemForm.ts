@@ -1,7 +1,7 @@
-import { ItemDTO } from "../models/item.model";
+import { NewItemDTO } from "../models/item.model";
 
 export function useItemForm(){
-    const handleSubmit = async (onSuccess?: () => void, formData?: ItemDTO) => {
+    const handleSubmit = async (onSuccess?: () => void, formData?: NewItemDTO) => {
         try {
             console.log(formData);
             // const res = await CreateAsync<ItemDTO,ItemDTO>(ItemUrl.create,formData!);
