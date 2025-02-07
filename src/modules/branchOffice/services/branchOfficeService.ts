@@ -42,7 +42,7 @@ export async function updateBranchOfficeAsync(id: number, branchOffice: NewBranc
         address: branchOffice.address,
         longitude: branchOffice.longitude,
         latitude: branchOffice.latitude,
-        images: branchOffice.pathImages
+        images: [] //pendiente
     }
 
     try {
