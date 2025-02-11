@@ -19,7 +19,7 @@ export default function Item() {
     const {handleModalUpdate, showModalUpdate} = ItemFormUpdate();
 
     const [showModalDelete, setShowModalDelete] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<{ id: number; name: string } | null>(null);
+    const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
 
     const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
       if (item) {
@@ -266,9 +266,7 @@ export default function Item() {
                     )}
                     <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
                     <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={0} name={""} refreshList={function (): Promise<void> {
-              throw new Error("Function not implemented.");
-            } } userID={0} />
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
             </div>
         );   
     } else {
@@ -366,9 +364,7 @@ export default function Item() {
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
               <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={0} name={""} refreshList={function (): Promise<void> {
-              throw new Error("Function not implemented.");
-            } } userID={0} />
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name}/>
             </div>
           );
     }

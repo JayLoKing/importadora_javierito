@@ -5,29 +5,51 @@ import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { DeleteItemAsync } from "../services/itemService";
+import { useAuthStore } from "../../../store/store";
+import { useEffect, useState } from "react";
+import { AuthUser } from "../../auth/models/auth.model";
+import { jwtDecoder } from "../../../utils/jwtDecoder";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
     id: number;
-    userID: number;
-    name: string;
-    refreshList: () => Promise<void>;
+    name: string;   
 }
 
-export default function ItemDelete({open, hiddeModal, id, userID, name, refreshList} : ItemModalParams){
+export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParams){
+
+    const jwt = useAuthStore(state => state.jwt);
+    const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
+    
+    function getRoleNUsername() {
+        if (jwt) {
+          let decode = jwtDecoder(jwt);
+          console.log(decode)
+          setUser({
+            id: decode.id,
+            userName: decode.sub,
+            role: decode.role
+          })
+        } else {
+          console.error("User authentication token is null");
+        }
+      }
 
     async function confirmDelete() {
         try{
-            const deleted = await DeleteItemAsync(id, userID);
+            const deleted = await DeleteItemAsync(id, user.id);
             if (deleted) {
                 hiddeModal(false);
-                await refreshList();
             }
         }catch (error){
             console.error("No se pudo eliminar el item:", error);
         }
     }
+
+    useEffect(()=>{
+        getRoleNUsername();  
+    }, [])
 
     return(
         <>
