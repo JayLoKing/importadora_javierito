@@ -1,39 +1,68 @@
-import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
+import { FaAlignJustify,  FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaTag } from "react-icons/fa";
 import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { ItemRegisterForm } from "../hooks/useItemForm";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { FetchDataAsync } from "../services/itemService";
+import { FetchDataAsync, FetchDataByIdAsync } from "../services/itemService";
 import "../styles/styles.css";
-import { FormEvent, useState } from "react";
-import { Brand, ItemAddress, SubCategory } from "../models/item.model";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Brand, ItemById, ItemAddress, SubCategory } from "../models/item.model";
 import { fileUpload } from "../services/storageService";
+import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
+import { useUpdateItemFormStore } from "../hooks/useUpdateItemFormStorn";
+import { ItemUrl } from "../urls/item.url";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
+    id: number;
 }
 
-const urlFetchBranchOffice = "/branchOffice/getAll";
-const urlFetchBrands = "/brands/getAllBrands";
-const urlFetchItemAddress = "/itemAddresses/getAllItemAddresses";
-const urlFetchSubCategories = "/subCategories/getAllSubCategories";
-
-export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
+export default function ItemUpdate({open, hiddeModal, id} : ItemModalParams){
     const toaster = useToaster();
-    const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(urlFetchBranchOffice);
-    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(urlFetchBrands);
-    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(urlFetchItemAddress);
-    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(urlFetchSubCategories);
+    const formRef = useRef<any>();
+    const { data: itemData, fetchData } = FetchDataByIdAsync<ItemById>(ItemUrl.getById, { itemID: id });
+    
+    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(ItemUrl.getAllBrands);
+    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(ItemUrl.getAllAddresses);
+    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(ItemUrl.getAllSubCategories);
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
-   
+    const { formData, loadData, updateField,validationModel} = useUpdateItemFormStore();
+    const { handleSubmit } = ItemFormUpdate();
 
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({
-       label: branch.name,
-       value: branch.id 
-    })) || [];
+    useEffect(() => {
+        if (itemData && itemData.itemImages) {
+            const fileList = itemData.itemImages.map((url, index) => ({
+                name: `image-${index + 1}`,
+                url,
+                fileKey: url,
+            }));
+            loadData({
+                itemID: itemData.itemID,
+                name: itemData.name,
+                alias: itemData.alias,
+                model: itemData.model,
+                price: itemData.price,
+                wholesalePrice: itemData.wholesalePrice,
+                barePrice: itemData.barePrice,
+                brandID: itemData.brandID,
+                subCategoryID: itemData.subCategoryID,
+                dateManufacture: itemData.dateManufacture,
+                itemAddressID: itemData.itemAddressID,
+                description: itemData.description,
+                itemImages: fileList as any,
+                weight: itemData.weight,
+                userID: 0
+           });
+           //updateField('itemImages', fileList);
+        }
+    }, [itemData, loadData]);
+
+    useEffect(() => {
+        if (open && id && !itemData) {
+            fetchData();
+        }
+    }, [open, id, fetchData, itemData]);
 
     const brandsOptions = dataBrands?.map(brand => ({
         label: brand.name,
@@ -59,19 +88,13 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
         );
     };
 
-    const {
-        formValue,
-        handleInputChange,
-        formRef,
-        model,
-        handleSubmit,
-    } = ItemRegisterForm();
+   
 
      const handleFileChange = async (files: File[]) => {
             try {
                 
                 const uploadPromises = files.map(async (file) => {
-                    const pathImage = await fileUpload(file, formValue);
+                    const pathImage = await fileUpload(file, formData);
                     return pathImage;
                 });
                 const pathImages = await Promise.all(uploadPromises);
@@ -80,7 +103,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                     setIsValidImgs(true);
                 } 
                 setIsValidImgs(false);
-                handleInputChange('pathItems', [...formValue.pathItems, ...pathImages]);
+                updateField('itemImages', [...formData.itemImages, ...pathImages]);
                 
             } catch (error) {
                 console.error('Error al cargar archivos:', error);
@@ -121,7 +144,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                 <ModalBody>
                     <Grid fluid>
                         <Stack spacing={24} direction="row" alignItems="flex-start" justifyContent="center">
-                            <Form ref={formRef} model={model} formValue={formValue} fluid>
+                            <Form ref={formRef} model={validationModel} formValue={formData} fluid>
                                 <Row>
                                     <Col xs={24} md={8}>
                                             <Form.Group controlId={'name'}>
@@ -132,7 +155,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="name"
-                                                        onChange={(value) => handleInputChange('name', value)}
+                                                        onChange={(value) => updateField('name', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -145,7 +168,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="alias"
-                                                        onChange={(value) => handleInputChange('alias', value)}
+                                                        onChange={(value) => updateField('alias', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -157,7 +180,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     </InputGroup.Addon>
                                                     <Form.Control 
                                                         name="model"
-                                                        onChange={(value) => handleInputChange('model', value)}
+                                                        onChange={(value) => updateField('model', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -170,7 +193,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="price"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('price', value)}
+                                                        onChange={(value) => updateField('price', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -183,7 +206,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="wholesalePrice"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('wholesalePrice', value)}
+                                                        onChange={(value) => updateField('wholesalePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -198,20 +221,20 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="barePrice"
                                                         type="number"
-                                                        onChange={(value) => handleInputChange('barePrice', value)}
+                                                        onChange={(value) => updateField('barePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'brandID'}>
                                                 <Form.ControlLabel>Marca del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
                                             </Form.Group>
 
 
                                             <Form.Group controlId={'subCategoryID'}>
                                                 <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                                <SelectPicker onChange={(value) => handleInputChange('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                                <SelectPicker onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'dateManufacture'}>
@@ -223,7 +246,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                     <Form.Control
                                                         name="dateManufacture"
                                                         type="date"
-                                                        onChange={(value) => handleInputChange('dateManufacture', value)}
+                                                        onChange={(value) => updateField('dateManufacture', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -231,40 +254,11 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                     <Col xs={24} md={8}>
                                         <Form.Group controlId={'itemAddressID'}>
                                             <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
-                                            </Form.Group>
-                                            <Form.Group controlId={'branchOfficeID'}>
-                                                <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => handleInputChange('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'quantity'}>
-                                                <Form.ControlLabel>Cantidad del Repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaBoxOpen />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        defaultValue={111}
-                                                        name="quantity"
-                                                        type="number"
-                                                        onChange={(value) => handleInputChange('quantity', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'acronym'}>
-                                                <Form.ControlLabel>Acrónimo del Artículo</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaSignature />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="acronym"
-                                                        placeholder="Acrónimo del artículo"
-                                                        onChange={(value) => handleInputChange('acronym', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
+                                                <SelectPicker onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                           
+                                           
+                                            
                                     
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
@@ -274,7 +268,7 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />
                                             </InputGroup.Addon>
-                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formValue.description}  placeholder="Descripción del repuesto" id="description" name="description" onChange={(e) => handleInputChange('description', e.target.value)} rows={5}  >
+                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formData.description}  placeholder="Descripción del repuesto" id="description" name="description" onChange={(e) => updateField('description', e.target.value)} rows={5}  >
 
                                             </textarea>
                                         </InputGroup>
@@ -290,7 +284,11 @@ export default function ItemUpdate({open, hiddeModal} : ItemModalParams){
                                                         await handleFileChange(files)
                                                     }
                                                 } 
-                                                 defaultFileList={[]}>
+                                                defaultFileList={formData.itemImages.map((url, index) => ({
+                                                    name: `image-${index + 1}`, 
+                                                    url, 
+                                                }))}
+                                                 >
                                                     <button>
                                                         <FaCamera />
                                                     </button>

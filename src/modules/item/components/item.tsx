@@ -2,23 +2,23 @@ import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, In
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
-import { GetItems } from "../models/item.model";
-import { ItemRegisterForm } from "../hooks/useItemForm";
+import { Item } from "../models/item.model";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
+import { ItemUrl } from "../urls/item.url";
+import { useItemTable } from "../hooks/useItemTable";
 
 const { Column, HeaderCell, Cell } = Table;
-const urlFetchItem = "/items/getAllItems";
 
-export default function Item() {
-    const {handleModal, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = ItemRegisterForm();
-    const { data, loading } = FetchDataAsync<GetItems[]>(`${urlFetchItem}?offset=${page }&limit=${limit}&param=${searchTerm}`);
-    const {handleModalUpdate, showModalUpdate} = ItemFormUpdate();
+export default function ItemTable() {
+    const {handleModalCreate, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
+    const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
+    const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
 
-    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
 
     const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
@@ -27,11 +27,10 @@ export default function Item() {
       }
       setShowModalDelete(open);
   };
-
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
     const filteredData = useMemo(() => {
-        return data.filter(item =>
+        return data!.filter(item =>
             regex.test(item.name) ||
             regex.test(item.description) ||
             regex.test(item.model) ||
@@ -45,7 +44,6 @@ export default function Item() {
         const end = start + limit;
         return filteredData.slice(start, end);
     }, [filteredData, limit, page]);
-
 
     const tableLoadingES = {
       loading: "Cargando Registros..."
@@ -132,11 +130,11 @@ export default function Item() {
                                     <FaSearch />
                                 </InputGroup.Addon>
                             </InputGroup>
-                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true)}> Nuevo Repuesto </IconButton>
+                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} onRowClick={rowData => setGetID(rowData.itemID)} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -248,7 +246,7 @@ export default function Item() {
                             maxButtons={5}
                             size="xs"
                             layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-                            total={data.length}
+                            total={data!.length}
                             limitOptions={[10, 20, 30]}
                             limit={limit}
                             activePage={page}
@@ -264,9 +262,10 @@ export default function Item() {
                             No se encontraron registros
                         </div>
                     )}
-                    <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
-                    <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
+                    <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
+                    <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
+
             </div>
         );   
     } else {
@@ -288,7 +287,7 @@ export default function Item() {
                     <IconButton
                         icon={<PlusIcon />}
                         appearance="primary"
-                        onClick={() => handleModal(true)}
+                        onClick={() => handleModalCreate(true)}
                         >
                         Nuevo Repuesto
                         </IconButton>
@@ -299,7 +298,7 @@ export default function Item() {
                 {filteredData.length > 0 ? (
                   <Grid fluid>
                     <Row>
-                      {data.map((item) => (
+                      {data!.map((item) => (
                         <Col key={item.itemID} xs={24} sm={24} md={24}>
                           <Card bordered style={{ marginBottom: "16px" }}>
                             <Card.Header>
@@ -362,8 +361,8 @@ export default function Item() {
                   </div>
                 )}
               </div>
-              <ItemForm open={showModal} hiddeModal={() => handleModal(false)} />
-              <ItemUpdate open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
+              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
+              <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
               <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name}/>
             </div>
           );

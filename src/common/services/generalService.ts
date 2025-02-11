@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import {httpClient} from "../../../api/httpClient.ts";
+import {httpClient} from "../../api/httpClient.ts";
 
 type Data<T> = T | [] | null;
 type ErrorType = Error | null;
@@ -107,20 +107,5 @@ export async function UpdateAsync<T, R>(url: string, body: T): Promise<R> {
         } else {
             throw new Error('Fallo en la edicion: Error desconocido');
         }
-    }
-}
-
-
-export async function DeleteItemAsync(id: number, userID: number){
-    try {
-        const response = await httpClient.delete("/items/removeItem", {
-            data: { id: id, userID: userID}
-        })
-        if (response.status === 200) {
-            return true;
-        }
-    } catch (error) {
-        console.error("Error al eliminar el item:", error);
-        throw error;
     }
 }

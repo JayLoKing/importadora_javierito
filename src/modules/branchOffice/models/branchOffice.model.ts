@@ -16,3 +16,17 @@ export interface NewBranchOfficeDTO {
     longitude: string;
     pathImages: string[];
 }
+
+export interface BranchOfficeDetailsDTO {
+    id: number;
+    name: string;
+    address: string;
+    latitude: string;
+    longitude: string;
+    images: OfficeImages[];
+}
+
+export interface OfficeImages {
+    id: number,
+    path: string
+}

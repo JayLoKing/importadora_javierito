@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { ItemDTO } from "../models/item.model";
-import { validationItemFormModel } from "../utils/validationForm";
+import { NewItemDTO } from "../models/item.model";
+import { validationItemCreateFormModel } from "../utils/validationForm";
 import { useAuthStore } from "../../../store/store";
-import { AuthUser } from "../../auth/models/auth.model";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
+import { UpdateAsync } from "../services/itemService";
+import { ItemUrl } from "../urls/item.url";
 
 export function ItemFormUpdate(){
     const formRef = useRef<any>();
     const [showModalUpdate, setShowModal] = useState<boolean>(false);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
+    const [getID, setGetID] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const jwt = useAuthStore(state => state.jwt);
-    const [user, setUser] = useState<AuthUser>({ id: 0, username: '', role: '' });
-    const [formValue, setFormValue] = useState<ItemDTO>({
+    const [formValue, setFormValue] = useState<NewItemDTO>({
         name: '',
         alias: '',
         description: '',
@@ -34,7 +35,7 @@ export function ItemFormUpdate(){
         acronym: ''
     });
 
-    const model = validationItemFormModel;
+    const model = validationItemCreateFormModel;
 
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
@@ -48,29 +49,13 @@ export function ItemFormUpdate(){
         checkScreenSize();
         window.addEventListener('resize', checkScreenSize);
         return () => window.removeEventListener('resize', checkScreenSize);
-      }, [formValue]);
-
-    useEffect(() => {
-         if (jwt) {
-            let decode = jwtDecoder(jwt);
-            setUser({
-                id: decode.id,
-                username: decode.sub,
-                role: decode.role
-            })
-
-            formValue.userID = user.id;
-        } else {
-              console.error("User authentication token is null");
-        }
-    }, [formValue]);
-
+      }, []);
         const handleSubmit = async (onSuccess?: () => void) => {
             if (!formRef.current) return false;
             try {
                 const isValid = await formRef.current.check();
                 if (isValid) {
-                    // const res = await CreateItemAsync(formValue);
+                    // const res = await UpdateAsync<ItemDTO, ItemDTO>(ItemUrl.update,formValue);
                     // if (res !== null) {
                     //     resetForm();
                     //     if (onSuccess) onSuccess();
@@ -108,13 +93,14 @@ export function ItemFormUpdate(){
         });
     };
 
-    function handleInputChange(field: keyof ItemDTO, value: any) {
+    function handleInputChange(field: keyof NewItemDTO, value: any) {
         console.log("Campo actualizado:", field, "Valor:", value);
         setFormValue((prevValues) => ({
                 ...prevValues,
                 [field]: value,
             }));
     };
+
 
     function handleModalUpdate(hidde: boolean){
         setShowModal(hidde);
@@ -135,5 +121,7 @@ export function ItemFormUpdate(){
         searchTerm,
         setSearchTerm,
         isMobile,
+        getID,
+        setGetID
     };
 }

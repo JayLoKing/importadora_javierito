@@ -1,4 +1,4 @@
-export interface ItemDTO {
+export interface NewItemDTO {
     name: string;
     alias: string;
     description: string;
@@ -19,7 +19,8 @@ export interface ItemDTO {
     acronym: string;
 }
 
-export interface GetItems {
+
+export interface Item {
     itemID: number;
     name: string;
     description: string;
@@ -36,6 +37,24 @@ export interface GetItems {
     totalStock: number;
 }
 
+export interface ItemById{
+    itemID: number;
+    name: string;
+    alias: string;
+    description: string;
+    model: string;
+    price: number;
+    wholesalePrice: number;
+    barePrice: number;
+    brandID: number;
+    subCategoryID: number;
+    weight: number;
+    dateManufacture: string;
+    itemAddressID: number;
+    userID: number;
+    itemImages: string[];
+}
+
 export interface ItemAddress {
     id: number;
     name: string;
@@ -50,15 +69,3 @@ export interface SubCategory {
     id: number;
     name: string;
 }
-
-export interface UpdateStockItem {
-    itemID: number;
-    quantity: number;
-}
-
-export interface GetItemStock {
-    itemID: number;
-    name: string;
-    quantity: number;
-}
-
