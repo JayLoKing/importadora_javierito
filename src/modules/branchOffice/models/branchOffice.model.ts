@@ -28,5 +28,6 @@ export interface BranchOfficeDetailsDTO {
 
 export interface OfficeImages {
     id: number,
-    path: string
+    path: string,
+    status: number
 }

@@ -45,6 +45,7 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
             resetValues()
         }
         setFiles([])
+        console.log(details)
     }, [action, details]);
 
     function handleMarkerChange(lat: number, lng: number) {
@@ -138,10 +139,16 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
                                             const filesOnLoad = fileList.map(file => file.blobFile).filter(Boolean) as File[];
                                             setFiles(filesOnLoad);
                                         }}
+                                        onRemove={(file) => {
+                                            if (file.url) {
+                                                details?.images.find(image => image.path === file.url)?.status === 1
+                                            }
+
+                                        }}
                                         defaultFileList={action === 'update' && details?.images.length! > 0 ?
                                             details?.images.map(image => ({
                                                 name: `image-${image.id}`,
-                                                url: image.path
+                                                url: image.path,
                                             })) :
                                             []}>
                                         <Button appearance="default" startIcon={<FaCamera />}>Seleccionar Imágenes...</Button>
@@ -164,7 +171,8 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
                 </Grid>
             </ModalBody>
             <ModalFooter>
-                <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
+                {/* <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button> */}
+                <Button onClick={(e) => console.log(details)} type="submit" appearance="primary">Aceptar</Button>
                 <Button onClick={() => {
                     resetValues()
                     hiddeModal(false, action)
