@@ -1,5 +1,5 @@
 import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, InputNumber } from "rsuite";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, InputNumber, Input } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
@@ -284,9 +284,13 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />
                                             </InputGroup.Addon>
-                                            <textarea style={{width: "100%", border:"none", outline:"none", resize:"none"}} value={formData.description}  placeholder="Descripcion del repuesto" id="description" name="description" onChange={(e) => updateField('description', e.target.value)} rows={5}  >
-
-                                            </textarea>
+                                            <Input
+                                                value={formData.description}
+                                                name="description"
+                                                as={'textarea'}
+                                                rows={5}
+                                                placeholder="Descripcion del repuesto"
+                                                onChange={(value) => updateField('description', value)} />
                                         </InputGroup>
                                     </Form.Group>
                                        

@@ -102,9 +102,12 @@ export function ItemFormUpdate(){
     };
 
 
-    function handleModalUpdate(hidde: boolean){
-        setShowModal(hidde);
-    }
+    const handleModalUpdate = (isOpen: boolean) => {
+        if (!isOpen) {
+          setGetID(0); // Limpia el ID al cerrar el modal
+        }
+        setShowModal(isOpen);
+      };
 
     return {
         formValue,
