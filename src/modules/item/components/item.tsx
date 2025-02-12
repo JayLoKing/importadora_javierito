@@ -14,15 +14,19 @@ import { useItemTable } from "../hooks/useItemTable";
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
+    const {handleModalCreate, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
     const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
-    const [showModalDelete, setShowModal] = useState<boolean>(false)
 
-    function handleModalDelete(hidde: boolean): void{
-        setShowModal(hidde);
-    }
-    
+    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
+    const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
+
+    const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
+      if (item) {
+          setSelectedItem(item);
+      }
+      setShowModalDelete(open);
+  };
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
     const filteredData = useMemo(() => {
@@ -130,60 +134,28 @@ export default function ItemTable() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={60} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={controlData} rowHeight={65} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
-                                    {(rowData) => (
-                                      <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                          <IconButton
-                                            onClick={() => {
-                                              setGetID(rowData.itemID);
-                                              handleModalUpdate(true);
-                                            }}
-                                            icon={<FaEdit style={{ width: 22, height: 22 }} />}
-                                            style={{ width: 40, background: "transparent", color: "#f08b33" }}
-                                            appearance="primary"
-                                          />
-                                        </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
-                                          <IconButton
-                                            onClick={() => {
-                                              setGetID(rowData.itemID); 
-                                              handleModalDelete(true); 
-                                            }}
-                                            icon={<FaTrash style={{ width: 20, height: 20 }} />}
-                                            style={{ width: 40, background: "transparent", color: "red" }}
-                                            appearance="primary"
-                                          />
-                                        </Whisper>
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                          <IconButton
-                                            onClick={(event) => {
-                                              event.stopPropagation();
-                                              setGetID(rowData.itemID); 
-                                            }}
-                                            icon={<FaSync style={{ width: 20, height: 20 }} />}
-                                            style={{ width: 40, background: "transparent", color: "green" }}
-                                            appearance="primary"
-                                          />
-                                        </Whisper>
-
-                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barra</Tooltip>}>
-                                          <IconButton
-                                            onClick={(event) => {
-                                              event.stopPropagation();
-                                              setGetID(rowData.itemID);
-                                            }}
-                                            icon={<FaBarcode style={{ width: 20, height: 20 }} />}
-                                            style={{ width: 40, background: "transparent", color: "black" }}
-                                            appearance="primary"
-                                          />
-                                        </Whisper>
-                                      </Stack>
+                                    { rowData => (
+                                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
+                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
+                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                            </Whisper>
+                                        </Stack>
                                     )}
-                                  </Cell>
+                                </Cell>
+
                             </Column>
                             {false && (
                                 <Column width={200} resizable>
@@ -192,7 +164,7 @@ export default function ItemTable() {
                                 </Column>
                             )}
                             <Column align="center" flexGrow={1} minWidth={140}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre del Repuesto</HeaderCell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre del Repuesto</HeaderCell>
                                 <Cell dataKey="name" />
                             </Column>
                         
@@ -284,7 +256,7 @@ export default function ItemTable() {
                             locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
                             />
-                       </>
+                      </>
                     
                     ) : (
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -293,7 +265,8 @@ export default function ItemTable() {
                     )}
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
                     <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
+
             </div>
         );   
     } else {
@@ -391,7 +364,7 @@ export default function ItemTable() {
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
               <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name}/>
             </div>
           );
     }
