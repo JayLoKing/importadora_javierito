@@ -1,6 +1,6 @@
 export interface ExcelReportsDTO {
-    startDate: string;  // Formato yyyy-MM-dd
-    endDate: string;    // Formato yyyy-MM-dd
+    startDate: Date;  
+    endDate: Date;    
 }
 
 export interface GetReportData{

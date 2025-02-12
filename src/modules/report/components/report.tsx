@@ -30,9 +30,9 @@ export default function Report(){
     const requestData = {
         startDate: startDate ? startDate.toISOString().split('T')[0] : '',
         endDate: endDate ? endDate.toISOString().split('T')[0] : '',
-      };
+    };
     
-    const { data: fetchedData, loading, error, fetchData } = FetchDataByIdAsync<GetReportData[]>(ItemUrl.excelReport, requestData);
+    const { data: fetchedData, fetchData } = FetchDataByIdAsync<GetReportData[]>(ItemUrl.excelReport, requestData);
     
     useEffect(() => {
         const sessionData = sessionStorage.getItem('reportData');
