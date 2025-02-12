@@ -5,7 +5,7 @@ import Register from "../modules/auth/components/register";
 import LandingPage from "../pages/landing/components/landingPage";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 import Layout from "../pages/layout/layout";
-import Item from "../modules/item/components/item.tsx";
+import ItemTable from "../modules/item/components/item.tsx";
 import Home from "../modules/home/components/homeContainer.tsx";
 import Report from "../modules/report/components/report.tsx";
 
@@ -18,7 +18,7 @@ export default function Routing() {
             <Route path="/report" element={<Layout titleComponent={'REPORTES'} children={<Report />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />
             <Route path="/login" element={<AuthContainer children={<Login />} />} />
-            <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<Item />} />} />
+            <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
         </Routes>
     )
 }

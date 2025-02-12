@@ -2,7 +2,7 @@ import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, In
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
-import { GetItems } from "../models/item.model";
+import { Item } from "../models/item.model";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
@@ -13,9 +13,9 @@ import { useItemTable } from "../hooks/useItemTable";
 
 const { Column, HeaderCell, Cell } = Table;
 
-export default function Item() {
+export default function ItemTable() {
     const {handleModalCreate, showModal, limit, page,handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
-    const { data, loading } = FetchDataAsync<GetItems[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
+    const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
     const [showModalDelete, setShowModal] = useState<boolean>(false)
 
@@ -130,28 +130,60 @@ export default function Item() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={60} onRowClick={rowData => setGetID(rowData.itemID)} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={60} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
-                                <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                      
-                                      <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                          <IconButton onClick={() => {
-                                            handleModalUpdate(true)
-                                          }} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
-                                      </Whisper>
-                                      <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
-                                          <IconButton onClick={() => handleModalDelete(true)} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
-                                      </Whisper>
-                                      <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                          <IconButton icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
-                                      </Whisper>
-                                      <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
-                                          <IconButton icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                                      </Whisper>
-                                  </Stack>
-                                </Cell>
+                                    {(rowData) => (
+                                      <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                          <IconButton
+                                            onClick={() => {
+                                              setGetID(rowData.itemID);
+                                              handleModalUpdate(true);
+                                            }}
+                                            icon={<FaEdit style={{ width: 22, height: 22 }} />}
+                                            style={{ width: 40, background: "transparent", color: "#f08b33" }}
+                                            appearance="primary"
+                                          />
+                                        </Whisper>
+                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
+                                          <IconButton
+                                            onClick={() => {
+                                              setGetID(rowData.itemID); 
+                                              handleModalDelete(true); 
+                                            }}
+                                            icon={<FaTrash style={{ width: 20, height: 20 }} />}
+                                            style={{ width: 40, background: "transparent", color: "red" }}
+                                            appearance="primary"
+                                          />
+                                        </Whisper>
+                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
+                                          <IconButton
+                                            onClick={(event) => {
+                                              event.stopPropagation();
+                                              setGetID(rowData.itemID); 
+                                            }}
+                                            icon={<FaSync style={{ width: 20, height: 20 }} />}
+                                            style={{ width: 40, background: "transparent", color: "green" }}
+                                            appearance="primary"
+                                          />
+                                        </Whisper>
+
+                                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barra</Tooltip>}>
+                                          <IconButton
+                                            onClick={(event) => {
+                                              event.stopPropagation();
+                                              setGetID(rowData.itemID);
+                                            }}
+                                            icon={<FaBarcode style={{ width: 20, height: 20 }} />}
+                                            style={{ width: 40, background: "transparent", color: "black" }}
+                                            appearance="primary"
+                                          />
+                                        </Whisper>
+                                      </Stack>
+                                    )}
+                                  </Cell>
                             </Column>
                             {false && (
                                 <Column width={200} resizable>

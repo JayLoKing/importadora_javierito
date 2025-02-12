@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ItemDTO } from "../models/item.model";
-import { validationItemFormModel } from "../utils/validationForm";
+import { NewItemDTO } from "../models/item.model";
+import { validationItemCreateFormModel } from "../utils/validationForm";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { UpdateAsync } from "../services/itemService";
@@ -15,7 +15,7 @@ export function ItemFormUpdate(){
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const jwt = useAuthStore(state => state.jwt);
-    const [formValue, setFormValue] = useState<ItemDTO>({
+    const [formValue, setFormValue] = useState<NewItemDTO>({
         name: '',
         alias: '',
         description: '',
@@ -35,7 +35,7 @@ export function ItemFormUpdate(){
         acronym: ''
     });
 
-    const model = validationItemFormModel;
+    const model = validationItemCreateFormModel;
 
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
@@ -93,7 +93,7 @@ export function ItemFormUpdate(){
         });
     };
 
-    function handleInputChange(field: keyof ItemDTO, value: any) {
+    function handleInputChange(field: keyof NewItemDTO, value: any) {
         console.log("Campo actualizado:", field, "Valor:", value);
         setFormValue((prevValues) => ({
                 ...prevValues,
@@ -102,9 +102,12 @@ export function ItemFormUpdate(){
     };
 
 
-    function handleModalUpdate(hidde: boolean){
-        setShowModal(hidde);
-    }
+    const handleModalUpdate = (isOpen: boolean) => {
+        if (!isOpen) {
+          setGetID(0); // Limpia el ID al cerrar el modal
+        }
+        setShowModal(isOpen);
+      };
 
     return {
         formValue,
