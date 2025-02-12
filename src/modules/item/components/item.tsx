@@ -134,7 +134,7 @@ export default function ItemTable() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  autoHeight data={controlData} rowHeight={65} onRowClick={rowData => setGetID(rowData.itemID)} headerHeight={65}>
+                        <Table style={{borderRadius:"15px", background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={controlData} rowHeight={65} onRowClick={rowData => setGetID(rowData.itemID)} headerHeight={65}>
                             <Column  align="center" flexGrow={3.7} minWidth={130}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -163,7 +163,7 @@ export default function ItemTable() {
                                 </Column>
                             )}
                             <Column align="center" flexGrow={1} minWidth={140}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre del Repuesto</HeaderCell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre del Repuesto</HeaderCell>
                                 <Cell dataKey="name" />
                             </Column>
                         
@@ -255,7 +255,7 @@ export default function ItemTable() {
                             locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
                             />
-                       </>
+                      </>
                     
                     ) : (
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>

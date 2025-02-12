@@ -100,10 +100,10 @@ export default function Login() {
                 </VStack>
             </Form>
 
-            <div className='signUpSection' >
+            {/* <div className='signUpSection' >
                 <Text className='signUpText' >¿No tienes una cuenta?</Text>
                 <a onClick={() => navigate('/register')} className='link' >Registrarse</a>
-            </div>
+            </div> */}
         </Panel>
     );
 }

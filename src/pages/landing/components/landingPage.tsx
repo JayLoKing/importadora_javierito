@@ -46,7 +46,7 @@ export default function LandingPage(){
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
                         <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
-                        <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> window.open("/register", "_blank", "noopener,noreferrer")}>Registrarse</Button>
+                        {/* <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> window.open("/register", "_blank", "noopener,noreferrer")}>Registrarse</Button> */}
                         <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
                     </div>
                 </Navbar>
@@ -83,7 +83,7 @@ export default function LandingPage(){
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
                 <Divider></Divider>
                 <div style={{ display: "flex", gap: "15px", alignItems:"center"}}>
-                    <label style={{fontSize:"18px"}}>¿No encontraste lo que buscabas? <strong>Contáctanos:</strong></label>
+                    <label style={{fontSize:"18px"}}><strong>¿No encontraste lo que buscabas?</strong> Contáctanos:</label>
                     <IconButton style={{fontSize:"30px"}} icon={<FaFacebook />} appearance="subtle" onClick={handleFacebook} />
                     <IconButton style={{fontSize:"30px"}} icon={<FaWhatsapp />} appearance="subtle" onClick={handleWhatsapp} />
                     <IconButton style={{fontSize:"30px"}} icon={<FaTiktok />} appearance="subtle" onClick={handleTikTok} />

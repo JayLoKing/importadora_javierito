@@ -1,4 +1,4 @@
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { Button, Modal, Stack } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
@@ -57,7 +57,7 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
                 <ModalHeader>
                     <ModalTitle >
                         <Stack justifyContent="center" alignItems="center">
-                        <FaExclamationCircle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
+                        <FaExclamationTriangle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
                             <strong>Advertencia</strong>
                         </Stack>
                     </ModalTitle>
