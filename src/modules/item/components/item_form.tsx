@@ -61,32 +61,71 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     
     const handleFileChange = async (files: any[]) => {
         try {
+            console.log(`Item: ${formData.name}`);
+            console.log('Iniciando manejo de archivos...');
             const currentUrls = formData.pathItems;
-
+            console.log('URLs actuales en pathItems:', currentUrls);
             const removedUrls = currentUrls.filter(
                 (url) => !files.some((file) => file.url === url)
             );
-
+            console.log('URLs eliminadas:', removedUrls);
+    
             if (removedUrls.length > 0) {
-                await Promise.all(removedUrls.map((url) => deleteFile(url)));
+                console.log('Eliminando archivos del storage...');
+                await Promise.all(removedUrls.map(async (url) => {
+                    try {
+                        console.log(`Eliminando archivo con URL: ${url}`);
+                        await deleteFile(url);
+                        console.log(`Archivo eliminado correctamente: ${url}`);
+                    } catch (error) {
+                        console.error(`Error al eliminar el archivo ${url}:`, error);
+                    }
+                }));
+            } else {
+                console.log('No hay archivos para eliminar.');
             }
-
-            const newImages = files.filter((file) => !file.url) .map((file) => file.blobFile);
-
-            const uploadPromises = newImages.map(async (file) => {
-                const pathImage = await fileUpload(file, formData);
-                return pathImage;
-            });
-
-            const pathImages = await Promise.all(uploadPromises);
-
-            console.log(pathImages.length);
-            if(pathImages.length > 5 || pathImages.length < 0){
+    
+            const newImages = files.filter((file) => file.blobFile).map((file) => file.blobFile);
+    
+            console.log('Nuevas imágenes a subir:', newImages);
+    
+            const totalImagesAfterUpdate = newImages.length + currentUrls.length - removedUrls.length;
+            console.log('Total de imágenes después de la actualización:', totalImagesAfterUpdate);
+    
+            if (totalImagesAfterUpdate > 5) {
+                console.log('Límite de imágenes excedido. No se subirán más imágenes.');
+                toaster.push(
+                    <Message closable showIcon type="warning">
+                        No puede subir mas de 5 imágenes
+                    </Message>,
+                    { placement: 'topCenter', duration: 3000 }
+                );
                 setIsValidImgs(true);
-            } 
+                return; 
+            }
+    
+            console.log('Subiendo nuevas imágenes al storage...');
+            const uploadPromises = newImages.map(async (file) => {
+                try {
+                    console.log(`Subiendo archivo: ${file.name || 'archivo sin nombre'}`);
+                    const pathImage = await fileUpload(file, formData.name ?? "DefaultNAME");
+                    console.log(`Archivo subido correctamente. URL: ${pathImage}`);
+                    return pathImage;
+                } catch (error) {
+                    console.error('Error al subir el archivo:', error);
+                    return null;
+                }
+            });
+    
+            const pathImages = (await Promise.all(uploadPromises)).filter((url) => url !== null);
+            console.log('URLs de las nuevas imágenes subidas:', pathImages);
+    
+            const updatedUrls = [...currentUrls.filter((url) => !removedUrls.includes(url)), ...pathImages];
+            console.log('URLs actualizadas en pathItems:', updatedUrls);
+            updateField('pathItems', updatedUrls);
+    
             setIsValidImgs(false);
-            updateField('pathItems', [...currentUrls.filter((url) => !removedUrls.includes(url)), ...pathImages]);
-                
+            console.log('Manejo de archivos completado correctamente.');
         } catch (error) {
             console.error('Error al manejar archivos:', error);
             toaster.push(
@@ -336,23 +375,29 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                         <Form.Group controlId={'pathItems'}>
                                             <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
-                                                <Uploader 
-                                                id="fileImage" 
+                                            <Uploader
+                                                id="fileImage"
                                                 autoUpload={false}
-                                                 multiple 
-                                                 listType="picture-text" 
-                                                 action="/" 
-                                                 onChange={
-                                                    async (filesList) => {
-                                                        const files = filesList.map(file => file.blobFile).filter(Boolean) as File[];
-                                                        await handleFileChange(files)
-                                                    }
-                                                } 
-                                                 defaultFileList={[]}>
-                                                    <button>
-                                                        <FaCamera />
-                                                    </button>
-                                                </Uploader>
+                                                multiple
+                                                listType="picture-text"
+                                                action="/"
+                                                onChange={async (filesList) => {
+                                                    // Verifica que cada archivo tenga `blobFile` antes de mapear
+                                                    const files = filesList
+                                                        .map(file => file.blobFile) // Extrae `blobFile`
+                                                        .filter(Boolean) // Filtra valores `undefined` o `null`
+                                                        .map(blobFile => ({
+                                                            name: blobFile!.name, // Asegúrate de que `name` esté definido
+                                                            blobFile, // Mantén el archivo original
+                                                        }));
+                                                    await handleFileChange(files);
+                                                }}
+                                                defaultFileList={[]}
+                                            >
+                                                <button>
+                                                    <FaCamera />
+                                                </button>
+                                            </Uploader>
                                                 <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
                                         </Form.Group>
                                     </Col>          
