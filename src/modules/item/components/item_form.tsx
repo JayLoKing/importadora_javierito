@@ -13,6 +13,7 @@ import { ItemUrl } from "../urls/item.url";
 import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
 import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
 import { useItemForm } from "../hooks/useItemForm";
+import { useNotificationService } from "../../../context/NotificationContext";
 
 interface ItemModalParams {
     open: boolean;
@@ -29,6 +30,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
     const {handleSubmit} = useItemForm();
+    const notificationService = useNotificationService(); 
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
@@ -140,7 +142,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!formRef.current.check()) {
+        if (formRef.current.check()) {
             console.error(formData);
             console.error("El formulario no es válido");
             return;
@@ -162,6 +164,16 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                     </Message>,
                     { placement: 'topCenter', duration: 3000 }
                 );
+            } else {
+    
+                notificationService.addNotification({
+                    id: Math.random().toString(), 
+                    message: 'Se creó un nuevo ítem.',
+                    timestamp: new Date(),
+                    type: 'CREATE',
+                    userId: 1, 
+                    targetRole: 1, 
+                });
             }
             formRef.current.reset();
             resetForm();
