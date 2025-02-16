@@ -8,7 +8,7 @@ import { FetchDataAsync } from "../services/itemService";
 import "../styles/styles.css";
 import { FormEvent, useState, useRef} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
-import { fileUpload } from "../services/storageService";
+import { deleteFile, fileUpload } from "../services/storageService";
 import { ItemUrl } from "../urls/item.url";
 import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
 import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
@@ -38,17 +38,17 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const brandsOptions = dataBrands?.map(brand => ({
         label: brand.name,
         value: brand.id 
-     })) || [];
+    })) || [];
 
-     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({
+    const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({
         label: itemAddress.name,
         value: itemAddress.id 
-     })) || [];
+    })) || [];
 
-     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({
+    const subCategoriesOptions = dataSubCategories?.map(subCategory => ({
         label: subCategory.name,
         value: subCategory.id 
-     })) || [];
+    })) || [];
     
     const showSuccessMessage = () => {
         toaster.push(
@@ -59,22 +59,42 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         );
     };
     
-     const handleFileChange = async (files: File[]) => {
+    const handleFileChange = async (files: any[]) => {
         try {
-            const uploadPromises = files.map(async (file) => {
+            const currentUrls = formData.pathItems;
+
+            const removedUrls = currentUrls.filter(
+                (url) => !files.some((file) => file.url === url)
+            );
+
+            if (removedUrls.length > 0) {
+                await Promise.all(removedUrls.map((url) => deleteFile(url)));
+            }
+
+            const newImages = files.filter((file) => !file.url) .map((file) => file.blobFile);
+
+            const uploadPromises = newImages.map(async (file) => {
                 const pathImage = await fileUpload(file, formData);
                 return pathImage;
             });
+
             const pathImages = await Promise.all(uploadPromises);
+
             console.log(pathImages.length);
             if(pathImages.length > 5 || pathImages.length < 0){
                 setIsValidImgs(true);
             } 
             setIsValidImgs(false);
-            updateField('pathItems', [...formData.pathItems, ...pathImages]);
+            updateField('pathItems', [...currentUrls.filter((url) => !removedUrls.includes(url)), ...pathImages]);
                 
         } catch (error) {
-            console.error('Error al cargar archivos:', error);
+            console.error('Error al manejar archivos:', error);
+            toaster.push(
+                <Message closable showIcon type="error">
+                    Error al manejar las imágenes
+                </Message>,
+                { placement: 'topCenter', duration: 3000 }
+            );
         }
     };
 
@@ -108,6 +128,24 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             resetForm();
         }
     };
+
+    const handleCancel = async () => {
+        try {
+            if (formData.pathItems.length > 0) {
+                await Promise.all(formData.pathItems.map((url) => deleteFile(url)));
+            }
+            hiddeModal(false);
+            resetForm();
+        } catch (error) {
+            console.error('Error al cancelar el formulario:', error);
+            toaster.push(
+                <Message closable showIcon type="error">
+                    Error al cancelar el formulario
+                </Message>,
+                { placement: 'topCenter', duration: 3000 }
+            );
+        }
+    }
 
     return (
         <>
@@ -325,7 +363,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={(e) => handleFormSubmit(e)} type="submit" appearance="primary">Registrar</Button>
-                    <Button onClick={() => hiddeModal(open)} appearance="default">Cancelar</Button>
+                    <Button onClick={handleCancel} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>
         </>
