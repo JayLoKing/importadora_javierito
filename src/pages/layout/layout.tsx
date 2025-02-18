@@ -188,15 +188,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                   </Dropdown>
                 ) : (
                   <>
-                    <Whisper trigger="click" placement="bottomEnd" speaker={
-                      <Popover title="Notificaciones">
-                        <div style={{ padding: "10px" }}>
-                          <NotificationComponent userRole={1} />
-                        </div>
-                      </Popover>
-                    }>
-                      <IconButton style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
-                    </Whisper>
+                    <NotificationComponent userRole={"Administrador"} visibility={handleVisibility}/>
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover style={{ textAlign: "center" }}>
                         <div style={{ padding: "5px", fontSize: "13px" }}>

@@ -23,7 +23,7 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
         weight: 0,
         dateManufacture: '',
         itemAddressID: 0,
-        userID: 1,
+        userID: 0,
         pathItems: [],
         branchOfficeID: 0,
         quantity: 0,

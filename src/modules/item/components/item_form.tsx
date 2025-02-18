@@ -14,6 +14,8 @@ import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
 import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
 import { useItemForm } from "../hooks/useItemForm";
 import { useNotificationService } from "../../../context/NotificationContext";
+import { useAuthStore } from "../../../store/store";
+import { jwtDecoder } from "../../../utils/jwtDecoder";
 
 interface ItemModalParams {
     open: boolean;
@@ -31,6 +33,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
     const {handleSubmit} = useItemForm();
     const notificationService = useNotificationService(); 
+    const jwt = useAuthStore(state => state.jwt);
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({
        label: branch.name,
@@ -139,9 +142,52 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         }
     };
 
+    const branchOfficeOptionsES = {
+        searchPlaceholder: "Buscar Sucursal..."
+    };
+    
+    const brandsOptionsES = {
+        searchPlaceholder: "Buscar marca..."
+    };
+    
+    const itemAddressesOptionsES = {
+        searchPlaceholder: "Buscar direccion..."
+    };
+    
+    const subCategoriesOptionsES = {
+        searchPlaceholder: "Buscar sub-categoria..."
+    };
+
+    const getUsernameAndRoleName = () => {
+        let roleName, userName, userId;
+        if(jwt){
+            let decode = jwtDecoder(jwt);
+            switch(decode.role){
+                case "ROLE_Admin":
+                    roleName = "Administrador"; 
+                    userName = decode.sub;
+                    userId = decode.id;
+                    break;
+                case "ROLE_Owner":
+                    roleName = "Dueño"; 
+                    userName = decode.sub;
+                    userId = decode.id;
+                    break;
+                default:
+                    roleName = "Vendedor";
+                    userName = decode.sub;
+                    userId = decode.id;
+                    break;
+            }
+            return [roleName, userName, userId];
+        }
+        return "";
+    }
+
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
-
+        const [roleName, userName, userId] = getUsernameAndRoleName();
+        formData.userID = userId as number;
         if (formRef.current.check()) {
             console.error(formData);
             console.error("El formulario no es válido");
@@ -157,22 +203,23 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             );
         } else {
             const success = await handleSubmit(showSuccessMessage, formData);
-            if (!success) {
+            if (success) {
                 toaster.push(
                     <Message closable showIcon type="error">
                         Hubo un error en el registro
                     </Message>,
                     { placement: 'topCenter', duration: 3000 }
                 );
+                return;
             } else {
-    
                 notificationService.addNotification({
                     id: Math.random().toString(), 
-                    message: 'Se creó un nuevo ítem.',
+                    message: 'creó un nuevo ítem',
                     timestamp: new Date(),
-                    type: 'CREATE',
-                    userId: 1, 
-                    targetRole: 1, 
+                    actionType: 'REGISTRO',
+                    type: 'Repuesto',
+                    userName: userName as string,
+                    targetRole: roleName as string, 
                 });
             }
             formRef.current.reset();
@@ -293,13 +340,13 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
 
                                             <Form.Group controlId={'brandID'}>
                                                 <Form.ControlLabel>Marca del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                                <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
                                             </Form.Group>
 
 
                                             <Form.Group controlId={'subCategoryID'}>
                                                 <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                                <SelectPicker onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                                <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'weight'}>
@@ -330,11 +377,11 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     <Col xs={24} md={8}>
                                         <Form.Group controlId={'itemAddressID'}>
                                             <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                                <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
                                             <Form.Group controlId={'branchOfficeID'}>
                                                 <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                                <SelectPicker onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                                <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
                                             </Form.Group>
 
                                             <Form.Group controlId={'quantity'}>
@@ -394,17 +441,16 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                 listType="picture-text"
                                                 action="/"
                                                 onChange={async (filesList) => {
-                                                    // Verifica que cada archivo tenga `blobFile` antes de mapear
                                                     const files = filesList
-                                                        .map(file => file.blobFile) // Extrae `blobFile`
-                                                        .filter(Boolean) // Filtra valores `undefined` o `null`
+                                                        .map(file => file.blobFile) 
+                                                        .filter(Boolean) 
                                                         .map(blobFile => ({
-                                                            name: blobFile!.name, // Asegúrate de que `name` esté definido
-                                                            blobFile, // Mantén el archivo original
+                                                            name: blobFile!.name, 
+                                                            blobFile, 
                                                         }));
                                                     await handleFileChange(files);
                                                 }}
-                                                defaultFileList={[]}
+                                                defaultFileList={formData.pathItems as []}
                                             >
                                                 <button>
                                                     <FaCamera />

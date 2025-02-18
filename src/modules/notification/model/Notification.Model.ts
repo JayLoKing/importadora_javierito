@@ -1,15 +1,15 @@
-// Notification.ts
 export interface Notification {
     id: string;
     message: string;
     timestamp: Date;
-    type: 'CREATE' | 'UPDATE' | 'DELETE' | 'RESERVATION';
-    userId?: number; 
-    targetRole?: number; 
+    actionType: 'REGISTRO' | 'EDICION' | 'ELIMINACION' | 'RESERVA';
+    type: 'Repuesto' | 'Sucursal' | 'Personal';
+    userName: string;
+    targetRole?: string; 
 }
 
 export interface Observer {
-    role: number;
+    role: string;
     update(notification: Notification): void;
 }
   
