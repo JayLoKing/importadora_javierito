@@ -1,4 +1,4 @@
-import { DatePicker, FlexboxGrid, Form, Heading, IconButton, InputGroup, Stack, Table, Tooltip, Whisper } from "rsuite";
+import { DatePicker, FlexboxGrid, Form, Heading, IconButton, InputGroup, Message, Stack, Table, Tooltip, Whisper } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
 import FormGroup from "rsuite/esm/FormGroup";
@@ -26,6 +26,7 @@ export default function Report() {
     const [data, setData] = useState<ReportData[]>([]);
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const requestData = {
         startDate: startDate,
@@ -44,7 +45,7 @@ export default function Report() {
                     datakey: 1,
                     name: "Prueba 1",
                     type: "Excel",
-                    filter: "-",
+                    filter: "Importadora Javierito",
                     date: "11/02/2025 - 12:00:00",
                     data: [],
                 },
@@ -52,7 +53,7 @@ export default function Report() {
                     datakey: 2,
                     name: "Prueba 2",
                     type: "CSV",
-                    filter: "-",
+                    filter: "Importadora Javierito",
                     date: "12/02/2025 - 14:30:00",
                     data: [],
                 },
@@ -63,25 +64,33 @@ export default function Report() {
     }, []);
 
     const handleAddReport = async () => {
-        console.log(requestData)
-        await fetchData();
-        if (fetchedData && fetchedData.length > 0) {
-            const newReport: ReportData = {
-                datakey: data.length + 1,
-                name: `Reporte ${data.length + 1}`,
-                type: "Excel",
-                filter: `${startDate || '-'} - ${endDate || '-'}`,
-                date: new Date().toLocaleString(),
-                data: fetchedData,
-            };
-
-            const updatedData = [...data, newReport];
-            setData(updatedData);
-            sessionStorage.setItem('reportData', JSON.stringify(updatedData));
-
-            alert("Reporte generado exitosamente");
-        } else {
-            alert("No se encontraron datos para el rango de fechas seleccionado.");
+        if(!startDate || !endDate){
+            alert("Por favor, seleccione un rango de fechas.");
+            return;
+        }
+        try{
+            const response = await fetchData();
+            if (response && response.length > 0) {
+                const newReport: ReportData = {
+                    datakey: data.length + 1,
+                    name: `Reporte ${data.length + 1}`,
+                    type: "Excel - CSV",
+                    filter: "Importadora Javierito",
+                    date: new Date().toLocaleString(),
+                    data: response,
+                };
+    
+                const updatedData = [...data, newReport];
+                setData(updatedData);
+                sessionStorage.setItem('reportData', JSON.stringify(updatedData));
+                
+            } else {
+                alert("No se encontraron datos para el rango de fechas seleccionado.");
+            }
+        }
+        catch(error){
+            console.error("Error al obtener los datos del reporte:", error);
+            alert("Ocurrió un error al obtener los datos del reporte.");
         }
     };
 
@@ -93,7 +102,6 @@ export default function Report() {
                 } else {
                     exportToCSV(rowData.data, `${rowData.name}_CSV`);
                 }
-                alert(`¡Reporte ${format.toUpperCase()} descargado con éxito!`);
             } else {
                 alert("Este reporte no contiene datos.");
             }
@@ -119,6 +127,7 @@ export default function Report() {
                                     placeholder="yyyy-MM-dd"
                                     style={{ width: '100%' }}
                                     onChange={(value) => setStartDate(value?.toISOString() || null)}
+                                    disabledDate={(date) => date ? date > new Date() : false}
                                 />
                             </InputGroup>
                         </FormGroup>
@@ -135,6 +144,7 @@ export default function Report() {
                                     placeholder="yyyy-MM-dd"
                                     style={{ width: '100%' }}
                                     onChange={(value) => setEndDate(value?.toISOString() || null)}
+                                    disabledDate={(date) => date ? date > new Date() : false}
                                 />
                             </InputGroup>
                         </FormGroup>
@@ -142,7 +152,7 @@ export default function Report() {
                 </FlexboxGrid>
                 <FlexboxGrid style={{ display: "flex", justifyContent: "end", marginTop: -60 }}>
                     <FlexboxGridItem >
-                        <IconButton icon={< PlusIcon />} appearance="primary" onClick={handleAddReport}> Nuevo Reporte </IconButton>
+                        <IconButton icon={< PlusIcon />} appearance="primary" onClick={handleAddReport} loading={isLoading} > {isLoading ? 'Generando..': 'Nuevo Reporte'} </IconButton>
                     </FlexboxGridItem>
                 </FlexboxGrid>
             </Form>
@@ -163,7 +173,7 @@ export default function Report() {
                     <Cell dataKey="type" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={90}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Filtros</HeaderCell>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Empresa</HeaderCell>
                     <Cell dataKey="filter" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={190}>

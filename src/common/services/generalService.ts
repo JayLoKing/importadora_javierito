@@ -51,7 +51,7 @@ export const FetchDataByIdAsync = <T>(url: string, body: any) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ErrorType>(null);
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (): Promise<T | null> => {
         const abortController = new AbortController();
         setLoading(true);
         setError(null);
@@ -59,6 +59,7 @@ export const FetchDataByIdAsync = <T>(url: string, body: any) => {
             const response = await httpClient.post(url, body, {signal: abortController.signal,});
             if (response.status === 200) {
                 setData(response.data);
+                return response.data;
             } else {
                 throw new Error(response.statusText);
             }
@@ -66,14 +67,13 @@ export const FetchDataByIdAsync = <T>(url: string, body: any) => {
             if (!abortController.signal.aborted) {
                 setError(error as Error);
             }
+            return null;
         } finally {
             if (!abortController.signal.aborted) {
                 setLoading(false);
             }
         }
-        return () => {
-            abortController.abort();
-        };
+
     }, [url, body]);
     return { data, loading, error, fetchData };
 };

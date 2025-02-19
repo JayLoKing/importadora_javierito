@@ -1,7 +1,8 @@
 import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton } from "rsuite";
 import "../styles/styles.css"
 import LOGO from '../../../assets/LogoJavier.jpg';
-import { FaEnvelope, FaFacebook, FaTiktok, FaUser, FaWhatsapp, FaWrench } from "react-icons/fa";
+import AdminIcon  from '@rsuite/icons/Admin';
+import { FaEnvelope, FaFacebook, FaTiktok, FaUserTie, FaWhatsapp, FaWrench } from "react-icons/fa";
 
 export default function LandingPage(){
     const handleFacebook = () => {
@@ -45,7 +46,7 @@ export default function LandingPage(){
                     </Dropdown>
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
-                        <IconButton icon={<FaUser style={{marginRight:"5px"}}/>} style={{fontWeight:"bold", color:"white", background:"transparent"}} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
+                        <IconButton appearance="primary" icon={< AdminIcon style={{ fontWeight:"bold", background:"transparent" }}/>} style={{ fontWeight:"bold", border:"1px solid white", color:"white" }} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
                         {/* <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> window.open("/register", "_blank", "noopener,noreferrer")}>Registrarse</Button> */}
                         <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
                     </div>
