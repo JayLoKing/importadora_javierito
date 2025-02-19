@@ -26,7 +26,7 @@ export default function ItemTable() {
           setSelectedItem(item);
       }
       setShowModalDelete(open);
-  };
+    };
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
     const filteredData = useMemo(() => {
@@ -362,7 +362,7 @@ export default function ItemTable() {
                   </div>
                 )}
               </div>
-              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
+              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)}/>
               <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
               <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name}/>
             </div>

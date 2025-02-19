@@ -1,5 +1,5 @@
 import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle, } from "rsuite";
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
@@ -11,10 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/store";
 import { jwtDecoder } from "../../utils/jwtDecoder";
 import { AuthUser } from "../../modules/auth/models/auth.model";
+import { NotificationComponent } from "../../modules/notification/components/Notification";
 
 interface LayoutProps {
-  titleComponent: React.ReactNode;
-  children: React.ReactNode;
+  titleComponent: ReactNode;
+  children: ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
@@ -25,7 +26,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const [visible, setVisible] = useState(false);
   const handleVisibility = () => setVisible(!visible);
   const navigate = useNavigate();
-
   const jwt = useAuthStore(state => state.jwt);
   const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
 
@@ -188,19 +188,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                   </Dropdown>
                 ) : (
                   <>
-                    <Whisper trigger="click" placement="bottomEnd" speaker={
-                      <Popover title="Notificaciones">
-                        <div style={{ padding: "10px" }}>
-                          <p><strong>Notificación 1:</strong> Pedido recibido</p>
-                          <Divider></Divider>
-                          <p><strong>Notificación 2:</strong> Inventario actualizado</p>
-                          <Divider></Divider>
-                          <p><strong>Notificación 3:</strong> Juan Registro un motor</p>
-                        </div>
-                      </Popover>
-                    }>
-                      <IconButton style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }} icon={<Badge content={7}><FaRegBell /></Badge>} appearance="subtle" onClick={handleVisibility} />
-                    </Whisper>
+                    <NotificationComponent userRole={"Administrador"} visibility={handleVisibility}/>
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover style={{ textAlign: "center" }}>
                         <div style={{ padding: "5px", fontSize: "13px" }}>

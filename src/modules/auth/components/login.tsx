@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, KeyboardEvent, useState } from 'react';
 import { Panel, Form, Button, VStack, Text, Image, InputGroup, useToaster, Message } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
@@ -36,8 +36,8 @@ export default function Login() {
         setVisible(!visible);
     }
 
-    async function handleSubmit(e: FormEvent) {
-        e.preventDefault();
+    async function handleSubmit(e?: FormEvent) {
+        if (e) e.preventDefault();
         const res = await authenticateAsync(formValues);
         if (res === null) {
             showErrorMessage();
@@ -47,6 +47,13 @@ export default function Login() {
             navigate('/branchOffice');
         }
         resetForm();
+    }
+
+    function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            handleSubmit();
+        }
     }
 
     return (
@@ -60,7 +67,7 @@ export default function Login() {
             <div>
                 <Text className='subtitle' >Por seguridad jamás revele sus datos.</Text>
             </div>
-            <Form fluid>
+            <Form fluid onKeyDown={handleKeyDown}>
                 <FormGroup>
                     <InputGroup inside>
                         <InputGroupAddon><FaUser /></InputGroupAddon>
