@@ -2,6 +2,8 @@ import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, 
 import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
+import { MdOutlineInventory } from "react-icons/md";
+import { PiListNumbersFill } from "react-icons/pi";
 import { IoMdSettings } from "react-icons/io";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
@@ -135,25 +137,29 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   if (!isMobile) {
     return (
       <Container style={{ display: "flex", height: '100vh' }}>
-        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#f5f5f5', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-          <Sidenav.Header style={{ backgroundColor: '#f5f5f5', padding: "10px", marginTop: "10px" }}>
+        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#EEEDED', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+          <Sidenav.Header style={{ backgroundColor: '#EEEDED', padding: "10px", marginTop: "10px" }}>
             <Brand expand={expand} />
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
           <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
-                <Nav.Item eventKey="1" onClick={() => navigate('/home')} style={{ borderRadius: "5px", }} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
-                <Nav.Item eventKey="2" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" onClick={() => navigate('/items')} style={{ borderRadius: "5px", }} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" onClick={() => navigate('/branchOffice')} style={{ borderRadius: "5px", }} icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
-                <Nav.Item eventKey="5" onClick={() => navigate('/report')} style={{ borderRadius: "5px" }} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes</Nav.Item>
-                <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
-                  <Nav.Item eventKey="6-1" style={{ borderRadius: "5px", }} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
-                  <Nav.Item eventKey="6-2" style={{ borderRadius: "5px", }} icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
+                <Nav.Item eventKey="1" onClick={() => navigate('/home')} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
+                <Nav.Item eventKey="2" style={{  }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
+                <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                {/* <Nav.Menu eventKey="5" onClick={() => navigate('/report')} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes */}
+                <Nav.Menu eventKey="4" placement="rightStart" trigger="hover" title="Reportes" icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />}  >  
+                  <Nav.Item eventKey="4-1" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-1" ? "active" : ""}`}>Inventario </Nav.Item>
+                  <Nav.Item eventKey="4-2" icon={<Icon as={PiListNumbersFill} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-2" ? "active" : ""}`}>Stock </Nav.Item>
                 </Nav.Menu>
-                <Nav.Item eventKey="7" style={{ borderRadius: "5px", }} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Vendedores</Nav.Item>
-                <Nav.Item eventKey="8" style={{ borderRadius: "5px", }} icon={<Icon as={FaTrash} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
+                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
+                  <Nav.Item eventKey="6-1" icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
+                  <Nav.Item eventKey="6-2" icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
+                </Nav.Menu>
+                <Nav.Item eventKey="7" icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Vendedores</Nav.Item>
+                <Nav.Item eventKey="8" onClick={() => navigate('/trash')} icon={<Icon as={FaTrash} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -217,10 +223,10 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
-          <Content style={{ margin: "5px 10px 0px 10px", borderRadius: "20px 20px 0px 0px", background: "#f5f5f5", height: "100vh", overflow: "auto", borderRight: '1px solid #e5e5e5', borderLeft: '1px solid #e5e5e5', borderTop: '1px solid #e5e5e5' }}>
+          <Content style={{ background: "#f5f5f5", height: "100vh", overflow: "auto", }}>
             {children}
           </Content>
-          <Footer style={{ borderLeft: '1px solid #e5e5e5', borderRight: '1px solid #e5e5e5', textAlign: "center", fontSize: "16px", fontWeight: "bold", marginLeft: "10px", marginRight: "10px", borderRadius: "0px 0px 20px 20px", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
+          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>
     );

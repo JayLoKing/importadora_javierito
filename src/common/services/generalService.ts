@@ -50,7 +50,6 @@ export const FetchDataByIdAsync = <T>(url: string, body: any) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ErrorType>(null);
-
     const fetchData = useCallback(async (): Promise<T | null> => {
         const abortController = new AbortController();
         setLoading(true);

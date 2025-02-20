@@ -25,7 +25,6 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
     function getRoleNUsername() {
         if (jwt) {
           let decode = jwtDecoder(jwt);
-          console.log(decode)
           setUser({
             id: decode.id,
             userName: decode.sub,

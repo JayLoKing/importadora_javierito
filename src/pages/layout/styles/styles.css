@@ -5,9 +5,6 @@
   .navbar1 {
     background: #f08b33;
     padding: 16px;
-    border-radius: 0px 0px 20px 20px;
-    margin-left: 10px;
-    margin-right: 10px;
   }
 
   .headerNav {
@@ -29,8 +26,6 @@
     position: relative;
     font-size: 24px;
     transition: width 0.3s ease;
-    border-radius: 0px 20px 20px 0%;
-    
   }
   .logoContainer {
     display: flex;

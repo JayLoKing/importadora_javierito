@@ -1,6 +1,7 @@
 import { Container, Content, Footer, Header, Nav, Navbar, Image, Divider, Dropdown, Button, IconButton } from "rsuite";
 import "../styles/styles.css"
 import LOGO from '../../../assets/LogoJavier.jpg';
+import VIDEO from '../../../assets/VideoJavier.mp4';
 import AdminIcon  from '@rsuite/icons/Admin';
 import { FaEnvelope, FaFacebook, FaTiktok, FaUserTie, FaWhatsapp, FaWrench } from "react-icons/fa";
 
@@ -29,7 +30,7 @@ export default function LandingPage(){
                     </div>
                     <Nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                     <IconButton icon={<FaWrench style={{marginRight:"5px"}}/>} style={{ fontSize:"20px", fontWeight:"bold", color:"white", background:"transparent"}}>Catálogo de Repuestos</IconButton>
-                    <Dropdown className="dropdown" title="Categorías" trigger="click" placement="bottomStart" style={{fontSize:"20px"}} >
+                    <Dropdown className="dropdown" trigger="hover" title="Categorías" placement="bottomStart" style={{fontSize:"20px"}} >
                         <Dropdown.Item>Puertas</Dropdown.Item>
                         <Dropdown.Item>Cajas</Dropdown.Item>
                         <Dropdown.Item>Motores</Dropdown.Item>
@@ -46,39 +47,19 @@ export default function LandingPage(){
                     </Dropdown>
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
-                        <IconButton appearance="primary" icon={< AdminIcon style={{ fontWeight:"bold", background:"transparent" }}/>} style={{ fontWeight:"bold", border:"1px solid white", color:"white" }} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
+                        <IconButton appearance="primary" icon={< AdminIcon style={{ fontWeight:"bold", background:"transparent" }}/>} style={{ fontSize:"16px", fontWeight:"bold", border:"1px solid white", color:"white" }} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
                         {/* <Button appearance="primary" style={{ background:"transparent", color:"black", fontWeight:"bold", border:"1px solid #1a1a1a" }} onClick={()=> window.open("/register", "_blank", "noopener,noreferrer")}>Registrarse</Button> */}
-                        <Button appearance="primary" style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
+                        <Button appearance="primary" style={{ fontSize:"15px", backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
                     </div>
                 </Navbar>
             </Header>
-            <Content>
-                {/* <Carousel style={{width:"100%", height:"100vh"}} shape="bar" autoplay>
-                    <div>
-                        <img src={a} alt="Sucursal 1" style={{ width: '100%', height: '100%' }} />
-                        <div className="carousel-caption">
-                            <h2>Sucursal 1</h2>
-                            <p>Marca Modelo 1</p>
-                            <Button appearance="primary">Cotizar con Vendedor</Button>
-                        </div>
-                    </div>
-                    <div>
-                        <img src={b} alt="Sucursal 2" style={{ width: '100%', height: '100%' }} />
-                        <div className="carousel-caption">
-                            <h2>Sucursal 2</h2>
-                            <p>Marca Modelo 2</p>
-                            <Button appearance="primary">Cotizar con Vendedor</Button>
-                        </div>
-                    </div>
-                    <div>
-                        <img src={c} alt="Sucursal 3" style={{ width: '100%', height: '100%' }} />
-                        <div className="carousel-caption">
-                            <h2>Sucursal 3</h2>
-                            <p>Marca Modelo 3</p>
-                            <Button appearance="primary">Cotizar con Vendedor</Button>
-                        </div>
-                    </div>
-                </Carousel> */}
+            <Content >
+                <div style={{ width: "100%", height: "100vh", position: "relative", overflow: "hidden" }}>
+                    <video autoPlay muted style={{width: "100%", height: "100%", objectFit: "cover"}}>
+                        <source src={VIDEO} type="video/mp4" /> Tu Navegador no soporta la reproducción de videos.
+                    </video>
+                </div>
+                
             </Content>
             <Footer style={{ padding: "20px", backgroundColor: "#f8f8f8", borderTop: "1px solid #e5e5e5" }}>
             <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>

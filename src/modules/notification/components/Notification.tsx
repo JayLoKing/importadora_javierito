@@ -46,10 +46,10 @@ export const NotificationComponent: FC<NotificationComponentProps> = ({ userRole
   };
 
   return (
-    <>
+    < >
       {messageNotifications.length === 0 ? (
-        <Whisper trigger="click" placement="bottomEnd" speaker={
-          <Popover title="Notificaciones">
+        <Whisper  trigger="click" placement="bottomEnd" speaker={
+          <Popover  title="Notificaciones">
             <div style={{ padding: "10px" }}>
               <p>
                 <strong>No tiene notificaciones.</strong>
@@ -66,7 +66,7 @@ export const NotificationComponent: FC<NotificationComponentProps> = ({ userRole
         </Whisper>
       ) : (
         <Whisper trigger="click" placement="bottomEnd" speaker={
-          <Popover title="Notificaciones">
+          <Popover style={{overflow:"auto"}} title="Notificaciones">
             <div style={{ padding: "10px" }}>
               {messageNotifications.map(notification => (
                 <>

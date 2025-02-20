@@ -43,17 +43,17 @@ export default function Report() {
             const initialData: ReportData[] = [
                 {
                     datakey: 1,
-                    name: "Prueba 1",
-                    type: "Excel",
-                    filter: "Importadora Javierito",
+                    name: "Reporte de Inventario 1",
+                    type: "Excel - CSV",
+                    filter: "Inventario",
                     date: "11/02/2025 - 12:00:00",
                     data: [],
                 },
                 {
                     datakey: 2,
-                    name: "Prueba 2",
-                    type: "CSV",
-                    filter: "Importadora Javierito",
+                    name: "Reporte de Inventario 2",
+                    type: "Excel - CSV",
+                    filter: "Inventario",
                     date: "12/02/2025 - 14:30:00",
                     data: [],
                 },
@@ -73,9 +73,9 @@ export default function Report() {
             if (response && response.length > 0) {
                 const newReport: ReportData = {
                     datakey: data.length + 1,
-                    name: `Reporte ${data.length + 1}`,
+                    name: `Reporte de Inventario ${data.length + 1}`,
                     type: "Excel - CSV",
-                    filter: "Importadora Javierito",
+                    filter: "Inventario",
                     date: new Date().toLocaleString(),
                     data: response,
                 };
@@ -157,7 +157,7 @@ export default function Report() {
                 </FlexboxGrid>
             </Form>
 
-            <Table data={data} height={530} rowHeight={65} headerHeight={60} style={{ textAlign: 'center', background: "white", borderRadius: "15px", fontSize: "15px", overflow: "hidden" }} >
+            <Table data={data} height={530} rowHeight={65} headerHeight={60} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
                 {false && (
                     <Column align="center" >
                         <HeaderCell>ID</HeaderCell>
@@ -173,7 +173,7 @@ export default function Report() {
                     <Cell dataKey="type" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={90}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Empresa</HeaderCell>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Filtro</HeaderCell>
                     <Cell dataKey="filter" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={190}>
@@ -181,7 +181,7 @@ export default function Report() {
                     <Cell dataKey="date" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={100}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", borderRadius: "0px 10px 0px 0px", fontWeight: 'bold', fontSize: '15px' }}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>
                         <strong>Acciones</strong>
                     </HeaderCell>
                     <Cell>

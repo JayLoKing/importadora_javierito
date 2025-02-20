@@ -8,17 +8,20 @@ import Layout from "../pages/layout/layout";
 import ItemTable from "../modules/item/components/item.tsx";
 import Home from "../modules/home/components/homeContainer.tsx";
 import Report from "../modules/report/components/report.tsx";
+import TrashTable from "../modules/trash/components/trash.tsx";
 
 export default function Routing() {
     return (
         <Routes>
             <Route index element={<LandingPage />} />
             <Route path="/home" element={<Layout titleComponent={'INICIO'} children={<Home/>}/>}/>
+            <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
             <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
             <Route path="/report" element={<Layout titleComponent={'REPORTES'} children={<Report />} />} />
+            <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<TrashTable />} />} />
             <Route path="/register" element={<AuthContainer children={<Register />} />} />
             <Route path="/login" element={<AuthContainer children={<Login />} />} />
-            <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
+
         </Routes>
     )
 }

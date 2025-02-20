@@ -376,7 +376,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     </Col> 
                                     <Col xs={24} md={8}>
                                         <Form.Group controlId={'itemAddressID'}>
-                                            <Form.ControlLabel>Direccion del Repuesto</Form.ControlLabel>
+                                            <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
                                                 <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                             </Form.Group>
                                             <Form.Group controlId={'branchOfficeID'}>
