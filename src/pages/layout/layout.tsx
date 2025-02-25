@@ -151,19 +151,18 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 {/* <Nav.Menu eventKey="5" onClick={() => navigate('/report')} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes */}
                 <Nav.Menu eventKey="4" placement="rightStart" trigger="hover" title="Reportes" icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />}  >  
                   <Nav.Item eventKey="4-1" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-1" ? "active" : ""}`}>Inventario </Nav.Item>
-                  <Nav.Item eventKey="4-2" icon={<Icon as={PiListNumbersFill} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-2" ? "active" : ""}`}>Stock </Nav.Item>
+                  <Nav.Item eventKey="4-2" icon={<Icon as={PiListNumbersFill} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-2" ? "active" : ""}`}>Ingresos </Nav.Item>
                 </Nav.Menu>
-                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
                   <Nav.Item eventKey="6-2" icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
                 </Nav.Menu>
-                <Nav.Item eventKey="7" icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Vendedores</Nav.Item>
+                <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>
                 <Nav.Item eventKey="8" onClick={() => navigate('/trash')} icon={<Icon as={FaTrash} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-          {/* <Divider style={{ height: '2px', color: 'black' }}></Divider> */}
 
         </Sidebar>
 
@@ -172,7 +171,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
             <Navbar appearance="inverse" className="navbar1" style={{ borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
               <Nav style={{ display: "flex", justifyContent: "space-between" }}>
                 <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
-                <NavItem disabled className="headerNav" style={{ color: "white" }}>{titleComponent}</NavItem>
+                <NavItem disabled className="headerNav" style={{ color: "white",  }}>{titleComponent}</NavItem>
               </Nav>
               <Nav pullRight style={{ position: "relative" }}>
                 {isMobile ? (
@@ -210,9 +209,9 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                           <p>{user.userName}</p>
                           <strong>{user.role}</strong>
                           <hr />
-                          <IconButton icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
+                          <IconButton onClick={() => navigate('/profile')} icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
                           <hr />
-                          <IconButton icon={<FaPowerOff style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Cerrar Sesión</IconButton>
+                          <IconButton onClick={signOut} icon={<FaPowerOff style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Cerrar Sesión</IconButton>
                         </div>
                       </Popover>
                     }>

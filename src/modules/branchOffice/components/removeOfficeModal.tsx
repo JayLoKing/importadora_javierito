@@ -1,5 +1,5 @@
 import { FaExclamationTriangle } from "react-icons/fa";
-import { Button, Modal } from "rsuite";
+import { Button, Modal, Stack } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
@@ -26,29 +26,27 @@ export default function RemoveOfficeModal({ open, hiddeModal, id, name, refreshL
         <Modal open={open} onClose={() => hiddeModal(false)} overflow>
             <ModalHeader>
                 <ModalTitle>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <FaExclamationTriangle style={{ marginRight: 10 }} />
-                        <strong>Advertencia</strong>
-                    </div>
+                    <Stack justifyContent="center" alignItems="center">
+                        <FaExclamationTriangle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
+                            <strong>Advertencia</strong>
+                    </Stack>
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
-                <section>
+                <Stack justifyContent="center" direction="row" spacing={5} alignItems="center">
+                    <section>
+                        <p>
+                            <strong>Eliminar la sucursal?</strong>
+                        </p>
+                    </section>
                     <p>
-                        <strong>Eliminar la sucursal?</strong>
+                        Está segur@ de eliminar la sucursal {name}?
                     </p>
-                </section>
-                <p>
-                    Está segur@ de eliminar la sucursal {name}?
-                </p>
+                </Stack>
             </ModalBody>
             <ModalFooter>
-                <Button onClick={() => confirmDelete()} appearance="primary">
-                    Aceptar
-                </Button>
-                <Button onClick={() => hiddeModal(open)}>
-                    Cancelar
-                </Button>
+                <Button onClick={() => confirmDelete()} type="submit" appearance="ghost" style={{ color: "#f08b33", borderColor: "#f08b33"}}>Sí</Button>
+                <Button onClick={() => hiddeModal(open)} appearance="primary">No</Button>
             </ModalFooter>
         </Modal>
     )

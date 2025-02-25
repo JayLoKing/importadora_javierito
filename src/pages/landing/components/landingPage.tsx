@@ -3,7 +3,7 @@ import "../styles/styles.css"
 import LOGO from '../../../assets/LogoJavier.jpg';
 import VIDEO from '../../../assets/VideoJavier.mp4';
 import AdminIcon  from '@rsuite/icons/Admin';
-import { FaEnvelope, FaFacebook, FaTiktok, FaUserTie, FaWhatsapp, FaWrench } from "react-icons/fa";
+import { FaEnvelope, FaFacebook, FaTiktok, FaWhatsapp, FaWrench } from "react-icons/fa";
 
 export default function LandingPage(){
     const handleFacebook = () => {
@@ -22,15 +22,15 @@ export default function LandingPage(){
     return(
         <Container>
             <Header >
-                <Navbar className="navbar" appearance="inverse" style={{ display: "flex", justifyContent: "space-between",  padding: "20px", alignItems: "center", borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
+                <Navbar appearance="inverse" style={{ position:"fixed", top:0, width:"100%", zIndex:1000, display: "flex", justifyContent: "space-between", height: "80px", padding: "10px", alignItems: "center", borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
                     <div style={{display:"flex", alignItems:"center"}}>
-                        <Image circle src={LOGO} style={{ width: "90px", height: "90px", objectFit: "cover" }} />
-                        <Divider vertical style={{fontSize:"400%"}}/>
-                        <label style={{fontSize:"28px", fontWeight:"bold"}}>IMPORTADORA JAVIERITO</label>
+                        <Image circle src={LOGO} style={{ width: "60px", height: "60px", objectFit: "cover" }} />
+                        <Divider vertical style={{fontSize:"300%"}}/>
+                        <label style={{fontSize:"24px", fontWeight:"bold" }}>IMPORTADORA JAVIERITO</label>
                     </div>
                     <Nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                    <IconButton icon={<FaWrench style={{marginRight:"5px"}}/>} style={{ fontSize:"20px", fontWeight:"bold", color:"white", background:"transparent"}}>Catálogo de Repuestos</IconButton>
-                    <Dropdown className="dropdown" trigger="hover" title="Categorías" placement="bottomStart" style={{fontSize:"20px"}} >
+                    <IconButton icon={<FaWrench style={{marginRight:"5px"}}/>} style={{ fontSize:"19px", fontWeight:"bold", color:"white", background:"transparent"}}>Catálogo de Repuestos</IconButton>
+                    <Dropdown trigger="hover" title="Categorías" placement="bottomStart" style={{ fontSize:"19px",}} >
                         <Dropdown.Item>Puertas</Dropdown.Item>
                         <Dropdown.Item>Cajas</Dropdown.Item>
                         <Dropdown.Item>Motores</Dropdown.Item>
@@ -41,7 +41,7 @@ export default function LandingPage(){
                         <Dropdown.Item>Frontales</Dropdown.Item>
                         <Dropdown.Item disabled>Y mucho mas..</Dropdown.Item>
                     </Dropdown>
-                    <Dropdown title="Empresa" trigger="hover" placement="bottomStart" style={{fontSize:"20px"}} >
+                    <Dropdown title="Empresa" trigger="hover" placement="bottomStart" style={{fontSize:"19px"}} >
                         <Dropdown.Item>Sobre Nosotros</Dropdown.Item>
                         <Dropdown.Item>Contacto</Dropdown.Item>
                     </Dropdown>
@@ -78,7 +78,7 @@ export default function LandingPage(){
                 </div>
                 <Divider></Divider>
             </div>
-            <div style={{ textAlign: "center" }}>        
+            <div style={{ textAlign: "center",  }}>        
                 <p>©2025 Importadora Javierito. Todos los derechos reservados.</p>
             </div>
             </Footer>

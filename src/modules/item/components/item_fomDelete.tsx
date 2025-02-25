@@ -14,7 +14,8 @@ interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
     id: number;
-    name: string;   
+    name: string;
+    // refreshList: () => Promise<void>;   
 }
 
 export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParams){
@@ -69,7 +70,7 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
                             </p>
                         </section>
                             <p>
-                                Está seguro que desea eliminar el item {name}
+                                Está segur@ que desea eliminar el item {name}
                             </p>
                     </Stack>
                 </ModalBody>

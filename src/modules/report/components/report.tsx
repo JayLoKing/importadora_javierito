@@ -1,4 +1,4 @@
-import { DatePicker, FlexboxGrid, Form, Heading, IconButton, InputGroup, Message, Stack, Table, Tooltip, Whisper } from "rsuite";
+import { DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Table, Tooltip, Whisper } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
 import FormGroup from "rsuite/esm/FormGroup";
@@ -43,20 +43,20 @@ export default function Report() {
             const initialData: ReportData[] = [
                 {
                     datakey: 1,
-                    name: "Reporte de Inventario 1",
+                    name: "Reporte de Prueba 1",
                     type: "Excel - CSV",
                     filter: "Inventario",
                     date: "11/02/2025 - 12:00:00",
                     data: [],
                 },
-                {
-                    datakey: 2,
-                    name: "Reporte de Inventario 2",
-                    type: "Excel - CSV",
-                    filter: "Inventario",
-                    date: "12/02/2025 - 14:30:00",
-                    data: [],
-                },
+                // {
+                //     datakey: 2,
+                //     name: "Reporte de Inventario 2",
+                //     type: "Excel - CSV",
+                //     filter: "Inventario",
+                //     date: "12/02/2025 - 14:30:00",
+                //     data: [],
+                // },
             ];
             setData(initialData);
             sessionStorage.setItem('reportData', JSON.stringify(initialData));
@@ -112,9 +112,9 @@ export default function Report() {
     };
 
     return (
-        <div style={{ padding: 30 }}>
-            <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{ marginTop: "-7px", color: "black" }}>Creación de reportes Excel - CSV</Heading></Stack>
-            <Form fluid style={{ marginBottom: 30 }}>
+        <div style={{ padding: 35 }}>
+            {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{ marginTop: "-7px", color: "black" }}>Creación de reportes Excel - CSV</Heading></Stack> */}
+            <Form fluid style={{ marginBottom: 25}}>
                 <FlexboxGrid style={{ display: "flex", justifyContent: "center", gap: "10px", fontSize: "15px" }} >
                     <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }} >
                         <FormGroup>
@@ -157,7 +157,7 @@ export default function Report() {
                 </FlexboxGrid>
             </Form>
 
-            <Table data={data} height={530} rowHeight={65} headerHeight={60} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
+            <Table bordered cellBordered data={data} height={530} rowHeight={65} headerHeight={60} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
                 {false && (
                     <Column align="center" >
                         <HeaderCell>ID</HeaderCell>
@@ -172,7 +172,7 @@ export default function Report() {
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Tipo de Reporte</HeaderCell>
                     <Cell dataKey="type" />
                 </Column>
-                <Column align="center" flexGrow={1} minWidth={90}>
+                <Column align="center" flexGrow={0.7} minWidth={90}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Filtro</HeaderCell>
                     <Cell dataKey="filter" />
                 </Column>
@@ -180,7 +180,7 @@ export default function Report() {
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha y Hora de creación</HeaderCell>
                     <Cell dataKey="date" />
                 </Column>
-                <Column align="center" flexGrow={1} minWidth={100}>
+                <Column align="center" flexGrow={0.8} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>
                         <strong>Acciones</strong>
                     </HeaderCell>

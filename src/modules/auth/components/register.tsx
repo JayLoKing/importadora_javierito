@@ -62,7 +62,7 @@ export default function Register() {
                                                         </InputGroup.Addon>
                                                         <Form.Control
                                                             name="name"
-                                                            placeholder="Nombres"
+                                                            placeholder="Nombres *"
                                                             onChange={(value) => handleInputChange('name', value)}
                                                         />
                                                     </InputGroup>
@@ -75,7 +75,7 @@ export default function Register() {
                                                         </InputGroup.Addon>
                                                         <Form.Control
                                                             name="lastName"
-                                                            placeholder="Apellido Paterno"
+                                                            placeholder="Apellido Paterno *"
                                                             onChange={(value) => handleInputChange('lastName', value)}
                                                         />
                                                     </InputGroup>
@@ -99,7 +99,7 @@ export default function Register() {
                                                         </InputGroup.Addon>
                                                         <Form.Control
                                                             name="ci"
-                                                            placeholder="Carnet de Identidad"
+                                                            placeholder="Carnet de Identidad *"
                                                             onChange={(value) => handleInputChange('ci', value)}
                                                         />
                                                     </InputGroup>
@@ -111,7 +111,7 @@ export default function Register() {
                                                         </InputGroup.Addon>
                                                         <Form.Control
                                                             name="phoneNumber"
-                                                            placeholder="Numero de Celular"
+                                                            placeholder="Número de Celular *"
                                                             onChange={(value) => handleInputChange('phoneNumber', value)}
                                                         />
                                                     </InputGroup>
@@ -123,7 +123,7 @@ export default function Register() {
                                                         </InputGroup.Addon>
                                                         <Form.Control
                                                             name="email"
-                                                            placeholder="Correo Electronico"
+                                                            placeholder="Correo Electrónico *"
                                                             onChange={(value) => handleInputChange('email', value)}
                                                         />
                                                     </InputGroup>

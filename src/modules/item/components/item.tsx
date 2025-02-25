@@ -1,7 +1,8 @@
 import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit} from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
-import {FaBarcode, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
+import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
+import { FaBarcode } from "react-icons/fa6";
 import { Item } from "../models/item.model";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
@@ -10,6 +11,7 @@ import { ComponentType, FC, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
 import { ItemUrl } from "../urls/item.url";
 import { useItemTable } from "../hooks/useItemTable";
+import "../../item/styles/styles.css";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -17,6 +19,10 @@ export default function ItemTable() {
     const {handleModalCreate, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
     const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
+
+    // const [sortColumn, setSortColumn] = useState();
+    // const [sortType, setSortType] = useState();
+    // const [loaading, setLoading] = useState(false);
 
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
@@ -60,7 +66,7 @@ export default function ItemTable() {
           previous: "Anterior",
         },
       };
-
+    
     const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
         <Cell {...props} style={{ padding: 0 }}>
             <div
@@ -98,7 +104,6 @@ export default function ItemTable() {
         );
     };
 
-
     if (loading) {
         return (
             <Grid fluid>
@@ -113,44 +118,38 @@ export default function ItemTable() {
         );
     }
 
-    // if (error) {
-    //     return (
-    //         <><Text color="red">Ups! Ocurrio un error: {error.message}</Text></>
-    //     );
-    // }
-
     if(!isMobile){
         return (
-            <div style={{padding:25, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
-                    <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack>
-                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "20px", marginTop:"-4px"}}>
+            <div style={{padding:35, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
+                    {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack> */}
+                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px", marginTop:"-4px"}}>
+                        <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                         <InputGroup style={{ width: 250 }}>
                             <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                 <InputGroup.Addon>
                                     <FaSearch />
                                 </InputGroup.Addon>
-                            </InputGroup>
-                            <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
+                        </InputGroup>
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={controlData} rowHeight={65} headerHeight={65}>
-                            <Column  align="center" flexGrow={3.7} minWidth={130}>
+                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={controlData} rowHeight={65} headerHeight={65}>
+                            <Column align="center" flexGrow={3.7} minWidth={130} fixed >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
-                                    { rowData => (
+                                    { rowData => ( 
                                         <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"#f08b33"}} appearance="primary" />
-                                            </Whisper>
-                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
-                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"green" }} appearance="primary" />
+                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
-                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
                                                 <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                            </Whisper>
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                         </Stack>
                                     )}
@@ -158,17 +157,17 @@ export default function ItemTable() {
 
                             </Column>
                             {false && (
-                                <Column width={200} resizable>
+                                <Column width={200} >
                                     <HeaderCell>ID</HeaderCell>
                                     <Cell dataKey="itmID" />
                                 </Column>
                             )}
-                            <Column align="center" flexGrow={1} minWidth={140}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre del Repuesto</HeaderCell>
+                            <Column align="center" flexGrow={1} minWidth={140} fixed>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
                                 <Cell dataKey="name" />
                             </Column>
                         
-                            <Column align="center" flexGrow={2} minWidth={150}>
+                            <Column align="center" flexGrow={2} minWidth={150} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
                                 <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}/>
                             </Column>
@@ -227,14 +226,6 @@ export default function ItemTable() {
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
                                 <ImageCell  rowData={(rowData: any ) => rowData}/>
                             </Column>
-                            {/* <Column align="center" flexGrow={1} minWidth={100}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Operaciones Stock</HeaderCell>
-                                <Cell>
-                                    <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                        
-                                    </Stack>
-                                </Cell>
-                            </Column> */}
                         </Table>
 
                         <Pagination
@@ -266,7 +257,6 @@ export default function ItemTable() {
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
                     <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
-
             </div>
         );   
     } else {
