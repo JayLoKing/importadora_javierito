@@ -430,7 +430,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                         </InputGroup>
                                     </Form.Group>
                                        
-                                   </Col>  
+                                    </Col>  
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                         <Form.Group controlId={'pathItems'}>
                                             <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
