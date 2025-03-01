@@ -465,7 +465,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                     </Grid>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={(e) => handleFormSubmit(e)} type="submit" appearance="primary">Registrar</Button>
+                    <Button onClick={(e) => handleFormSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
                     <Button onClick={handleCancel} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>

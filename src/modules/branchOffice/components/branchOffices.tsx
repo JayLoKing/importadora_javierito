@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { Heading, IconButton, Stack, Table, Tooltip, Whisper } from "rsuite";
+import { IconButton, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
 import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
-import { FaEdit, FaMapPin, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
 import RemoveOfficeModal from "./removeOfficeModal";
+import { LuMapPinned } from "react-icons/lu";
 
 export default function BranchOffices() {
 
@@ -58,7 +59,7 @@ export default function BranchOffices() {
     return (
         <div className="container-offices">
             <div className="header-container">
-                <Heading level={3} style={{ color: "black" }}>Lista de sucursales</Heading>
+                {/* <Heading level={3} style={{ color: "black" }}>Lista de sucursales</Heading> */}
                 <div className="button-container">
                     <IconButton
                         icon={<PlusIcon />}
@@ -69,30 +70,24 @@ export default function BranchOffices() {
                 </div>
             </div>
 
-            <Table style={{ background: "white", overflow: "hidden" }} height={600} headerHeight={60} data={branchOffices} rowHeight={65}>
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden" }} height={600} headerHeight={60} data={branchOffices} rowHeight={65}>
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
                         {(rowData) => (
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                    <IconButton
-                                        icon={<FaEdit />}
-                                        style={{ width: 40, margin: 3 }}
-                                        appearance="primary"
+                                    <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
                                         onClick={() => {
                                             getBranchOfficeById(rowData.id)
                                             handleModal(true, 'update')
                                         }} />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
-                                    <IconButton icon={<FaMapPin />} style={{ width: 40, margin: 3 }} appearance="primary" />
+                                    <IconButton icon={<LuMapPinned style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                    <IconButton
-                                        icon={<FaTrash />}
-                                        style={{ width: 40, margin: 3 }}
-                                        appearance="primary"
+                                    <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
                                         onClick={() => {
                                             remove(rowData.id, rowData.name)
                                             handleModalDelete(true);
