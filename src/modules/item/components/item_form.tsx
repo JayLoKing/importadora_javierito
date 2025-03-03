@@ -1,21 +1,20 @@
-import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWeight } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, InputNumber, Input } from "rsuite";
+import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { FetchDataAsync } from "../services/itemService";
+import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/itemService";
 import "../styles/styles.css";
-import { FormEvent, useState, useRef} from "react";
+import { FormEvent, useState, useRef, useMemo, useEffect} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
 import { deleteFile, fileUpload } from "../services/storageService";
-import { ItemUrl } from "../urls/item.url";
-import { BranchOfficeUrl } from "../../branchOffice/urls/branchOffice.url";
 import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
-import { useItemForm } from "../hooks/useItemForm";
 import { useNotificationService } from "../../../context/NotificationContext";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
+import { useApi } from "../../../common/services/useApi";
+import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 
 interface ItemModalParams {
     open: boolean;
@@ -24,37 +23,40 @@ interface ItemModalParams {
 
 export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const toaster = useToaster();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
-    const { data: dataBranchOffice, loading: loadingBranchOffice } = FetchDataAsync<BranchOffice[]>(BranchOfficeUrl.getAll);
-    const { data: dataBrands, loading: loadingBrands } = FetchDataAsync<Brand[]>(ItemUrl.getAllBrands);
-    const { data: dataItemAddresses, loading: loadingItemAddressess } = FetchDataAsync<ItemAddress[]>(ItemUrl.getAllAddresses);
-    const { data: dataSubCategories, loading: loadingSubCategories } = FetchDataAsync<SubCategory[]>(ItemUrl.getAllSubCategories);
-    const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
-    const {handleSubmit} = useItemForm();
-    const notificationService = useNotificationService(); 
+
+    // Fetch para sucursales, marcas, direcciones y subcategorías
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
+
+    const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
+    const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
+
+    const fetchItemAdressesAsync = useMemo(() => getItemAdressesAsync(), []);
+    const { data: dataItemAddresses, loading: loadingItemAddressess, fetch: fetchItemAdresses } = useApi<ItemAddress[]>(fetchItemAdressesAsync, { autoFetch: true });
+
+    const fetchItemBrandsAsync = useMemo(() => getBrandsAsync(), []);
+    const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
+
+    const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
+    const notificationService = useNotificationService();
     const jwt = useAuthStore(state => state.jwt);
 
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({
-       label: branch.name,
-       value: branch.id 
-    })) || [];
+    useEffect(() => {
+        fetchBranchOffices();
+        fetchItemSubCategory();
+        fetchItemAdresses();
+        fetchBrands();
+    }, [fetchBranchOffices, fetchItemSubCategory, fetchItemAdresses, fetchBrands]);
 
-    const brandsOptions = dataBrands?.map(brand => ({
-        label: brand.name,
-        value: brand.id 
-    })) || [];
+    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+    const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.id })) || [];
+    const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
+    const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
 
-    const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({
-        label: itemAddress.name,
-        value: itemAddress.id 
-    })) || [];
 
-    const subCategoriesOptions = dataSubCategories?.map(subCategory => ({
-        label: subCategory.name,
-        value: subCategory.id 
-    })) || [];
-    
     const showSuccessMessage = () => {
         toaster.push(
             <Message closable showIcon type="success" >
@@ -64,6 +66,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
         );
     };
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleFileChange = async (files: any[]) => {
         try {
             console.log(`Item: ${formData.name}`);
@@ -161,7 +164,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const getUsernameAndRoleName = () => {
         let roleName, userName, userId;
         if(jwt){
-            let decode = jwtDecoder(jwt);
+            const decode = jwtDecoder(jwt);
             switch(decode.role){
                 case "ROLE_Admin":
                     roleName = "Administrador"; 
@@ -187,43 +190,47 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
         const [roleName, userName, userId] = getUsernameAndRoleName();
-        formData.userID = userId as number;
+        updateField('userID', userId as number);
+
         if (formRef.current.check()) {
-            console.error(formData);
             console.error("El formulario no es válido");
+            console.warn("Formulario:", formData);
             return;
         }
 
-        if(isValidImgs){
+        if (isValidImgs) {
             toaster.push(
-                <Message closable showIcon type="warning" >
-                    Tienen que ser 5 imagenes.
+                <Message closable showIcon type="warning">
+                    Tienen que ser 5 imágenes.
                 </Message>,
                 { placement: 'topCenter', duration: 3000 }
             );
-        } else {
-            const success = await handleSubmit(showSuccessMessage, formData);
-            if (success) {
-                toaster.push(
-                    <Message closable showIcon type="error">
-                        Hubo un error en el registro
-                    </Message>,
-                    { placement: 'topCenter', duration: 3000 }
-                );
-                return;
-            } else {
+            return;
+        }
+
+        try {
+            await createItemAsync(formData);
+                showSuccessMessage();
                 notificationService.addNotification({
-                    id: Math.random().toString(), 
+                    id: Math.random().toString(),
                     message: 'creó un nuevo ítem',
                     timestamp: new Date(),
                     actionType: 'REGISTRO',
                     type: 'Repuesto',
                     userName: userName as string,
-                    targetRole: roleName as string, 
+                    targetRole: roleName as string,
                 });
-            }
-            formRef.current.reset();
-            resetForm();
+                formRef.current.reset();
+                resetForm();
+                hiddeModal(false);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            toaster.push(
+                <Message closable showIcon type="error">
+                    Error al crear el item
+                </Message>,
+                { placement: 'topCenter', duration: 3000 }
+            );
         }
     };
 
@@ -234,6 +241,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             }
             hiddeModal(false);
             resetForm();
+            formRef.current.reset();
         } catch (error) {
             console.error('Error al cancelar el formulario:', error);
             toaster.push(
@@ -343,21 +351,9 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                 <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
                                             </Form.Group>
 
-
                                             <Form.Group controlId={'subCategoryID'}>
                                                 <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
                                                 <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'weight'}>
-                                                <Form.ControlLabel>Peso del repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                   
-                                                    <InputGroup.Addon>
-                                                        <FaWeight />
-                                                    </InputGroup.Addon>
-                                                    <InputNumber name="weight" defaultValue={100} formatter={value => `${value} kg`}  onChange={(value) => updateField('weight', value)}/>
-                                                </InputGroup>
                                             </Form.Group>
 
                                             <Form.Group controlId={'dateManufacture'}>

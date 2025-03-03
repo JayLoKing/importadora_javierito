@@ -1,138 +1,69 @@
-import {useCallback, useEffect, useState} from "react";
 import {httpClient} from "../../../api/httpClient.ts";
-import { Item } from "../models/item.model.ts";
+import { Brand, Item, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
 import { ItemUrl } from "../urls/item.url.ts";
 import { loadAbort } from "../../../utils/loadAbort.utility.ts";
 import { UseApiCall } from "../../../utils/useApi.model.ts";
 
-type Data<T> = T | [] | null;
-type ErrorType = Error | null;
-
-interface Params<T> {
-    data: Data<T>;
-    dataObject?: T;
-    loading: boolean;
-    error: ErrorType;
-}
-
-export const FetchDataAsync = <T>(url: string) : Params<T> => {
-    const [data, setData] = useState<Data<T>>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<ErrorType>(null);
-
-    useEffect(() => {
-        const abortController = new AbortController();
-
-        const fetchData = async () => {
-            try {
-                const response = await httpClient.get(url,  {signal: abortController.signal,});
-                if(response.status === 200){
-                    setData(response.data);
-                    setError(null);
-                } else {
-                    throw new Error(response.statusText);
-                }
-            } catch (error) {
-                if (!abortController.signal.aborted) {
-                    setError(error as Error);
-                }
-            } finally {
-                if (!abortController.signal.aborted) {
-                    setLoading(false);
-                }
-            }
-            return () => {
-                abortController.abort();
-            };
-        }
-        fetchData();
-    }, [url])
-    return {data, error, loading};
-}
-
-export const FetchDataByIdAsync = <T>(url: string, body: any) => {
-    const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<ErrorType>(null);
-
-    const fetchData = useCallback(async () => {
-        const abortController = new AbortController();
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await httpClient.post(url, body, {signal: abortController.signal,});
-            if (response.status === 200) {
-                setData(response.data);
-            } else {
-                throw new Error(response.statusText);
-            }
-        } catch (error) {
-            if (!abortController.signal.aborted) {
-                setError(error as Error);
-            }
-        } finally {
-            if (!abortController.signal.aborted) {
-                setLoading(false);
-            }
-        }
-        return () => {
-            abortController.abort();
-        };
-    }, [url, body]);
-    return { data, loading, error, fetchData };
-};
-
-export async function CreateAsync<T, R>(url: string, body: T): Promise<R> {
-    try {
-        const response = await httpClient.post<R>(url, body);
-        if (response.status === 200) {
-            return response.data;
-        }
-        throw new Error(`Error: ${response.statusText}`);
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Fallo en la creacion: ${error.message}`);
-        } else {
-            throw new Error('Fallo en la creacion: Error desconocido');
-        }
-    }
-}
-
-export async function UpdateAsync<T, R>(url: string, body: T): Promise<R> {
-    try {
-        const response = await httpClient.put<R>(url, body);
-        if (response.status === 200) {
-            return response.data;
-        }
-        throw new Error(`Error: ${response.statusText}`);
-    } catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Fallo en la edicion: ${error.message}`);
-        } else {
-            throw new Error('Fallo en la edicion: Error desconocido');
-        }
-    }
-}
-
-
-export async function DeleteItemAsync(id: number, userID: number){
-    try {
-        const response = await httpClient.delete("/items/removeItem", {
-            data: { id: id, userID: userID}
-        })
-        if (response.status === 200) {
-            return true;
-        }
-    } catch (error) {
-        console.error("Error al eliminar el item:", error);
-        throw error;
-    }
-}
-
-export const getAsyncItems = (page: number, limit: number, query?: string) : UseApiCall<Item[]> => {
+export const getItemsAsync = (page: number, limit: number, query?: string) : UseApiCall<Item[]> => {
     const controller = loadAbort();
     return { 
         call: httpClient.get<Item[]>(ItemUrl.getAll(page, limit, query), {signal: controller.signal}), 
+        controller
+    }
+}
+
+export const getItemAdressesAsync = () : UseApiCall<ItemAddress[]> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.get<ItemAddress[]>(ItemUrl.getAllAddresses, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const getBrandsAsync = () : UseApiCall<Brand[]> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.get<Brand[]>(ItemUrl.getAllBrands, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const getSubCategoryAsync = () : UseApiCall<SubCategory[]>  => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.get<SubCategory[]>(ItemUrl.getAllSubCategories, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const getItemAsyncById = (id: number): UseApiCall<ItemById> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.post<ItemById>(ItemUrl.getById, {itemID: id} ,{signal: controller.signal}),
+        controller
+    }
+}
+
+export const createItemAsync = (item: NewItemDTO): UseApiCall<NewItemDTO> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.post<NewItemDTO>(ItemUrl.create, item, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const updateItemAsync = (item: ItemById): UseApiCall<ItemById> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.put<ItemById>(ItemUrl.update, item, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const deleteItemAsync = (id: number, userID: number): UseApiCall<null> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.delete<null>(ItemUrl.delete, {data: {id: id, userID: userID}, signal: controller.signal}),
         controller
     }
 }

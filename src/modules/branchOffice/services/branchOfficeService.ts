@@ -1,5 +1,9 @@
+/* eslint-disable no-useless-catch */
 import { httpClient } from "../../../api/httpClient";
-import { NewBranchOfficeDTO, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
+import { loadAbort } from "../../../utils/loadAbort.utility";
+import { UseApiCall } from "../../../utils/useApi.model";
+import { NewBranchOfficeDTO, BranchOfficeDetailsDTO, BranchOffice } from "../models/branchOffice.model";
+import { BranchOfficeUrl } from "../urls/branchOffice.url";
 
 export async function getBranchOfficesAsync() {
     try {
@@ -9,6 +13,14 @@ export async function getBranchOfficesAsync() {
         }
     } catch (error) {
         throw error;
+    }
+}
+
+export const getBranchOfficesAsync2 = () : UseApiCall<BranchOffice[]> => {
+    const controller = loadAbort();
+    return { 
+        call: httpClient.get<BranchOffice[]>(BranchOfficeUrl.getAll, {signal: controller.signal}), 
+        controller
     }
 }
 

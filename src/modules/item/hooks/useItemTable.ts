@@ -4,9 +4,10 @@ export function useItemTable (){
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
-    const [searchLoading, setSearchLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
+    const [getID, setGetID] = useState(0);
 
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
@@ -14,11 +15,7 @@ export function useItemTable (){
     };
     
     const handleSearch = (value: string) => {
-        setSearchLoading(true);
         setSearchTerm(value);
-        setTimeout(() => {
-            setSearchLoading(false);
-        }, 500); 
     };
     
     useEffect(() => {
@@ -34,17 +31,27 @@ export function useItemTable (){
         setShowModal(hidde);
     }
 
+    const handleModalUpdate = (isOpen: boolean) => {
+        if (!isOpen) {
+          setGetID(0); 
+        }
+        setShowModalUpdate(isOpen);
+      };
+
     return {
         handleModalCreate,
+        handleModalUpdate,
         showModal,
+        showModalUpdate,
         handleChangeLimit,
         handleSearch,
-        searchLoading,
         limit,
         page,
         setPage,
         searchTerm,
         setSearchTerm,
         isMobile,
+        getID,
+        setGetID
     };
 }

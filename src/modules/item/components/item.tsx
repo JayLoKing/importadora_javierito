@@ -1,10 +1,11 @@
-import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit} from "rsuite";
-import { getAsyncItems } from "../services/itemService";
+/* eslint-disable no-constant-binary-expression */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit} from "rsuite";
+import { getItemsAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
 import { Item } from "../models/item.model";
-import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
@@ -16,8 +17,7 @@ import { useApi } from "../../../common/services/useApi";
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate, showModal, searchTerm,setSearchTerm,handleSearch, searchLoading, isMobile} = useItemTable();
-    const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
+    const {handleModalCreate,handleModalUpdate, showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
     const [limit, setLimit] = useState(5); 
@@ -27,13 +27,12 @@ export default function ItemTable() {
       setPage(1);
       setLimit(newLimit);
     }
-    const apiCall = useMemo(() => {
-      return getAsyncItems(page, limit, searchTerm);
+    const fetchItemsAsync = useMemo(() => {
+      return getItemsAsync(page, limit, searchTerm);
     }, [limit, page, searchTerm]);
-    const { loading, data, error, fetch} = useApi<Item[]>(apiCall, { autoFetch: false });
+    const { loading, data, error, fetch} = useApi<Item[]>(fetchItemsAsync, { autoFetch: false });
     
     useEffect(() => {
-      console.log('Llamando a fetch manualmente con page:', page);
       fetch();
     }, [fetch, page]);
 
@@ -55,7 +54,7 @@ export default function ItemTable() {
             regex.test(item.brand) ||
             regex.test(item.category)
         );
-    }, [data, regex, page]);
+    }, [data, regex]);
 
     
 
@@ -76,19 +75,21 @@ export default function ItemTable() {
       };
     
     const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
-        <Cell {...props} style={{ padding: 0 }}>
+        <Cell {...props} style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div
                 style={{
-                    width: 40,
-                    height: 40,
+                    width: 70,
+                    height: 70,
                     background: '#f5f5f5',
                     borderRadius: 6,
                     marginTop: 2,
                     overflow: 'hidden',
-                    display: 'inline-block'
+                    display: 'inline-block',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
-                <img src={rowData.itemImage} width="40" />
+                <Image  zoomed fallbackSrc="Error" src={rowData.itemImage}  width="40" />
             </div>
         </Cell>
     );
@@ -112,27 +113,12 @@ export default function ItemTable() {
         );
     };
 
-    if (loading) {
-        return (
-            <Grid fluid>
-              <Row>
-                  <Col xs={24} md={24} sm={24}>
-                    <Stack justifyContent="center" alignItems="center" direction="column">
-                      <Loader content="Cargando..." vertical />
-                    </Stack>
-                  </Col>
-              </Row>
-            </Grid>
-        );
-    }
-
     if(error){
       return (
         <p>Ha ocurrido un error: {error.message}</p>
       )
     }
 
-  
     if(!isMobile){
         return (
             <div style={{padding:35, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
@@ -146,10 +132,8 @@ export default function ItemTable() {
                                 </InputGroup.Addon>
                         </InputGroup>
                     </Stack>
-                    {filteredData.length > 0 ? (
-                       <>
-                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={filteredData} rowHeight={65} headerHeight={65}>
-                            <Column align="center" flexGrow={3.7} minWidth={130} fixed >
+                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={105} headerHeight={65}>
+                            <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
                                     { rowData => ( 
@@ -177,72 +161,73 @@ export default function ItemTable() {
                                     <Cell dataKey="itmID" />
                                 </Column>
                             )}
-                            <Column align="center" flexGrow={1} minWidth={140} fixed>
+                            <Column align="center" flexGrow={1} minWidth={140} fixed="left">
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
-                                <Cell dataKey="name" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                             </Column>
                         
-                            <Column align="center" flexGrow={2} minWidth={150} resizable>
+                            <Column align="center" flexGrow={2} minWidth={150} fixed="left" resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
-                                <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}/>
+                                <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                             </Column>
-                        
+                            <Column align="center" flexGrow={1} minWidth={150} fixed="left">
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
+                                <ImageCell  rowData={(rowData: any ) => rowData}/>
+                            </Column>
                             <Column align="center" flexGrow={1} minWidth={150}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
-                                <Cell dataKey="model" />
+                                <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={80}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio</HeaderCell>
-                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={120}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio por mayor</HeaderCell>
-                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.wholesalePrice}</span>)}</Cell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.wholesalePrice}</span>)}</Cell>
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Base</HeaderCell>
-                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Marca</HeaderCell>
-                                <Cell dataKey="brand" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="brand" />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={120}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Categoría</HeaderCell>
-                                <Cell dataKey="category" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="category" />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={120}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Sub-Categoría</HeaderCell>
-                                <Cell dataKey="subCategory" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="subCategory" />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={140}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Fabricación</HeaderCell>
-                                <Cell dataKey="dateManufacture" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="dateManufacture" />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={150}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Ubicación del Repuesto</HeaderCell>
-                                <Cell dataKey="address" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Cantidad Total</HeaderCell>
-                                <Cell dataKey="totalStock" />
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalStock" />
                             </Column>
-                        
-                            <Column align="center" flexGrow={1} minWidth={150}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
-                                <ImageCell  rowData={(rowData: any ) => rowData}/>
+                            <Column align="center" flexGrow={1} minWidth={100}>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Posibles Ganancias</HeaderCell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                             </Column>
                         </Table>
-
                         <Pagination
                             prev
                             next
@@ -264,13 +249,6 @@ export default function ItemTable() {
                             locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
                             />
-                      </>
-                    
-                    ) : (
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            No se encontraron registros
-                        </div>
-                    )}
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
                     <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
@@ -303,8 +281,7 @@ export default function ItemTable() {
                 </Stack>
               </div>
               <div style={{ overflowY: "auto", flex: 1, paddingBottom: "20px" }}>
-                {filteredData.length > 0 ? (
-                  <Grid fluid>
+              <Grid fluid>
                     <Row>
                       {data!.map((item) => (
                         <Col key={item.itemID} xs={24} sm={24} md={24}>
@@ -363,11 +340,6 @@ export default function ItemTable() {
                       ))}
                     </Row>
                   </Grid>
-                ) : (
-                  <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                    No se encontraron registros
-                  </div>
-                )}
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)}/>
               <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />

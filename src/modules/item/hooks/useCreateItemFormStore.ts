@@ -5,7 +5,9 @@ import { validationItemCreateFormModel } from "../utils/validationForm";
 interface CreateItemFormStore {
     formData: NewItemDTO;
     resetForm: () => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateField: (field: keyof NewItemDTO, value: any) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validationModel: any;
 }
 
@@ -20,7 +22,6 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
         barePrice: 0,
         brandID: 0,
         subCategoryID: 0,
-        weight: 0,
         dateManufacture: '',
         itemAddressID: 0,
         userID: 0,
@@ -41,7 +42,6 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
                 barePrice: 0,
                 brandID: 0,
                 subCategoryID: 0,
-                weight: 0,
                 dateManufacture: '',
                 itemAddressID: 0,
                 userID: 0,

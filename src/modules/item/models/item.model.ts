@@ -8,7 +8,6 @@ export interface NewItemDTO {
     barePrice: number;
     brandID: number;
     subCategoryID: number;
-    weight: number;
     dateManufacture: string;
     itemAddressID: number;
     userID: number;
@@ -48,10 +47,11 @@ export interface ItemById{
     barePrice: number;
     brandID: number;
     subCategoryID: number;
-    weight: number;
     dateManufacture: string;
+    branchOfficeID: number;
     itemAddressID: number;
     userID: number;
+    acronym: string;
     itemImages: string[];
 }
 

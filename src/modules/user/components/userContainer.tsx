@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-binary-expression */
 import PlusIcon from '@rsuite/icons/Plus';
 import { useState } from 'react';
 import { FaSearch, FaTrash } from 'react-icons/fa';

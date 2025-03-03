@@ -40,11 +40,6 @@ export const validationItemCreateFormModel = Schema.Model({
     subCategoryID: NumberType()
         .isRequired('Debe seleccionar una subcategoría') 
         .min(1, 'Debe seleccionar una subcategoría válida'), 
-
-    weight: NumberType()
-        .isRequired('El peso es requerido')
-        .min(0, 'El peso debe ser un número positivo.'),
-
     dateManufacture: StringType()
         .isRequired('La fecha de fabricación es requerida')
         .pattern(/^\d{4}-\d{2}-\d{2}$/, 'La fecha de fabricación debe estar en el formato YYYY-MM-DD.'),

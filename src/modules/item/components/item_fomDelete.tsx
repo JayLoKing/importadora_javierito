@@ -4,7 +4,7 @@ import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { DeleteItemAsync } from "../services/itemService";
+import { deleteItemAsync } from "../services/itemService";
 import { useAuthStore } from "../../../store/store";
 import { useEffect, useState } from "react";
 import { AuthUser } from "../../auth/models/auth.model";
@@ -25,7 +25,7 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
     
     function getRoleNUsername() {
         if (jwt) {
-          let decode = jwtDecoder(jwt);
+          const decode = jwtDecoder(jwt);
           setUser({
             id: decode.id,
             userName: decode.sub,
@@ -36,19 +36,19 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
         }
       }
 
-    async function confirmDelete() {
-        try{
-            const deleted = await DeleteItemAsync(id, user.id);
-            if (deleted) {
-                hiddeModal(false);
-            }
-        }catch (error){
-            console.error("No se pudo eliminar el item:", error);
-        }
-    }
+      async function confirmDelete() {
+        try {
+            console.log("id", id, "user.id", user.id);
+            await deleteItemAsync(id, user.id); 
+            hiddeModal(false);
+          } catch (err) {
+            console.error("No se pudo eliminar el item:", err);
+          }
+      }
 
     useEffect(()=>{
         getRoleNUsername();  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return(
