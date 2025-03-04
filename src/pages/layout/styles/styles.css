@@ -50,10 +50,11 @@
     background: #f08b33 !important;
     font-weight: bold;
   }
+
   .navmenu {
-    color: #FFFFFF;
+    color: black;
   }
-  
+
   .navmenu:hover {
     background: #D9D9D9 !important;
     color: black !important;

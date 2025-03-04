@@ -2,7 +2,7 @@
 import PlusIcon from '@rsuite/icons/Plus';
 import { useState } from 'react';
 import { FaSearch, FaTrash } from 'react-icons/fa';
-import { IconButton, Input, InputGroup, Stack, Table, Tooltip, Whisper,  } from "rsuite";
+import { IconButton, Input, InputGroup, SelectPicker, Stack, Table, Tooltip, Whisper,  } from "rsuite";
 import { Cell, HeaderCell } from "rsuite-table";
 import Column from "rsuite/esm/Table/TableColumn";
 import CreateUserModal from './createUserModal';
@@ -21,17 +21,22 @@ export default function UserContainer(){
     return(
         <div style={{ padding:35 }}>
             <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
-                <IconButton onClick={() => handleOpenModalCreate()} icon={<PlusIcon />}  appearance="primary">Registrar Usuario</IconButton>
-                <InputGroup style={{ width: 250 }}>
-                    <Input placeholder="Buscar usuario..." />
-                        <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
-                            <FaSearch />
-                        </InputGroup.Addon>
-                </InputGroup>
+                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleOpenModalCreate()}> Nuevo Usuario </IconButton>
+                <Stack spacing={6}>
+                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Estado"/>
+                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Cargo"/>
+                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sucursal"/>
+                    <InputGroup style={{ width: 250 }}>
+                        <Input placeholder="Buscar repuesto..."/>
+                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
+                        </InputGroup>
+                </Stack>
             </Stack>
             <>
-                <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}} height={600} rowHeight={65} headerHeight={65}>
-                    <Column align='center' flexGrow={1} minWidth={110}>
+                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} height={600} rowHeight={65} headerHeight={65}>
+                    <Column align='center' flexGrow={1} minWidth={110} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell >
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
@@ -48,12 +53,12 @@ export default function UserContainer(){
                         </Cell>
                     </Column>
                     {false && (
-                        <Column width={200} resizable>
+                        <Column width={200} >
                             <HeaderCell>ID</HeaderCell>
                             <Cell dataKey="userID" />
                         </Column>
                     )}
-                    <Column align="center" flexGrow={1} minWidth={140}>
+                    <Column align="center" flexGrow={1} minWidth={140} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Estado</HeaderCell>
                         <Cell dataKey="status">
                             //Agregar un mensaje como en mosquito lab
