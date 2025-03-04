@@ -1,5 +1,9 @@
 import {useCallback, useEffect, useState} from "react";
 import {httpClient} from "../../../api/httpClient.ts";
+import { Item } from "../models/item.model.ts";
+import { ItemUrl } from "../urls/item.url.ts";
+import { loadAbort } from "../../../utils/loadAbort.utility.ts";
+import { UseApiCall } from "../../../utils/useApi.model.ts";
 
 type Data<T> = T | [] | null;
 type ErrorType = Error | null;
@@ -122,5 +126,13 @@ export async function DeleteItemAsync(id: number, userID: number){
     } catch (error) {
         console.error("Error al eliminar el item:", error);
         throw error;
+    }
+}
+
+export const getAsyncItems = (page: number, limit: number, query?: string) : UseApiCall<Item[]> => {
+    const controller = loadAbort();
+    return { 
+        call: httpClient.get<Item[]>(ItemUrl.getAll(page, limit, query), {signal: controller.signal}), 
+        controller
     }
 }

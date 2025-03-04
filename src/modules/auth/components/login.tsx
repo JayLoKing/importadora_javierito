@@ -14,6 +14,8 @@ import { authenticateAsync } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import "../styles/styles.css"
 import { useAuthStore } from '../../../store/store';
+import { useForgotPasswordModal } from '../hooks/useResetPassword';
+import ForgotPasswordForm from './forgotPassword';
 
 export default function Login() {
 
@@ -21,6 +23,7 @@ export default function Login() {
     const { formValues, handleInputChange, resetForm } = useLoginForm({ username: '', password: '' });
     const toaster = useToaster();
     const navigate = useNavigate();
+    const { handleModalForgotPassword, showModal} = useForgotPasswordModal();
 
     const setUserAuth = useAuthStore(state => state.setAuthUser);
 
@@ -93,7 +96,7 @@ export default function Login() {
                     </InputGroup>
                 </FormGroup>
 
-                <a className='forgotPasswordText' >
+                <a className='forgotPasswordText' onClick={() => handleModalForgotPassword(true)}>
                     ¿Olvidaste tu contraseña?
                 </a>
 
@@ -106,7 +109,7 @@ export default function Login() {
                     </Button>
                 </VStack>
             </Form>
-
+            <ForgotPasswordForm open={showModal} hiddeModal={() => handleModalForgotPassword(false)} />
             {/* <div className='signUpSection' >
                 <Text className='signUpText' >¿No tienes una cuenta?</Text>
                 <a onClick={() => navigate('/register')} className='link' >Registrarse</a>

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { RegisterUserDTO } from "../models/register.user.model";
 import { registerClientAsync } from "../services/registerUserService";
-import { validationUserFormModel } from "../utils/validations/user/validation_form";
+import { validationUserFormModel } from "../utils/validations/validation_form";
 
 export function userRegisterForm(){
     const formRef = useRef<any>();

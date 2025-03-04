@@ -1,5 +1,5 @@
 import { Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
-import { FetchDataAsync } from "../services/itemService";
+import { getAsyncItems } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
@@ -7,25 +7,37 @@ import { Item } from "../models/item.model";
 import { ItemFormUpdate } from "../hooks/useItemFormUpdate";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
-import { ComponentType, FC, useMemo, useState } from "react";
+import { ComponentType, FC, useEffect, useMemo, useState } from "react";
 import ItemDelete from "./item_fomDelete";
-import { ItemUrl } from "../urls/item.url";
 import { useItemTable } from "../hooks/useItemTable";
 import "../../item/styles/styles.css";
+import { useApi } from "../../../common/services/useApi";
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate, showModal, limit, page, handleSearch, searchLoading,  setPage, handleChangeLimit, searchTerm, setSearchTerm, isMobile} = useItemTable();
-    const { data, loading } = FetchDataAsync<Item[]>(`${ItemUrl.getAll}?offset=${page }&limit=${limit}&param=${searchTerm}`);
+    const {handleModalCreate, showModal, searchTerm,setSearchTerm,handleSearch, searchLoading, isMobile} = useItemTable();
     const {handleModalUpdate, showModalUpdate, getID, setGetID} = ItemFormUpdate();
-
-    // const [sortColumn, setSortColumn] = useState();
-    // const [sortType, setSortType] = useState();
-    // const [loaading, setLoading] = useState(false);
-
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
+    const [limit, setLimit] = useState(5); 
+    const [page, setPage] = useState(1);
+
+    function handleChangeLimit(newLimit: number) {
+      setPage(1);
+      setLimit(newLimit);
+    }
+    const apiCall = useMemo(() => {
+      return getAsyncItems(page, limit, searchTerm);
+    }, [limit, page, searchTerm]);
+    const { loading, data, error, fetch} = useApi<Item[]>(apiCall, { autoFetch: false });
+    
+    useEffect(() => {
+      console.log('Llamando a fetch manualmente con page:', page);
+      fetch();
+    }, [fetch, page]);
+
+
 
     const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
       if (item) {
@@ -43,13 +55,9 @@ export default function ItemTable() {
             regex.test(item.brand) ||
             regex.test(item.category)
         );
-    }, [data, regex]);
+    }, [data, regex, page]);
 
-    const controlData = useMemo(() => {
-        const start = limit * (page - 1);
-        const end = start + limit;
-        return filteredData.slice(start, end);
-    }, [filteredData, limit, page]);
+    
 
     const tableLoadingES = {
       loading: "Cargando Registros..."
@@ -118,6 +126,13 @@ export default function ItemTable() {
         );
     }
 
+    if(error){
+      return (
+        <p>Ha ocurrido un error: {error.message}</p>
+      )
+    }
+
+  
     if(!isMobile){
         return (
             <div style={{padding:35}}>
@@ -138,7 +153,7 @@ export default function ItemTable() {
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={595} data={controlData} rowHeight={65} headerHeight={65}>
+                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={filteredData} rowHeight={65} headerHeight={65}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -250,14 +265,16 @@ export default function ItemTable() {
                             last
                             ellipsis
                             boundaryLinks
-                            maxButtons={5}
+                            maxButtons={10}
                             size="xs"
-                            layout={['total', '-', 'limit', '|', 'pager', 'skip']}
-                            total={data!.length}
-                            limitOptions={[10, 20, 30]}
+                            layout={['-', 'pager']}
+                            total={10}
                             limit={limit}
                             activePage={page}
-                            onChangePage={setPage}
+                            onChangePage={(newPage) => {
+                                console.log('Cambiando a página:', newPage);
+                                setPage(newPage);
+                            }}
                             onChangeLimit={handleChangeLimit}
                             locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
