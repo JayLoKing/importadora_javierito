@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { IconButton, Stack, Table, Tooltip, Whisper } from "rsuite";
+import { IconButton, Input, InputGroup, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
 import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
@@ -57,20 +57,20 @@ export default function BranchOffices() {
     }
 
     return (
-        <div className="container-offices">
-            <div className="header-container">
-                {/* <Heading level={3} style={{ color: "black" }}>Lista de sucursales</Heading> */}
-                <div className="button-container">
-                    <IconButton
-                        icon={<PlusIcon />}
-                        appearance="primary"
-                        onClick={() => handleModal(true, 'insert')}>
-                        Nueva sucursal
-                    </IconButton>
-                </div>
-            </div>
+        <div style={{padding:35}}>
+            <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
+                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nuevo sucursal </IconButton>
+                <Stack spacing={6}>
+                    <InputGroup style={{ width: 250 }}>
+                        <Input placeholder="Buscar repuesto..." />
+                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
+                        </InputGroup>
+                </Stack>
+            </Stack>
 
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden" }} height={600} headerHeight={60} data={branchOffices} rowHeight={65}>
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} height={600} headerHeight={60} data={branchOffices} rowHeight={65}>
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>

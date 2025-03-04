@@ -1,4 +1,4 @@
-import {Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit} from "rsuite";
+import { Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
 import { FetchDataAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
@@ -120,20 +120,25 @@ export default function ItemTable() {
 
     if(!isMobile){
         return (
-            <div style={{padding:35, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
+            <div style={{padding:35}}>
                     {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack> */}
-                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px", marginTop:"-4px"}}>
+                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px"}}>
                         <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
-                        <InputGroup style={{ width: 250 }}>
-                            <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => handleSearch(value)}/>
-                                <InputGroup.Addon>
-                                    <FaSearch />
-                                </InputGroup.Addon>
-                        </InputGroup>
+                        <Stack spacing={6}>
+                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Marca"/>
+                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Categoría"/>
+                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sub-Categoría"/>
+                          <InputGroup style={{ width: 250 }}>
+                              <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => handleSearch(value)}/>
+                                  <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                      <FaSearch />
+                                  </InputGroup.Addon>
+                          </InputGroup>
+                        </Stack>
                     </Stack>
                     {filteredData.length > 0 ? (
                        <>
-                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={600} data={controlData} rowHeight={65} headerHeight={65}>
+                        <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={searchLoading}  height={595} data={controlData} rowHeight={65} headerHeight={65}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -171,24 +176,34 @@ export default function ItemTable() {
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
                                 <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}/>
                             </Column>
-                        
+                            
+                            <Column align="center" flexGrow={1} minWidth={150}>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
+                                <ImageCell  rowData={(rowData: any ) => rowData}/>
+                            </Column>
+                            
                             <Column align="center" flexGrow={1} minWidth={150}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
                                 <Cell dataKey="model" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={80}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio</HeaderCell>
+                            <Column align="center" flexGrow={1} minWidth={100}>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de compra</HeaderCell>
                                 <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={120}>
+                            <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio por mayor</HeaderCell>
                                 <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.wholesalePrice}</span>)}</Cell>
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Base</HeaderCell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de venta</HeaderCell>
+                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
+                            </Column>
+
+                            <Column align="center" flexGrow={1} minWidth={100}>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio pelado</HeaderCell>
                                 <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
                         
@@ -218,13 +233,13 @@ export default function ItemTable() {
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Cantidad Total</HeaderCell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Stock</HeaderCell>
                                 <Cell dataKey="totalStock" />
                             </Column>
-                        
-                            <Column align="center" flexGrow={1} minWidth={150}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
-                                <ImageCell  rowData={(rowData: any ) => rowData}/>
+
+                            <Column align="center" flexGrow={1} minWidth={100}>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Total</HeaderCell>
+                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
                         </Table>
 

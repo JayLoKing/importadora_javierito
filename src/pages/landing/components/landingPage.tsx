@@ -23,7 +23,7 @@ export default function LandingPage(){
         <Container>
             <Header >
                 <Navbar appearance="inverse" style={{ position:"fixed", top:0, width:"100%", zIndex:1000, display: "flex", justifyContent: "space-between", height: "80px", padding: "10px", alignItems: "center", borderBottom: '1px solid #e5e5e5', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'}}>
-                    <div style={{display:"flex", alignItems:"center"}}>
+                    <div style={{ display:"flex", alignItems:"center" }}>
                         <Image circle src={LOGO} style={{ width: "60px", height: "60px", objectFit: "cover" }} />
                         <Divider vertical style={{fontSize:"300%"}}/>
                         <label style={{fontSize:"24px", fontWeight:"bold" }}>IMPORTADORA JAVIERITO</label>
