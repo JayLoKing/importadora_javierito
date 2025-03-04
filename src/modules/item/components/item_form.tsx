@@ -411,7 +411,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                     <Form.Group controlId={'description'}>
-                                        <Form.ControlLabel>Descripcion del Repuesto</Form.ControlLabel>
+                                        <Form.ControlLabel>Descripción del Repuesto</Form.ControlLabel>
                                         <InputGroup inside>
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />
@@ -421,7 +421,7 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                 name="description"
                                                 as={'textarea'}
                                                 rows={5}
-                                                placeholder="Descripcion del repuesto"
+                                                placeholder="Descripción del repuesto"
                                                 onChange={(value) => updateField('description', value)} />
                                         </InputGroup>
                                     </Form.Group>

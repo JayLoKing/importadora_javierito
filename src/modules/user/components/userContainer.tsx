@@ -27,7 +27,7 @@ export default function UserContainer(){
                     <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Cargo"/>
                     <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sucursal"/>
                     <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar repuesto..."/>
+                        <Input placeholder="Buscar usuario.."/>
                             <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
                                 <FaSearch />
                             </InputGroup.Addon>

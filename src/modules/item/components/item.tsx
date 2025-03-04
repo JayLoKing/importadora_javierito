@@ -128,14 +128,14 @@ export default function ItemTable() {
                           <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Categoría"/>
                           <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sub-Categoría"/>
                           <InputGroup style={{ width: 250 }}>
-                              <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => handleSearch(value)}/>
+                              <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                   <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
                                       <FaSearch />
                                   </InputGroup.Addon>
                           </InputGroup>
                         </Stack>
                     </Stack>
-                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={105} headerHeight={70}>
+                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -164,7 +164,7 @@ export default function ItemTable() {
                                     <Cell dataKey="itmID" />
                                 </Column>
                             )}
-                            <Column align="center" flexGrow={1} minWidth={140} fixed="left">
+                            <Column align="center" flexGrow={1} minWidth={140} fixed="left" resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                             </Column>
@@ -183,7 +183,7 @@ export default function ItemTable() {
                                 <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={105}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de compra</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
 

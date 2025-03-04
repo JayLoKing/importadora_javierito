@@ -22,7 +22,7 @@ interface ReportData {
     data: GetReportData[];
 }
 
-export default function Report() {
+export default function IncomeReport() {
     const [data, setData] = useState<ReportData[]>([]);
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
@@ -45,18 +45,10 @@ export default function Report() {
                     datakey: 1,
                     name: "Reporte de Prueba 1",
                     type: "Excel - CSV",
-                    filter: "Inventario",
+                    filter: "Ingresos",
                     date: "11/02/2025 - 12:00:00",
                     data: [],
                 },
-                // {
-                //     datakey: 2,
-                //     name: "Reporte de Inventario 2",
-                //     type: "Excel - CSV",
-                //     filter: "Inventario",
-                //     date: "12/02/2025 - 14:30:00",
-                //     data: [],
-                // },
             ];
             setData(initialData);
             sessionStorage.setItem('reportData', JSON.stringify(initialData));
@@ -73,9 +65,9 @@ export default function Report() {
             if (response && response.length > 0) {
                 const newReport: ReportData = {
                     datakey: data.length + 1,
-                    name: `Reporte de Inventario ${data.length + 1}`,
+                    name: `Reporte de Ingresos ${data.length + 1}`,
                     type: "Excel - CSV",
-                    filter: "Inventario",
+                    filter: "Ingreso",
                     date: new Date().toLocaleString(),
                     data: response,
                 };
@@ -157,7 +149,7 @@ export default function Report() {
                 </FlexboxGrid>
             </Form>
 
-            <Table bordered cellBordered data={data} height={530} rowHeight={65} headerHeight={70} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
+            <Table bordered cellBordered data={data} height={530} rowHeight={100} headerHeight={70} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
                 {false && (
                     <Column align="center" >
                         <HeaderCell>ID</HeaderCell>
@@ -166,19 +158,19 @@ export default function Report() {
                 )}
                 <Column align="center" flexGrow={1} minWidth={190}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre del archivo</HeaderCell>
-                    <Cell dataKey="name" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={90}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Tipo de Reporte</HeaderCell>
-                    <Cell dataKey="type" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="type" />
                 </Column>
                 <Column align="center" flexGrow={0.7} minWidth={90}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Filtro</HeaderCell>
-                    <Cell dataKey="filter" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="filter" />
                 </Column>
                 <Column align="center" flexGrow={1} minWidth={190}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha y Hora de creación</HeaderCell>
-                    <Cell dataKey="date" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="date" />
                 </Column>
                 <Column align="center" flexGrow={0.8} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>

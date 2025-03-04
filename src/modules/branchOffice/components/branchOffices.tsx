@@ -59,10 +59,10 @@ export default function BranchOffices() {
     return (
         <div style={{padding:35}}>
             <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
-                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nuevo sucursal </IconButton>
+                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nueva Sucursal </IconButton>
                 <Stack spacing={6}>
                     <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar repuesto..." />
+                        <Input placeholder="Buscar sucursal.." />
                             <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
                                 <FaSearch />
                             </InputGroup.Addon>
@@ -70,7 +70,7 @@ export default function BranchOffices() {
                 </Stack>
             </Stack>
 
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} height={600} headerHeight={70} data={branchOffices} rowHeight={65}>
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} rowHeight={100} height={600} headerHeight={70} data={branchOffices} >
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
@@ -107,17 +107,17 @@ export default function BranchOffices() {
 
                 <Column align="center" flexGrow={1} minWidth={140}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
-                    <Cell dataKey="name" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                 </Column>
 
                 <Column align="center" flexGrow={1} minWidth={120}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
-                    <Cell dataKey="address" />
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                 </Column>
 
                 <Column align="center" flexGrow={1} minWidth={140}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
-                    <Cell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
                         {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
                     </Cell>
                 </Column>

@@ -1,4 +1,4 @@
-import { FaSearch, FaSync, FaTrash } from "react-icons/fa";
+import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import { Input, InputGroup, Stack, IconButton, Table, Whisper, Tooltip } from "rsuite";
 import { Cell, HeaderCell } from "rsuite-table";
 import Column from "rsuite/esm/Table/TableColumn";
@@ -6,33 +6,58 @@ import Column from "rsuite/esm/Table/TableColumn";
 
 export default function TrashTable (){
     return(
-        <div style={{padding:25, overflowX: "auto",flex: 1, display: "flex", flexDirection: "column"}}>
-            {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de la Papelera</Heading></Stack> */}
-            <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "20px", marginTop:"-4px"}}>
-                <InputGroup style={{ width: 250 }}>
-                    <Input placeholder="Buscar en la papelera..." />
-                        <InputGroup.Addon>
-                            <FaSearch />
-                        </InputGroup.Addon>
-                </InputGroup>
+        <div style={{padding:35}}>
+            <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
+                {/* <IconButton icon={<PlusIcon />} appearance="primary" > Recuperar </IconButton> */}
+                <Stack spacing={6}>
+                    <InputGroup style={{ width: 250 }}>
+                        <Input placeholder="Buscar.." />
+                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
+                        </InputGroup>
+                </Stack>
             </Stack>
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden" }} height={600} headerHeight={60} rowHeight={65}>
+
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} rowHeight={100} height={600} headerHeight={70} >
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
-                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Recuperar</Tooltip>}>
-                                <IconButton  icon={<FaSync style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"green"}} appearance="primary" />
-                            </Whisper>
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Item</Tooltip>}>
-                                <IconButton icon={<FaTrash style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"red" }} appearance="primary" />
-                            </Whisper>                                      
-                        </Stack>
+                            <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Recuperar</Tooltip>}>
+                                    <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                    <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                </Whisper>
+                            </Stack>
                     </Cell>
                 </Column>
-                
+
+                {false && (
+                    <Column>
+                        <HeaderCell>Id</HeaderCell>
+                        <Cell dataKey="id" />
+                    </Column>
+                )}
+
+                <Column align="center" flexGrow={1} minWidth={140}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
+                </Column>
+
+                <Column align="center" flexGrow={1} minWidth={120}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Usuario</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
+                </Column>
+
+                <Column align="center" flexGrow={1} minWidth={140}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de acción</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                        
+                    </Cell>
+                </Column>
             </Table>
         </div>
-
     )
 }
