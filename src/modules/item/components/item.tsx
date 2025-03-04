@@ -183,7 +183,7 @@ export default function ItemTable() {
                                 <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={80}>
+                            <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de compra</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
 
@@ -201,7 +201,7 @@ export default function ItemTable() {
 
                             <Column align="center" flexGrow={1} minWidth={100}>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio pelado</HeaderCell>
-                                <Cell>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
