@@ -70,7 +70,7 @@ export default function BranchOffices() {
                 </Stack>
             </Stack>
 
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} height={600} headerHeight={60} data={branchOffices} rowHeight={65}>
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} height={600} headerHeight={70} data={branchOffices} rowHeight={65}>
                 <Column align="center" flexGrow={1} minWidth={100}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>

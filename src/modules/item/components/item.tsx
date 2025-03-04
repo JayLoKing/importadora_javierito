@@ -1,4 +1,4 @@
-import {  Loader, Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
+import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
 import { getItemsAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
@@ -135,7 +135,7 @@ export default function ItemTable() {
                           </InputGroup>
                         </Stack>
                     </Stack>
-                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={105} headerHeight={65}>
+                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={105} headerHeight={70}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>

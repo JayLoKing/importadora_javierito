@@ -35,7 +35,7 @@ export default function UserContainer(){
                 </Stack>
             </Stack>
             <>
-                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} height={600} rowHeight={65} headerHeight={65}>
+                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} height={600} rowHeight={65} headerHeight={70}>
                     <Column align='center' flexGrow={1} minWidth={110} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell >

@@ -157,7 +157,7 @@ export default function Report() {
                 </FlexboxGrid>
             </Form>
 
-            <Table bordered cellBordered data={data} height={530} rowHeight={65} headerHeight={60} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
+            <Table bordered cellBordered data={data} height={530} rowHeight={65} headerHeight={70} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
                 {false && (
                     <Column align="center" >
                         <HeaderCell>ID</HeaderCell>
