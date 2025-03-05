@@ -15,10 +15,10 @@ interface ItemModalParams {
     hiddeModal: (hide: boolean) => void;
     id: number;
     name: string;
-    // refreshList: () => Promise<void>;   
+    onItemDeleted?: () => void;  
 }
 
-export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParams){
+export default function ItemDelete({open, hiddeModal, id, name, onItemDeleted} : ItemModalParams){
 
     const jwt = useAuthStore(state => state.jwt);
     const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
@@ -41,6 +41,9 @@ export default function ItemDelete({open, hiddeModal, id, name} : ItemModalParam
             console.log("id", id, "user.id", user.id);
             await deleteItemAsync(id, user.id); 
             hiddeModal(false);
+            if(onItemDeleted){
+                onItemDeleted();
+            }
           } catch (err) {
             console.error("No se pudo eliminar el item:", err);
           }

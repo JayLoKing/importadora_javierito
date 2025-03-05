@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-binary-expression */
 import { useEffect, useState } from "react";
 import { IconButton, Input, InputGroup, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";

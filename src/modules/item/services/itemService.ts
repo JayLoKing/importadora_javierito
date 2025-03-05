@@ -1,13 +1,13 @@
 import {httpClient} from "../../../api/httpClient.ts";
-import { Brand, Item, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
+import { Brand, GetItems, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
 import { ItemUrl } from "../urls/item.url.ts";
 import { loadAbort } from "../../../utils/loadAbort.utility.ts";
 import { UseApiCall } from "../../../utils/useApi.model.ts";
 
-export const getItemsAsync = (page: number, limit: number, query?: string) : UseApiCall<Item[]> => {
+export const getItemsAsync = (page: number, limit: number, query?: string) : UseApiCall<GetItems> => {
     const controller = loadAbort();
     return { 
-        call: httpClient.get<Item[]>(ItemUrl.getAll(page, limit, query), {signal: controller.signal}), 
+        call: httpClient.get<GetItems>(ItemUrl.getAll(page, limit, query), {signal: controller.signal}), 
         controller
     }
 }
@@ -55,7 +55,7 @@ export const createItemAsync = (item: NewItemDTO): UseApiCall<NewItemDTO> => {
 export const updateItemAsync = (item: ItemById): UseApiCall<ItemById> => {
     const controller = loadAbort();
     return {
-        call: httpClient.put<ItemById>(ItemUrl.update, item, {signal: controller.signal}),
+        call: httpClient.patch<ItemById>(ItemUrl.update, item, {signal: controller.signal}),
         controller
     }
 }
