@@ -2,7 +2,7 @@
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
 import { InlineEdit, Input, Loader, Stack } from "rsuite";
 import { UserProfile } from "../models/userProfile.model";
-import { getAccountByIdAsync } from "../services/user.service";
+import { editProfileAsync, getAccountByIdAsync } from "../services/user.service";
 import { useApi } from "../../../common/services/useApi";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
@@ -17,6 +17,17 @@ interface FieldProps {
 }
 
 const Field: FC<FieldProps> = ({ label, value, name, onChange }) => {
+    const [tempValue, setTempValue] = useState(value);
+    useEffect(() => {
+        console.log(`Sincronizando tempValue con value para ${name}:`, value);
+        setTempValue(value);
+    }, [value, name]);
+
+    const handleSave = () => {
+        console.log(`Guardando valor para ${name}:`, tempValue);
+        onChange(name, tempValue);
+    };
+
     return (
         <Stack direction="row" spacing={10}>
             <label style={{ 
@@ -28,8 +39,11 @@ const Field: FC<FieldProps> = ({ label, value, name, onChange }) => {
             </label>
             <InlineEdit
                 placeholder="Haga clic para editar ..."
-                value={value}
-                onChange={(newValue) => onChange(name, newValue)}
+                value={tempValue}
+                onChange={(newValue) => {
+                    setTempValue(newValue);
+                }} 
+                onSave={handleSave} 
                 style={{ width: 300 }}
             />
         </Stack>
@@ -85,10 +99,13 @@ export default function Profile() {
     }, [data, loadData]);
 
     const handleFieldChange = async (fieldName: keyof UserProfile, value: any) => {
-        updateField(fieldName, value);
+        updateField(fieldName, value); 
+        const updatedFormData = {
+            ...formData,
+            [fieldName]: value
+        };
         try {
-            console.log(`Campo ${fieldName} actualizado exitosamente`);
-            // Aquí iría la lógica para enviar la actualización a la API
+            await editProfileAsync(updatedFormData);
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
         }
@@ -113,13 +130,6 @@ export default function Profile() {
                     <h4 style={{ marginLeft: 50, marginBottom: 10, marginTop: 10 }}>
                         Mi cuenta
                     </h4>
-                    <Field 
-                        label="ID" 
-                        as={Input} 
-                        value={formData.id || ''} 
-                        name="id"
-                        onChange={handleFieldChange}
-                    />
                     <Field 
                         label="Nombre" 
                         as={Input} 

@@ -8,22 +8,54 @@ import Column from "rsuite/esm/Table/TableColumn";
 import CreateUserModal from './createUserModal';
 import { useApi } from '../../../common/services/useApi';
 import { getAllUsersAsync } from '../services/user.service';
-import { User } from '../models/user.model';
-import { useTableUser } from '../hooks/useTableUser';
+import { GetUsers, User } from '../models/user.model';
+import { ParamsUser } from '../models/userParams.model';
+import { BranchOffice } from '../../branchOffice/models/branchOffice.model';
+import { getBranchOfficesAsync2 } from '../../branchOffice/services/branchOfficeService';
 
 export default function UserContainer(){
-    const {searchTerm, handleSearch} = useTableUser();
     const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(1);
-  
+    const [users, setUsers] = useState<User[]>([]);
+    const [total, setTotal] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [params, setParams] = useState<ParamsUser>({status: null, role: null, officeId: null, someName: null});
+    const userActive = ['Activo'].map( status => ({ label: status, value: 1 }));
+    const userInactive = ['Inactivo'].map( status => ({label: status,value: 0 }));
+    const employeeRole = ['Empleado'].map( role => ({label: role, value: 'Employee'}));
+    const administratorRole = ['Administrador'].map( role => ({label: role, value: 'Admin'}));
+
+    const statusOptions = [...userActive, ...userInactive];
+    const roleOptions = [...employeeRole, ...administratorRole];
+
     const handleChangeLimit = (dataKey: number) => {
       setPage(1);
       setLimit(dataKey);
     };
     const [showModalCreate, setShowModalCreate] = useState(false);
-    const fetchUsers = useMemo(() => getAllUsersAsync(), []);
-    const {data, loading, error, fetch} = useApi<User[]>(fetchUsers, {autoFetch: false});
-    useEffect(() => { fetch() }, [fetch]);  
+
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
+        const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
+
+
+    const fetchUsers = useMemo(() => {
+        return getAllUsersAsync(limit, page, params)
+    }, [limit, page, params]);
+    const {data, loading, error, fetch} = useApi<GetUsers>(fetchUsers, {autoFetch: false});
+    useEffect(() => { fetch() }, [fetch, page, limit]);  
+    useEffect(() => {
+        if (data) {
+            if (Array.isArray(data)) {
+                setUsers([]); 
+            } else {
+                setUsers(data.first);
+                setTotal(data.second); 
+            }
+        } 
+        fetchBranchOffices();
+    }, [data, fetchBranchOffices]); 
+    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+
     console.log(data)
     function handleOpenModalCreate() {
         setShowModalCreate(true);
@@ -32,14 +64,6 @@ export default function UserContainer(){
     function handleCloseModalCreate() {
         setShowModalCreate(false);
     }
-
-    const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
-    const filteredData = useMemo(() => {
-        return data!.filter(user =>
-            regex.test(user.role) ||
-            regex.test(user.userName)
-        );
-    }, [data, regex]);
 
     const paginationLocaleES = {
         total: "Total de Registros: {0}",
@@ -68,11 +92,11 @@ export default function UserContainer(){
             <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
                 <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleOpenModalCreate()}> Nuevo Usuario </IconButton>
                 <Stack spacing={6}>
-                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Estado"/>
-                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Cargo"/>
-                    <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sucursal"/>
+                    <SelectPicker label="Filtro" data={statusOptions} value={params.status} onChange={(value) => setParams(prev => ({...prev, status: value}))} searchable={false} placeholder="Estado"/>
+                    <SelectPicker label="Filtro" data={roleOptions} value={params.role} onChange={(value) => setParams(prev => ({...prev, role: value}))} searchable={false} placeholder="Cargo"/>
+                    <SelectPicker label="Filtro" data={branchOfficeOptions} value={params.officeId} onChange={(value) => setParams(prev => ({...prev, officeId: value}))} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
                     <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar usuario.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
+                        <Input placeholder="Buscar usuario.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
                             <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
                                 <FaSearch />
                             </InputGroup.Addon>
@@ -80,7 +104,7 @@ export default function UserContainer(){
                 </Stack>
             </Stack>
             <>
-                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} data={filteredData} loading={loading} height={600} rowHeight={65} headerHeight={70}>
+                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} data={users} loading={loading} height={600} rowHeight={65} headerHeight={70}>
                     <Column align='center' flexGrow={1} minWidth={110} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell >
@@ -119,7 +143,7 @@ export default function UserContainer(){
                     </Column>
                     <Column align="center" flexGrow={1} minWidth={110}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Usuario</HeaderCell>
-                        <Cell dataKey="userName"/>    
+                        <Cell dataKey="username"/>    
                     </Column>
                     <Column align="center" flexGrow={1} minWidth={150}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Cargo</HeaderCell>
@@ -127,7 +151,7 @@ export default function UserContainer(){
                     </Column>
                     <Column align="center" flexGrow={1} minWidth={200}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Nombre Completo</HeaderCell>
-                        <Cell dataKey="fullName"/>
+                        <Cell dataKey="fullname"/>
                     </Column>
                     <Column align="center" flexGrow={1} minWidth={160}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Carnet de Identidad</HeaderCell>
@@ -143,7 +167,7 @@ export default function UserContainer(){
                     </Column>
                     <Column align="center" flexGrow={1} minWidth={200}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Sucursal</HeaderCell>
-                        <Cell dataKey="branchOfficeID"/>
+                        <Cell dataKey="office"/>
                     </Column>
                 </Table>
                 <div style={{ padding: 20 }}>
@@ -157,7 +181,7 @@ export default function UserContainer(){
                     maxButtons={5}
                     size="xs"
                     layout={['total', '-', '|', 'pager', 'skip']}
-                    total={data!.length}
+                    total={total}
                     limit={limit}
                     activePage={page}
                     onChangePage={setPage}

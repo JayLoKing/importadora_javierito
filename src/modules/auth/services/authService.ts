@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { httpClient } from "../../../api/httpClient";
 import { LoginDTO } from "../models/login.model";
 

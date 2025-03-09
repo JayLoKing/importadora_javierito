@@ -1,8 +1,9 @@
 import { httpClient } from "../../../api/httpClient";
 import { loadAbort } from "../../../utils/loadAbort.utility";
 import { UseApiCall } from "../../../utils/useApi.model";
-import { User } from "../models/user.model";
+import { GetUsers } from "../models/user.model";
 import { NewUserDTO } from "../models/userDto.model";
+import { ParamsUser } from "../models/userParams.model";
 import { UserProfile } from "../models/userProfile.model";
 import { UserUrl } from "../url/user.url";
 
@@ -22,10 +23,10 @@ export const createUserAsync = (user: NewUserDTO): UseApiCall<NewUserDTO> => {
     }
 }
 
-export const getAllUsersAsync = () : UseApiCall<User[]> => {
+export const getAllUsersAsync = (limit: number, page: number, params?: ParamsUser) : UseApiCall<GetUsers> => {
     const controller = loadAbort();
     return {
-        call: httpClient.get<User[]>(UserUrl.getAll, {signal: controller.signal}),
+        call: httpClient.post<GetUsers>(UserUrl.getAll(limit, page), params, {signal: controller.signal}),
         controller
     }
 }
@@ -34,6 +35,14 @@ export const getUserByEmailAsync = (email: string) : UseApiCall<null> => {
     const controller = loadAbort();
     return {
         call: httpClient.post<null>(UserUrl.getByEmail, {email: email}, {signal: controller.signal}),
+        controller
+    }
+}
+
+export const editProfileAsync = (profile: UserProfile) : UseApiCall<UserProfile> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.patch<UserProfile>(UserUrl.updateProfile, profile, {signal: controller.signal}),
         controller
     }
 }

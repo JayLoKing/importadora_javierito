@@ -1,11 +1,11 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
-import { getItemsAsync } from "../services/itemService";
+import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
-import { GetItems, Item } from "../models/item.model";
+import { Brand, GetItems, Item, SubCategory } from "../models/item.model";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
@@ -37,6 +37,11 @@ export default function ItemTable() {
       fetch();
     }, [fetch, page, limit]);
     
+    const fetchItemBrandsAsync = useMemo(() => getBrandsAsync(), []);
+    const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
+    const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
+    const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
+
 
     useEffect(() => {
       if (itemsData) {
@@ -47,8 +52,12 @@ export default function ItemTable() {
               setTotal(itemsData.total); 
           }
       } 
-  }, [itemsData]); 
+      fetchBrands();
+      fetchItemSubCategory();
+  }, [itemsData, fetchBrands, fetchItemSubCategory]); 
 
+  const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.name })) || [];
+  const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.name })) || [];
     const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
       if (item) {
           setSelectedItem(item);
@@ -63,6 +72,7 @@ export default function ItemTable() {
         regex.test(item.description) ||
         regex.test(item.model) ||
         regex.test(item.brand) ||
+        regex.test(item.subCategory) ||
         regex.test(item.category)
       );
       return result;
@@ -143,9 +153,9 @@ export default function ItemTable() {
                     <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px"}}>
                         <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                         <Stack spacing={6}>
-                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Marca"/>
+                          <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Marca"/>
                           <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Categoría"/>
-                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sub-Categoría"/>
+                          <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Sub-Categoría"/>
                           <InputGroup style={{ width: 250 }}>
                               <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                   <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
