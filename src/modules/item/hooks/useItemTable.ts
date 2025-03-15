@@ -7,6 +7,7 @@ export function useItemTable (){
     const [searchTerm, setSearchTerm] = useState("");
     const [showModal, setShowModal] = useState<boolean>(false);
     const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
+    const [showModalBareCode, setShowModalBareCode] = useState<boolean>(false);
     const [getID, setGetID] = useState(0);
 
     const handleChangeLimit = (datakey : number) => {
@@ -36,13 +37,22 @@ export function useItemTable (){
           setGetID(0); 
         }
         setShowModalUpdate(isOpen);
-      };
+    };
+
+    const handleModalBareCode = (isOpen: boolean) => {
+        if (!isOpen) {
+          setGetID(0); 
+        }
+        setShowModalBareCode(isOpen);
+    };
 
     return {
         handleModalCreate,
         handleModalUpdate,
+        handleModalBareCode,
         showModal,
         showModalUpdate,
+        showModalBareCode,
         handleChangeLimit,
         handleSearch,
         limit,

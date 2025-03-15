@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FormEvent, useRef, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { Button, Form , Heading, InputGroup, Message, Stack, useToaster, Modal, Divider } from "rsuite";
-import { useRecoveryPasswordForm, useResetPasswordForm } from "../hooks/useResetPassword";
+import { Button, Form , Heading, InputGroup, Message, Stack, useToaster, Modal, Divider, Loader } from "rsuite";
+import { useResetPasswordForm, useValidateEmailForm } from "../hooks/useResetPassword";
 import { AiFillEyeInvisible } from "react-icons/ai";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
-import { ResetPassword } from "../models/resetPassword.model";
-import { CreateAsync } from "../../../common/services/generalService";
+import { getCodeByEmailAsync, resetPasswordAsync } from "../services/user.service";
+import { useApi } from "../../../common/services/useApi";
 
 interface ResetPasswordModalParams {
     open: boolean;
@@ -22,8 +23,10 @@ export default function ForgotPasswordForm({open, hiddeModal} : ResetPasswordMod
     const [showFormChangePassword, setShowFormChangePassword] = useState(false);
     const [visible, setVisible] = useState(false);
     const [only, setOnly] = useState(false);
-    const {formData, updateField, resetForm, validationModel} = useRecoveryPasswordForm();
+    const {formData, updateField, resetForm, validationModel} = useValidateEmailForm();
     const {formData: formDataPassword, updateField: updateFieldPassword, resetForm: resetFormPassword, validationModel: validationModelPassword} = useResetPasswordForm();
+
+    const { data, fetch, loading } = useApi<string>(null, { autoFetch: false });
 
     const showSuccessMessage = () => {
         toaster.push(
@@ -49,13 +52,23 @@ export default function ForgotPasswordForm({open, hiddeModal} : ResetPasswordMod
     }
     
 
-    async function handleVerifyEmail() {
-        
-        //Logica que enviara el correo
+    async function handleVerifyEmail(e: FormEvent) {
+        e.preventDefault();
+        try{
+            console.log(formData.email);
+            await fetch(getCodeByEmailAsync(formData.email));
+        }catch(error) {
+            console.log(error);
+        } 
     }
-    function handleVerifyCode(){
-        setShowFormChangePassword(true);
-        setOnly(true);
+
+    function handleVerifyCode() {
+        if (data && data === formData.code) {
+            setShowFormChangePassword(true);
+            setOnly(true);
+        } else {
+            showErrorMessage();
+        }
     }
 
     const handleCancel = async () => {
@@ -80,18 +93,15 @@ export default function ForgotPasswordForm({open, hiddeModal} : ResetPasswordMod
         e.preventDefault();
         if (!formRefPassword.current) return false;
         try {
-            const isValid = await formRefPassword.current.check();
-            if (isValid) {
-                const res = await CreateAsync<ResetPassword, ResetPassword>('/', formDataPassword);
-                 if (res !== null) {
-                    hiddeModal(false);
-                    showSuccessMessage();
-                    setShowFormChangePassword(false);
-                    resetFormPassword();
-                    resetForm();
-                    setOnly(false);
-                 }
-            }
+            formDataPassword.email = formData.email;
+            await resetPasswordAsync(formDataPassword);
+
+            hiddeModal(false);
+            showSuccessMessage();
+            setShowFormChangePassword(false);
+            resetFormPassword();
+            resetForm();
+            setOnly(false);
         } catch (error) {
             console.error('Fallo en la validacion del Formulario: ', error);
             showErrorMessage();
@@ -121,8 +131,11 @@ export default function ForgotPasswordForm({open, hiddeModal} : ResetPasswordMod
                                     <InputGroup.Button style={{color:"orange"}} type="submit" onClick={handleVerifyEmail} >Enviar</InputGroup.Button>
                                 </InputGroup>
                             </Form.Group>
-                            <Form.Group>
-                                <InputGroup inside>
+                            {loading ? (
+                                <Loader content="Verificando correo..." vertical />
+                            ):(
+                                <Form.Group>
+                                    <InputGroup inside>
                                     <InputGroup.Addon><RiLockPasswordFill /></InputGroup.Addon>
                                     <Form.Control
                                         name="code"
@@ -130,8 +143,9 @@ export default function ForgotPasswordForm({open, hiddeModal} : ResetPasswordMod
                                         value={formData.code}
                                         onChange={(value) => updateField('code', value)} />
                                     <InputGroup.Button style={{color:"orange"}} type="button" onClick={handleVerifyCode}>Verificar</InputGroup.Button>
-                                </InputGroup>
-                            </Form.Group>
+                                    </InputGroup>
+                                </Form.Group>
+                            )}
                         </Form>
                         {!showFormChangePassword ? (<></>) : (
                                        <>

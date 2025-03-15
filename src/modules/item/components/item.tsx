@@ -13,11 +13,12 @@ import ItemDelete from "./item_fomDelete";
 import { useItemTable } from "../hooks/useItemTable";
 import "../../item/styles/styles.css";
 import { useApi } from "../../../common/services/useApi";
+import ItemBareCode from "./item_formBarreCode";
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate,handleModalUpdate, showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
+    const {handleModalCreate,handleModalUpdate, handleModalBareCode, showModalBareCode,showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
     const [limit, setLimit] = useState(5); 
@@ -177,7 +178,7 @@ export default function ItemTable() {
                                                 <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
-                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
                                                 <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
@@ -291,6 +292,7 @@ export default function ItemTable() {
                             />
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
                     <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
+                    <ItemBareCode id={getID} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
         );   

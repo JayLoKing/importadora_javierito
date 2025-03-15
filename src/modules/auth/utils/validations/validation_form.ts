@@ -42,6 +42,4 @@ export const validationVerifyEmailForm = Schema.Model({
     email: StringType()
         .isRequired('Se necesita el correo para verificacion de cuenta.')
         .isEmail('Ingrese un correo electronico valido.'),
-    code: StringType()
-        .isRequiredOrEmpty('Se necesita el codigo'),
 });
