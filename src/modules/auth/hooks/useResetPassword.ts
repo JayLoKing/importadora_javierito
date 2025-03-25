@@ -23,6 +23,7 @@ export const useResetPasswordForm = create<ResetPasswordForm>((set) => ({
         email: '',
         newPassword: '',
         confirmPassword: '',
+        code: ''
     }, 
     resetForm: () => {
         set({
@@ -30,6 +31,7 @@ export const useResetPasswordForm = create<ResetPasswordForm>((set) => ({
                 email: '',
                 newPassword: '',
                 confirmPassword: '',
+                code: ''
             },
         })
     }, 

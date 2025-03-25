@@ -2,6 +2,7 @@ const moduleBaseUrl = "/auth";
 
 export const AuthUrl = {
     authenticate: `${moduleBaseUrl}/authenticate`,
-    resetPassword: `${moduleBaseUrl}/resetPassword`
+    resetPassword: `${moduleBaseUrl}/resetPassword`,
+    getRecoveryCode: `${moduleBaseUrl}/getRecoveryCode`
 } as const;
 
