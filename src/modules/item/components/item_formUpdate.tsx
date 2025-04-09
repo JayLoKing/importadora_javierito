@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FaAlignJustify, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
+import { FaAlignJustify, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
 import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input, Loader } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
@@ -14,25 +15,26 @@ import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useApi } from "../../../common/services/useApi";
 import { useUpdateItemFormStore } from "../hooks/useUpdateItemFormStorn";
-import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
     id: number;
+    onItemUpdated?: () => void;
 }
 
-export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
+export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemModalParams){
     const toaster = useToaster();
     const formRef = useRef<any>();
-    const {formData, loadData,updateField, validationModel} = useUpdateItemFormStore();
+    const {formData, loadData, updateField, validationModel} = useUpdateItemFormStore();
 
-    const fetchItemByIdAsync = useMemo(() => getItemAsyncById(id), [id]);
-    const { data: itemData, fetch: fetchData, loading: loadingItemData } = useApi<ItemById>(fetchItemByIdAsync, { autoFetch: false });
-
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
-    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
+    const fetchItemByIdAsync = useMemo(() => {
+        if(open && id){
+            return getItemAsyncById(id);
+        }
+        return null;
+    },[id]);
+    const { data: itemData, fetch: fetchData, loading: loadingItemData } = useApi<ItemById>(fetchItemByIdAsync!, { autoFetch: false });
 
     const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
     const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
@@ -44,6 +46,7 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
     const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
 
     const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
+    const [originalImages, setOriginalImages] = useState<string[]>([]);
     const notificationService = useNotificationService();
     const jwt = useAuthStore(state => state.jwt);
 
@@ -51,13 +54,11 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
         fetchItemSubCategory();
         fetchItemAdresses();
         fetchBrands();
-        fetchBranchOffices();
-    }, [fetchItemSubCategory, fetchItemAdresses, fetchBrands, fetchBranchOffices]);
+    }, [fetchItemSubCategory, fetchItemAdresses, fetchBrands]);
 
     const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.id })) || [];
     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
 
     useEffect(() => {
         if (itemData && !Array.isArray(itemData) && itemData.itemImages) {
@@ -78,19 +79,16 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
                 subCategoryID: itemData.subCategoryID,
                 dateManufacture: itemData.dateManufacture,
                 itemAddressID: itemData.itemAddressID,
-                branchOfficeID: itemData.branchOfficeID,
                 description: itemData.description,
                 itemImages: fileList as any,
                 userID: 0,
                 acronym: itemData.acronym,
            });
-           //updateField('itemImages', fileList);
+           setOriginalImages(itemData.itemImages);
         }
     }, [itemData, loadData]);
 
-    const branchOfficeOptionsES = {
-        searchPlaceholder: "Buscar Sucursal..."
-    };
+   
 
     useEffect(() => {
         if (open && id) {
@@ -248,7 +246,6 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
             await updateItemAsync(formData);
                 showSuccessMessage();
                 notificationService.addNotification({
-                    id: Math.random().toString(),
                     message: 'creó un nuevo ítem',
                     timestamp: new Date(),
                     actionType: 'REGISTRO',
@@ -258,6 +255,9 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
                 });
                 formRef.current.reset();
                 hiddeModal(false);
+                if (onItemUpdated) {
+                    onItemUpdated(); 
+                }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toaster.push(
@@ -271,7 +271,22 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
 
     const handleCancel = async () => {
         try {
-            
+            const currentImages = formData.itemImages.map((file: any) => file.url || file); 
+            const imagesToDelete = currentImages.filter(url => !originalImages.includes(url)); 
+
+            if (imagesToDelete.length > 0) {
+                console.log("Eliminando imágenes nuevas al cancelar:", imagesToDelete);
+                await Promise.all(imagesToDelete.map(async (url) => {
+                    try {
+                        await deleteFile(url);
+                        console.log(`Imagen eliminada del storage: ${url}`);
+                    } catch (error) {
+                        console.error(`Error al eliminar la imagen ${url}:`, error);
+                    }
+                }));
+            } else {
+                console.log("No hay imágenes nuevas para eliminar al cancelar.");
+            }
             hiddeModal(false);
             formRef.current.reset();
         } catch (error) {
@@ -290,7 +305,7 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
             <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow>
                 <ModalTitle>
                     <Stack justifyContent="center" alignItems="center">
-                        <strong>Nuevo Respuesto</strong>
+                        <strong>Editar Respuesto</strong>
                     </Stack>   
                 </ModalTitle>
                 <ModalBody>
@@ -430,10 +445,7 @@ export default function ItemForm({open, hiddeModal, id} : ItemModalParams){
                                             <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
                                                 <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
                                         </Form.Group>
-                                        <Form.Group controlId={'branchOfficeID'}>
-                                            <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                            <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
-                                        </Form.Group>
+                                        
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                     <Form.Group controlId={'description'}>

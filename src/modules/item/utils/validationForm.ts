@@ -47,6 +47,9 @@ export const validationItemCreateFormModel = Schema.Model({
     itemAddressID: NumberType()
         .isRequired('Debe seleccionar una dirección') 
         .min(1, 'Debe seleccionar una dirección válida'), 
+    purchasePrice: NumberType()
+        .isRequiredOrEmpty('El precio de compra es requerido')
+        .min(0, 'El precio de compra debe ser un número positivo.'),
     pathItems: ArrayType()
         .isRequired('Debe subir al menos una imagen')
         .minLength(1, 'Debe subir al menos una imagen')

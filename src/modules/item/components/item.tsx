@@ -1,9 +1,11 @@
+/* eslint-disable no-constant-binary-expression */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
-import { getItemsAsync } from "../services/itemService";
+import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/itemService";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
-import { Item } from "../models/item.model";
+import { Brand, GetItems, Item, SubCategory } from "../models/item.model";
 import ItemForm from "./item_form";
 import ItemUpdate from "./item_formUpdate";
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
@@ -11,15 +13,18 @@ import ItemDelete from "./item_fomDelete";
 import { useItemTable } from "../hooks/useItemTable";
 import "../../item/styles/styles.css";
 import { useApi } from "../../../common/services/useApi";
+import ItemBareCode from "./item_formBarreCode";
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate,handleModalUpdate, showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
+    const {handleModalCreate,handleModalUpdate, handleModalBareCode, showModalBareCode,showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
     const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
     const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
     const [limit, setLimit] = useState(5); 
     const [page, setPage] = useState(1);
+    const [items, setItems] = useState<Item[]>([]);
+    const [total, setTotal] = useState(0);
 
     function handleChangeLimit(newLimit: number) {
       setPage(1);
@@ -28,14 +33,32 @@ export default function ItemTable() {
     const fetchItemsAsync = useMemo(() => {
       return getItemsAsync(page, limit, searchTerm);
     }, [limit, page, searchTerm]);
-    const { loading, data, error, fetch} = useApi<Item[]>(fetchItemsAsync, { autoFetch: false });
-    
+    const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: false });
     useEffect(() => {
       fetch();
-    }, [fetch, page]);
+    }, [fetch, page, limit]);
+    
+    const fetchItemBrandsAsync = useMemo(() => getBrandsAsync(), []);
+    const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
+    const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
+    const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
 
 
+    useEffect(() => {
+      if (itemsData) {
+          if (Array.isArray(itemsData)) {
+              setItems([]); 
+          } else {
+              setItems(itemsData.data);
+              setTotal(itemsData.total); 
+          }
+      } 
+      fetchBrands();
+      fetchItemSubCategory();
+  }, [itemsData, fetchBrands, fetchItemSubCategory]); 
 
+  const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.name })) || [];
+  const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.name })) || [];
     const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
       if (item) {
           setSelectedItem(item);
@@ -45,14 +68,16 @@ export default function ItemTable() {
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
     const filteredData = useMemo(() => {
-        return data!.filter(item =>
-            regex.test(item.name) ||
-            regex.test(item.description) ||
-            regex.test(item.model) ||
-            regex.test(item.brand) ||
-            regex.test(item.category)
-        );
-    }, [data, regex]);
+      const result = items.filter(item =>
+        regex.test(item.name) ||
+        regex.test(item.description) ||
+        regex.test(item.model) ||
+        regex.test(item.brand) ||
+        regex.test(item.subCategory) ||
+        regex.test(item.category)
+      );
+      return result;
+    }, [items, regex]);
 
     
 
@@ -111,6 +136,11 @@ export default function ItemTable() {
         );
     };
 
+    const handleRefreshData = () => {
+      setPage(1); 
+      fetch();   
+    };
+
     if(error){
       return (
         <p>Ha ocurrido un error: {error.message}</p>
@@ -124,9 +154,9 @@ export default function ItemTable() {
                     <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px"}}>
                         <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                         <Stack spacing={6}>
-                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Marca"/>
+                          <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Marca"/>
                           <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Categoría"/>
-                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Sub-Categoría"/>
+                          <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Sub-Categoría"/>
                           <InputGroup style={{ width: 250 }}>
                               <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                   <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
@@ -148,7 +178,7 @@ export default function ItemTable() {
                                                 <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
-                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
                                                 <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
@@ -246,10 +276,10 @@ export default function ItemTable() {
                             last
                             ellipsis
                             boundaryLinks
-                            maxButtons={10}
+                            maxButtons={5}
                             size="xs"
-                            layout={['-', 'pager']}
-                            total={10}
+                            layout={['total', '-', '|', 'pager', 'skip']}
+                            total={total}
                             limit={limit}
                             activePage={page}
                             onChangePage={(newPage) => {
@@ -260,9 +290,10 @@ export default function ItemTable() {
                             locale={paginationLocaleES}
                             style={{marginTop: "5px"}}
                             />
-                    <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} />
-                    <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} />
+                    <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
+                    <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
+                    <ItemBareCode id={getID} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
         );   
     } else {
@@ -281,6 +312,27 @@ export default function ItemTable() {
                       </InputGroup.Addon>
                     </InputGroup>
                   ) : (
+                    <>
+                      <Pagination
+                            prev
+                            next
+                            first
+                            last
+                            ellipsis
+                            boundaryLinks
+                            maxButtons={5}
+                            size="xs"
+                            layout={['total', '-', '|', 'pager']}
+                            total={total}
+                            limit={limit}
+                            activePage={page}
+                            onChangePage={(newPage) => {
+                                console.log('Cambiando a página:', newPage);
+                                setPage(newPage);
+                            }}
+                            onChangeLimit={handleChangeLimit}
+                            locale={paginationLocaleES}
+                            />
                     <IconButton
                         icon={<PlusIcon />}
                         appearance="primary"
@@ -288,13 +340,14 @@ export default function ItemTable() {
                         >
                         Nuevo Repuesto
                         </IconButton>
+                    </>
                   )}
                 </Stack>
               </div>
               <div style={{ overflowY: "auto", flex: 1, paddingBottom: "20px" }}>
               <Grid fluid>
                     <Row>
-                      {data!.map((item) => (
+                      {items!.map((item) => (
                         <Col key={item.itemID} xs={24} sm={24} md={24}>
                           <Card bordered style={{ marginBottom: "16px" }}>
                             <Card.Header>
@@ -333,16 +386,16 @@ export default function ItemTable() {
                             <Card.Footer>
                               <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                  <IconButton icon={<FaEdit style={{ width: 22, height: 22 }} />} style={{ width: 40, background: "transparent", color: "#f08b33" }} appearance="primary" />
-                                </Whisper>
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                  <IconButton icon={<FaTrash style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "red" }} appearance="primary" />
+                                    <IconButton onClick={() => {setGetID(item.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                  <IconButton icon={<FaSync style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "green" }} appearance="primary" />
+                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetID(item.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Codigo de Barra</Tooltip>}>
-                                  <IconButton icon={<FaBarcode style={{ width: 20, height: 20 }} />} style={{ width: 40, background: "transparent", color: "black" }} appearance="primary" />
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
+                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetID(item.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
+                                    <IconButton onClick={() => {setGetID(item.itemID); handleModalDelete(true, { id: item.itemID, name: item.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                               </Stack>
                             </Card.Footer>
@@ -352,9 +405,9 @@ export default function ItemTable() {
                     </Row>
                   </Grid>
               </div>
-              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)}/>
-              <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} />
-              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name}/>
+              <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
+              <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
           );
     }

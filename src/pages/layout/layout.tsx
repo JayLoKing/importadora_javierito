@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle, } from "rsuite";
 import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
@@ -46,7 +48,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
 
   function getRoleNUsername() {
     if (jwt) {
-      let decode = jwtDecoder(jwt);
+      const decode = jwtDecoder(jwt);
       console.log(decode)
       decode.role = setRole(decode.role)
       setUser({

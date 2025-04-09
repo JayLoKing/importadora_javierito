@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 
-export function useItemTable (){
+export function useTableUser (){
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [showModal, setShowModal] = useState<boolean>(false);
-    const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
-    const [showModalBareCode, setShowModalBareCode] = useState<boolean>(false);
     const [getID, setGetID] = useState(0);
 
     const handleChangeLimit = (datakey : number) => {
@@ -28,31 +25,7 @@ export function useItemTable (){
         return () => window.removeEventListener('resize', checkScreenSize);
     }, []);
     
-    function handleModalCreate(hidde: boolean){
-        setShowModal(hidde);
-    }
-
-    const handleModalUpdate = (isOpen: boolean) => {
-        if (!isOpen) {
-          setGetID(0); 
-        }
-        setShowModalUpdate(isOpen);
-    };
-
-    const handleModalBareCode = (isOpen: boolean) => {
-        if (!isOpen) {
-          setGetID(0); 
-        }
-        setShowModalBareCode(isOpen);
-    };
-
     return {
-        handleModalCreate,
-        handleModalUpdate,
-        handleModalBareCode,
-        showModal,
-        showModalUpdate,
-        showModalBareCode,
         handleChangeLimit,
         handleSearch,
         limit,

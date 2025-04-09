@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {create} from "zustand";
 import { ItemById } from "../models/item.model";
 import { validationItemEditFormModel } from "../utils/validationForm";
@@ -5,9 +6,7 @@ import { validationItemEditFormModel } from "../utils/validationForm";
 interface UpdateItemFormStore {
     formData: ItemById;
     loadData: (data: ItemById) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateField: (field: keyof ItemById, value: any) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validationModel: any;
 }
 

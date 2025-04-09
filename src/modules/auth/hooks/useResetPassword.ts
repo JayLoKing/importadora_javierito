@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {create} from "zustand";
-import { ResetPassword, EmptyResetPassword, VerifyEmailPlusCode, EmptyVerifyEmailPlusCode } from "../models/resetPassword.model";
+import { ResetPassword, VerifyEmail } from "../models/resetPassword.model";
 import { validationResetPasswordForm, validationVerifyEmailForm } from "../utils/validations/validation_form";
 import { useState } from "react";
 
@@ -11,17 +12,27 @@ interface ResetPasswordForm {
 }
 
 interface VerificationEmailForm {
-    formData: VerifyEmailPlusCode;
+    formData: VerifyEmail;
     resetForm: () => void;
-    updateField: (field: keyof VerifyEmailPlusCode, value: any) => void;
+    updateField: (field: keyof VerifyEmail, value: any) => void;
     validationModel: any;
 }
 
 export const useResetPasswordForm = create<ResetPasswordForm>((set) => ({
-    formData: EmptyResetPassword, 
+    formData: {
+        email: '',
+        newPassword: '',
+        confirmPassword: '',
+        code: ''
+    }, 
     resetForm: () => {
         set({
-            formData: EmptyResetPassword,
+            formData: {
+                email: '',
+                newPassword: '',
+                confirmPassword: '',
+                code: ''
+            },
         })
     }, 
     updateField: (field, value) =>
@@ -31,11 +42,17 @@ export const useResetPasswordForm = create<ResetPasswordForm>((set) => ({
     validationModel: validationResetPasswordForm,
 }));
 
-export const useRecoveryPasswordForm = create<VerificationEmailForm>((set) => ({
-    formData: EmptyVerifyEmailPlusCode, 
+export const useValidateEmailForm = create<VerificationEmailForm>((set) => ({
+    formData: {
+        email: '',
+        code: '',
+    }, 
     resetForm: () => {
         set({
-            formData: EmptyVerifyEmailPlusCode,
+            formData: {
+                email: '',
+                code: '',
+            },
         })
     }, 
     updateField: (field, value) =>

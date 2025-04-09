@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
+// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, getDocs, collection } from "firebase/firestore"; 
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAPQ39tW7kwb8G_SSTaM92s-IBlBbGUf-k",
   authDomain: "importadora-javierito.firebaseapp.com",
@@ -14,9 +12,24 @@ const firebaseConfig = {
   appId: "1:58503441335:web:adba5321b00a2d387ed632"
 };
 
-// Initialize Firebase
+// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
+// Inicializa Storage
 const storage = getStorage(app);
 
-export { storage }
+// Inicializa Firestore
+const db = getFirestore(app); 
+
+export async function checkFirestoreAvailability(): Promise<boolean> {
+  try {
+    await getDocs(collection(db, "notifications"));
+    console.log("Firestore está disponible y accesible.");
+    return true;
+  } catch (error) {
+    console.error("Firestore no está disponible o hay un problema de conexión:", error);
+    return false;
+  }
+}
+
+export { storage, db };

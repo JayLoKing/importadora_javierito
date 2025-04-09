@@ -41,6 +41,7 @@ export default function Login() {
 
     async function handleSubmit(e?: FormEvent) {
         if (e) e.preventDefault();
+        console.log(formValues);
         const res = await authenticateAsync(formValues);
         if (res === null) {
             showErrorMessage();

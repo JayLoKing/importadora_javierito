@@ -34,7 +34,9 @@ export const validationResetPasswordForm = Schema.Model({
         .isRequiredOrEmpty('La contraseña es requerida.')
         .minLength(8, 'La contraseña debe tener al menos 8 caracteres.'),
     confirmPassword: StringType()
-        .isRequiredOrEmpty('Debe confirmar la contraseña.')
+        .isRequiredOrEmpty('Debe confirmar la contraseña.'),
+    code: StringType()
+        .isRequiredOrEmpty('Codigo no Ingresado'),
         
 });
 
@@ -42,6 +44,4 @@ export const validationVerifyEmailForm = Schema.Model({
     email: StringType()
         .isRequired('Se necesita el correo para verificacion de cuenta.')
         .isEmail('Ingrese un correo electronico valido.'),
-    code: StringType()
-        .isRequiredOrEmpty('Se necesita el codigo'),
 });

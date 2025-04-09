@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import { UserProfile } from "../models/userProfile.model";
 
-interface UpdateItemFormStore {
+interface UpdateProfileFormStore {
     formData: UserProfile;
     loadData: (data: UserProfile) => void;
     resetForm: () => void;
@@ -9,7 +9,7 @@ interface UpdateItemFormStore {
     updateField: (field: keyof UserProfile, value: any) => void;
 }
 
-export const useUpdateProfileFormStore = create<UpdateItemFormStore>((set) => ({
+export const useUpdateProfileFormStore = create<UpdateProfileFormStore>((set) => ({
     formData: {
         id: 0,
         name: '',

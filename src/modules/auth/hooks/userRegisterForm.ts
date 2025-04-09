@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useRef, useState } from "react";
 import { RegisterUserDTO } from "../models/register.user.model";
 import { registerClientAsync } from "../services/registerUserService";

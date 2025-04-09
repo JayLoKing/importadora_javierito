@@ -19,9 +19,10 @@ import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOffice
 interface ItemModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
+    onItemCreated?: () => void;
 }
 
-export default function ItemForm({open, hiddeModal} : ItemModalParams){
+export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalParams){
     const toaster = useToaster();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
@@ -212,7 +213,6 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
             await createItemAsync(formData);
                 showSuccessMessage();
                 notificationService.addNotification({
-                    id: Math.random().toString(),
                     message: 'creó un nuevo ítem',
                     timestamp: new Date(),
                     actionType: 'REGISTRO',
@@ -223,6 +223,9 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                 formRef.current.reset();
                 resetForm();
                 hiddeModal(false);
+                if(onItemCreated){
+                    onItemCreated();
+                }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toaster.push(
@@ -342,6 +345,19 @@ export default function ItemForm({open, hiddeModal} : ItemModalParams){
                                                         name="barePrice"
                                                         type="number"
                                                         onChange={(value) => updateField('barePrice', value)}
+                                                    />
+                                                </InputGroup>
+                                            </Form.Group>
+                                            <Form.Group controlId={'purchasePrice'}>
+                                            <Form.ControlLabel >Precio Pelado</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaDollarSign />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="purchasePrice"
+                                                        type="number"
+                                                        onChange={(value) => updateField('purchasePrice', value)}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>

@@ -11,6 +11,7 @@ export interface NewItemDTO {
     dateManufacture: string;
     itemAddressID: number;
     userID: number;
+    purchasePrice: number;
     pathItems: string[];
     branchOfficeID: number;
     quantity: number;
@@ -36,6 +37,11 @@ export interface Item {
     totalStock: number;
 }
 
+export interface GetItems {
+    data: Item[];
+    total: number;
+}
+
 export interface ItemById{
     itemID: number;
     name: string;
@@ -48,7 +54,6 @@ export interface ItemById{
     brandID: number;
     subCategoryID: number;
     dateManufacture: string;
-    branchOfficeID: number;
     itemAddressID: number;
     userID: number;
     acronym: string;

@@ -12,7 +12,7 @@ interface UseApiResult<T> {
     loading: boolean;
     data: Data<T>;
     error: CustomError;
-    fetch: () => void;
+    fetch: (apiCall?: UseApiCall<T>) => Promise<void>;
 }
 
 export const useApi = <T,>(initialApiCall: UseApiCall<T> | null, options?: UseApiOptions): UseApiResult<T> => {
@@ -22,12 +22,15 @@ export const useApi = <T,>(initialApiCall: UseApiCall<T> | null, options?: UseAp
 
     const fetch = useCallback(async (apiCall?: UseApiCall<T>) => {
         const callToUse = apiCall || initialApiCall;
+        console.log(callToUse);
         if (!callToUse) return;
+        
 
         const { call, controller } = callToUse;
         setLoading(true);
         try {
             const response = await call;
+            console.log(response);
             setData(response.data);
             setError(null);
         } catch (error) {
@@ -39,7 +42,7 @@ export const useApi = <T,>(initialApiCall: UseApiCall<T> | null, options?: UseAp
         } finally {
             setLoading(false);
         }
-        return () => controller.abort();
+        controller.abort();
     }, [initialApiCall]);
 
     useEffect(() => {

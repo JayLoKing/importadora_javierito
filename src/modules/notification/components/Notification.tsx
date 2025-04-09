@@ -13,15 +13,21 @@ interface NotificationComponentProps {
 export const NotificationComponent: FC<NotificationComponentProps> = ({ userRole, visibility }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notificationService = useNotificationService();
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const existingNotifications = notificationService.getNotifications();
-    setNotifications(existingNotifications);
+    setNotifications(existingNotifications.filter(notif => notif.targetRole === 'Administrador')); // Filtra solo para admin
+    setLoading(false);
 
     const observer = {
       role: userRole,
       update: (notification: Notification) => {
-        setNotifications(prev => [...prev, notification]);
+        if (!notification || notification.targetRole === 'Administrador') {
+          setNotifications(prev => {
+            if (!notification) return prev; 
+            return [...prev, notification];
+          });
+        }
       },
     };
 
@@ -41,60 +47,77 @@ export const NotificationComponent: FC<NotificationComponentProps> = ({ userRole
   const allowedTypes = ['REGISTRO', 'EDICION', 'ELIMINACION', 'RESERVA'];
   const messageNotifications = notifications.filter(typeMessage => allowedTypes.includes(typeMessage.actionType));
 
-  const handleDelete = (id: string) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
+  const handleDelete = async (id: string) => {
+    await notificationService.deleteNotification(id); // Elimina de Firestore
+    setNotifications(prev => prev.filter(notification => notification.id !== id)); // Actualiza localmente
   };
 
+  if (loading) {
+    return (
+      <Whisper trigger="click" placement="bottomEnd" speaker={
+        <Popover title="Notificaciones">
+          <div style={{ padding: "10px" }}>
+            <p>Cargando notificaciones...</p>
+          </div>
+        </Popover>
+      }>
+        <IconButton
+          style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }}
+          icon={<FaRegBell />}
+          appearance="subtle"
+          onClick={visibility}
+        />
+      </Whisper>
+    );
+  }
+
   return (
-    < >
+    <>
       {messageNotifications.length === 0 ? (
-        <Whisper  trigger="click" placement="bottomEnd" speaker={
-          <Popover  title="Notificaciones">
+        <Whisper trigger="click" placement="bottomEnd" speaker={
+          <Popover title="Notificaciones">
             <div style={{ padding: "10px" }}>
-              <p>
-                <strong>No tiene notificaciones.</strong>
-              </p>
+              <p><strong>No tiene notificaciones.</strong></p>
             </div>
           </Popover>
         }>
-          <IconButton 
-            style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }} 
-            icon={<Badge content={messageNotifications.length}><FaRegBell /></Badge>} 
-            appearance="subtle" 
-            onClick={visibility} 
+          <IconButton
+            style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }}
+            icon={<Badge content={messageNotifications.length}><FaRegBell /></Badge>}
+            appearance="subtle"
+            onClick={visibility}
           />
         </Whisper>
       ) : (
         <Whisper trigger="click" placement="bottomEnd" speaker={
-          <Popover style={{overflow:"auto"}} title="Notificaciones">
+          <Popover style={{ overflow: "auto" }} title="Notificaciones">
             <div style={{ padding: "10px" }}>
               {messageNotifications.map(notification => (
                 <>
                   <div key={notification.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <p>
-                    <strong>{notification.type}</strong> - <strong style={{ color: actionColors[notification.actionType] }}>{notification.actionType}</strong><br/>
-                    {notification.timestamp.toLocaleString()}<br/>
-                    El {notification.targetRole} {notification.userName} {notification.message}  
-                  </p>
-                  <IconButton 
-                    icon={<RxCross1 />} 
-                    appearance="default" 
-                    color="red" 
-                    onClick={() => handleDelete(notification.id)} 
-                  />
-                </div>
-                <Divider />
+                    <p>
+                      <strong>{notification.type}</strong> - <strong style={{ color: actionColors[notification.actionType] }}>{notification.actionType}</strong><br />
+                      {notification.timestamp.toLocaleString()}<br />
+                      El {notification.targetRole} {notification.userName} {notification.message}
+                    </p>
+                    <IconButton
+                      icon={<RxCross1 />}
+                      appearance="default"
+                      color="red"
+                      onClick={() => handleDelete(notification.id)}
+                    />
+                  </div>
+                  <Divider />
                 </>
               ))}
-              
             </div>
           </Popover>
         }>
-          <IconButton 
-            style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }} 
-            icon={<Badge content={messageNotifications.length}><FaRegBell /></Badge>} 
-            appearance="subtle" 
-            onClick={visibility} 
+          <IconButton
+            style={{ marginRight: "15px", fontSize: '24px', background: "transparent", color: "white" }}
+            icon={<Badge content={messageNotifications.length}><FaRegBell /></Badge>}
+            appearance="subtle"
+            onClick={visibility}
           />
         </Whisper>
       )}
