@@ -1,7 +1,7 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
-import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/itemService";
+import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
@@ -14,13 +14,23 @@ import { useItemTable } from "../hooks/useItemTable";
 import "../../item/styles/styles.css";
 import { useApi } from "../../../common/services/useApi";
 import ItemBareCode from "./item_formBarreCode";
+import UpdateStock from "./item_formStock";
+import { useRegisterItem } from "../hooks/useRegisterItem";
+import { useUpdateItem } from "../hooks/useUpdateItem";
+import { useDeleteItem } from "../hooks/useDeleteItem";
+import { useUpdateStock } from "../hooks/useUpdateStock";
+import { useBarcode } from "../hooks/useBarcode";
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {handleModalCreate,handleModalUpdate, handleModalBareCode, showModalBareCode,showModalUpdate, getID,showModal, setGetID,searchTerm,setSearchTerm,handleSearch, isMobile} = useItemTable();
-    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
-    const [selectedItem, setSelectedItem] = useState<{ id: number; name: string }>({ id: 0, name: '' });
+    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES} = useItemTable();
+    const {handleModalCreate,showModal} = useRegisterItem();
+    const {handleModalUpdate,showModalUpdate, getIDUpdate, setGetIDUpdate} = useUpdateItem();
+    const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
+    const {handleModalStock, showModalStock, setGetIDStock, getIDStock} = useUpdateStock();
+    const {handleModalBareCode, showModalBareCode, setGetIDBarcode, getIDBarcode} = useBarcode();
+
     const [limit, setLimit] = useState(5); 
     const [page, setPage] = useState(1);
     const [items, setItems] = useState<Item[]>([]);
@@ -55,16 +65,11 @@ export default function ItemTable() {
       } 
       fetchBrands();
       fetchItemSubCategory();
-  }, [itemsData, fetchBrands, fetchItemSubCategory]); 
+    }, [itemsData, fetchBrands, fetchItemSubCategory]); 
 
-  const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.name })) || [];
-  const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.name })) || [];
-    const handleModalDelete = (open: boolean, item?: { id: number; name: string }) => {
-      if (item) {
-          setSelectedItem(item);
-      }
-      setShowModalDelete(open);
-    };
+    const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.name })) || [];
+    const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.name })) || [];
+   
     const regex = useMemo(() => new RegExp(searchTerm, "i"), [searchTerm]);
 
     const filteredData = useMemo(() => {
@@ -79,24 +84,6 @@ export default function ItemTable() {
       return result;
     }, [items, regex]);
 
-    
-
-    const tableLoadingES = {
-      loading: "Cargando Registros..."
-    };
-
-    const paginationLocaleES = {
-        total: "Total de Registros: {0}",
-        limit: "{0} / página",
-        skip: "Ir a la página {0}",
-        pager: {
-          first: "Primero",
-          last: "Último",
-          next: "Siguiente",
-          previous: "Anterior",
-        },
-      };
-    
     const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
         <Cell {...props} style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div
@@ -172,16 +159,16 @@ export default function ItemTable() {
                                     { rowData => ( 
                                         <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
+                                                <IconButton onClick={() => {setGetIDUpdate(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                                <IconButton onClick={(event) => { event.stopPropagation(); setGetID(rowData.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetIDStock(rowData.itemID); handleModalStock(true) }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
-                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetIDBarcode(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
-                                                <IconButton onClick={() => {setGetID(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                                <IconButton onClick={() => {setGetIDDelete(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                             </Whisper>
                                         </Stack>
                                     )}
@@ -291,9 +278,10 @@ export default function ItemTable() {
                             style={{marginTop: "5px"}}
                             />
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
-                    <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
-                    <ItemBareCode id={getID} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
-                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
+                    <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
+                    <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
+                    <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)}/>
+                    <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
         );   
     } else {
@@ -386,16 +374,16 @@ export default function ItemTable() {
                             <Card.Footer>
                               <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                    <IconButton onClick={() => {setGetID(item.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
+                                    <IconButton onClick={() => {setGetIDUpdate(item.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Stock</Tooltip>}>
-                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetID(item.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
+                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetIDUpdate(item.itemID); }} icon={<FaSync style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
-                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetID(item.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                    <IconButton onClick={(event) => { event.stopPropagation(); setGetIDBarcode(item.itemID); }} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
-                                    <IconButton onClick={() => {setGetID(item.itemID); handleModalDelete(true, { id: item.itemID, name: item.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                    <IconButton onClick={() => {setGetIDDelete(item.itemID); handleModalDelete(true, { id: item.itemID, name: item.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                               </Stack>
                             </Card.Footer>
@@ -406,8 +394,10 @@ export default function ItemTable() {
                   </Grid>
               </div>
               <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
-              <ItemUpdate id={getID} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
-              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={selectedItem.id} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
+              <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
+              <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
+              <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)}/>
+              <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
           );
     }

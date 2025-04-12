@@ -29,10 +29,10 @@ export default function Login() {
 
     function showErrorMessage() {
         toaster.push(
-            <Message type="error" closable showIcon header="Error de inicio de sesión">
+            <Message  centered type="error" closable showIcon header="Error de inicio de sesión">
                 <p>Usuario o contraseña incorrectos.</p>
             </Message>,
-            { duration: 3000 })
+            { placement: 'topCenter', duration: 3000 })
     }
 
     function handleChange() {
@@ -41,16 +41,17 @@ export default function Login() {
 
     async function handleSubmit(e?: FormEvent) {
         if (e) e.preventDefault();
-        console.log(formValues);
-        const res = await authenticateAsync(formValues);
-        if (res === null) {
-            showErrorMessage();
-        } else {
-            setUserAuth(res.token);
-            localStorage.setItem('jwt', res.token);
+        try {
+            console.log(formValues);
+            const { call } = authenticateAsync(formValues);
+            const res = await call;
+            setUserAuth(res.data.token);
+            localStorage.setItem('jwt', res.data.token);
             navigate('/branchOffice');
+            resetForm();
+        } catch {
+            showErrorMessage();
         }
-        resetForm();
     }
 
     function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {

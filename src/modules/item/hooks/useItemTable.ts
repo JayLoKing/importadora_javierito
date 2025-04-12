@@ -5,11 +5,7 @@ export function useItemTable (){
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [showModal, setShowModal] = useState<boolean>(false);
-    const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
-    const [showModalBareCode, setShowModalBareCode] = useState<boolean>(false);
-    const [getID, setGetID] = useState(0);
-
+    
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
         setLimit(datakey);
@@ -19,6 +15,23 @@ export function useItemTable (){
         setSearchTerm(value);
     };
     
+    const tableLoadingES = {
+        loading: "Cargando Registros..."
+      };
+  
+      const paginationLocaleES = {
+          total: "Total de Registros: {0}",
+          limit: "{0} / página",
+          skip: "Ir a la página {0}",
+          pager: {
+            first: "Primero",
+            last: "Último",
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+      };
+
+
     useEffect(() => {
         const checkScreenSize = () => {
             setIsMobile(window.innerWidth < 768);
@@ -28,31 +41,7 @@ export function useItemTable (){
         return () => window.removeEventListener('resize', checkScreenSize);
     }, []);
     
-    function handleModalCreate(hidde: boolean){
-        setShowModal(hidde);
-    }
-
-    const handleModalUpdate = (isOpen: boolean) => {
-        if (!isOpen) {
-          setGetID(0); 
-        }
-        setShowModalUpdate(isOpen);
-    };
-
-    const handleModalBareCode = (isOpen: boolean) => {
-        if (!isOpen) {
-          setGetID(0); 
-        }
-        setShowModalBareCode(isOpen);
-    };
-
     return {
-        handleModalCreate,
-        handleModalUpdate,
-        handleModalBareCode,
-        showModal,
-        showModalUpdate,
-        showModalBareCode,
         handleChangeLimit,
         handleSearch,
         limit,
@@ -61,7 +50,7 @@ export function useItemTable (){
         searchTerm,
         setSearchTerm,
         isMobile,
-        getID,
-        setGetID
+        tableLoadingES,
+        paginationLocaleES
     };
 }

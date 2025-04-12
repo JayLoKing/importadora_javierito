@@ -11,4 +11,3 @@ export const ItemUrl = {
     getAllAddresses: '/itemAddresses/getAllItemAddresses',
     getAllSubCategories: '/subCategories/getAllSubCategories'
 } as const;
-

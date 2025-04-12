@@ -10,7 +10,7 @@ export interface NewItemDTO {
     subCategoryID: number;
     dateManufacture: string;
     itemAddressID: number;
-    userID: number;
+    userID?: number;
     purchasePrice: number;
     pathItems: string[];
     branchOfficeID: number;
