@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, InputGroup, Modal, SelectPicker, Stack} from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
@@ -6,60 +7,78 @@ import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { useUpdateStockFormStore } from "../validations/useUpdateStockFormStore";
 import { useApi } from "../../../common/services/useApi";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { FormEvent, useEffect, useMemo, useRef } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useRegisterItem } from "../hooks/useRegisterItem";
 import { FaBuilding, FaBoxOpen} from "react-icons/fa";
 import { createStockAsync } from "../services/stock.service";
 import { useUpdateStock } from "../hooks/useUpdateStock";
-
+import { getAcronymAsync } from "../services/item.service";
+import { NewStockDTO } from "../models/stock.model";
 
 interface StockModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
     id?: number;
+    onStockUpdated?: () => void;
 }
 
-export default function UpdateStock ({open, hiddeModal,id} : StockModalParams) {
-    const {formData, updateField, resetForm, validationModel} = useUpdateStockFormStore();
+export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : StockModalParams) {
+    const {formData, updateField, resetForm, validationModel, loadData} = useUpdateStockFormStore();
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
+    const fetchAcronymByIdAsync = useMemo(() => {
+            if(open && id){
+                return getAcronymAsync(id);
+            }
+            return null;
+        },[]);
+    const { data: acronymData, fetch: fetchData } = useApi<NewStockDTO>(fetchAcronymByIdAsync!, { autoFetch: true });
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
     const { branchOfficeOptionsES } = useRegisterItem();
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
     const {showErrorMessage, showSuccessMessage} = useUpdateStock();
+    const [isLoading, setIsLoading] = useState(false);
     const formRef = useRef<any>();
+    useEffect(() => {
+        if (acronymData && !Array.isArray(acronymData)) {
+            loadData({
+              itemId: id,
+              acronym: acronymData.acronym,
+           });
+        }
+    }, [acronymData, id]);
 
     useEffect(() => {
-        fetchBranchOffices();
-    }, [fetchBranchOffices]);
+        if(open && id){
+            resetForm();
+            fetchBranchOffices();
+            fetchData();
+        }
+    }, [fetchBranchOffices, fetchData]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        console.log(id);
-        formData.itemId = id;
-        formData.acronym = "GX";
-        
-        const result = await formRef.current.checkAsync();
-        if (!result.hasError) {
-            console.log("Formulario válido, procediendo...");
-            console.warn("Formulario:", formData);
-        } else {
-            console.error("El formulario no es válido");
-            console.warn("Errores de validación:", result);
-            console.warn("Formulario:", formData);
-            return;
-        }
-
-
+        setIsLoading(true);
         try {
-            const { call } = createStockAsync(formData);
-            await call;
+            console.log(formData);
+            const result = await formRef.current.checkAsync();
+            if (result.hasError) {
+                console.log("Hay errores en el formulario", result.hasError);
+                return;
+            } 
+        
+            await createStockAsync(formData);
+            if (onStockUpdated) {
+                onStockUpdated(); 
+            }
             hiddeModal(false);
             resetForm();
             showSuccessMessage();
         } catch (error) {
             console.error("Error updating stock:", error);
             showErrorMessage();
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -90,10 +109,9 @@ export default function UpdateStock ({open, hiddeModal,id} : StockModalParams) {
                                             <FaBoxOpen />
                                         </InputGroup.Addon>
                                             <Form.Control
-                                                defaultValue={formData.quantity}
                                                 name="quantity"
                                                 type="number"
-                                                onChange={(value) => updateField('quantity', value)}
+                                                onChange={(value) => updateField('quantity', parseFloat(value))}
                                     />
                                 </InputGroup>
                             </Form.Group>
@@ -101,7 +119,7 @@ export default function UpdateStock ({open, hiddeModal,id} : StockModalParams) {
                     </Stack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
+                    <Button onClick={(e) => handleSubmit(e)} loading={isLoading} type="submit" appearance="primary">Aceptar</Button>
                     <Button onClick={handleCancel} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>

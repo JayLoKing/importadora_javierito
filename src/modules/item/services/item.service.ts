@@ -1,5 +1,5 @@
 import {httpClient} from "../../../api/httpClient.ts";
-import { Brand, GetItems, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
+import { Brand, GetItems, ItemAcronym, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
 import { ItemUrl } from "../urls/item.url.ts";
 import { loadAbort } from "../../../utils/loadAbort.utility.ts";
 import { UseApiCall } from "../../../utils/useApi.model.ts";
@@ -43,6 +43,16 @@ export const getItemAsyncById = (id: number): UseApiCall<ItemById> => {
         controller
     }
 }
+
+export const getAcronymAsync = (id: number): UseApiCall<ItemAcronym> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.post<ItemAcronym>(ItemUrl.getAcronym, {id: id}, {signal: controller.signal}),
+        controller
+    }
+}
+
+
 
 export const createItemAsync = (item: NewItemDTO): UseApiCall<NewItemDTO> => {
     const controller = loadAbort();

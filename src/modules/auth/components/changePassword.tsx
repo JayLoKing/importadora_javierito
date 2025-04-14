@@ -55,6 +55,7 @@ export const ChangePassword = ({open, hiddeModal, data, email}: ChangePasswordPr
             console.log(error);
         } finally {
             setIsLoading(false);
+            setActive(true);
         }
     }
 

@@ -9,5 +9,7 @@ export const ItemUrl = {
 
     getAllBrands: '/brands/getAllBrands',
     getAllAddresses: '/itemAddresses/getAllItemAddresses',
-    getAllSubCategories: '/subCategories/getAllSubCategories'
+    getAllSubCategories: '/subCategories/getAllSubCategories',
+
+    getAcronym: `${moduleBaseUrl}/itemAcronym`,
 } as const;

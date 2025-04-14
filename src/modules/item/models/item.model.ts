@@ -74,3 +74,7 @@ export interface SubCategory {
     id: number;
     name: string;
 }
+
+export interface ItemAcronym {
+    acronym: string;
+}

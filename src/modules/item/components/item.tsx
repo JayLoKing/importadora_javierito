@@ -3,7 +3,7 @@
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
 import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
-import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
+import { FaBoxOpen, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
 import { Brand, GetItems, Item, SubCategory } from "../models/item.model";
 import ItemForm from "./item_form";
@@ -84,25 +84,82 @@ export default function ItemTable() {
       return result;
     }, [items, regex]);
 
-    const ImageCell = ({ rowData, ...props }: { rowData: any }) => (
-        <Cell {...props} style={{ padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div
-                style={{
-                    width: 70,
-                    height: 70,
-                    background: '#f5f5f5',
-                    borderRadius: 6,
-                    marginTop: 2,
-                    overflow: 'hidden',
-                    display: 'inline-block',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
-                <Image  zoomed fallbackSrc="Error" src={rowData.itemImage}  width="40" />
-            </div>
-        </Cell>
-    );
+    const ImageCell = ({ rowData, ...props }: { rowData: any }) => {
+      const [imgError, setImgError] = useState(false);
+      
+      return (
+          <Cell {...props} style={{ 
+              padding: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              userSelect: 'none'
+          }}>
+              <div style={{
+                  width: 70,
+                  height: 70,
+                  background: '#f5f5f5',
+                  borderRadius: 6,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: 5,
+                  boxSizing: 'border-box',
+                  userSelect: 'none'
+              }}>
+                  {imgError || !rowData.itemImage ? (
+                      <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          height: '100%',
+                          width: '100%',
+                          userSelect: 'none'
+                      }}>
+                          <FaBoxOpen style={{ 
+                              fontSize: 16,  
+                              color: '#999',
+                              marginBottom: 2,
+                              userSelect: 'none'  
+                          }} />
+                          <div style={{ 
+                              fontSize: 9,  
+                              color: '#999',
+                              lineHeight: 1.1,
+                              textAlign: 'center',
+                              width: '100%',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'wrap',
+                              userSelect: 'none', 
+                              WebkitUserSelect: 'none', 
+                              MozUserSelect: 'none' 
+                              
+                          }}>
+                              Imagen no disponible
+                          </div>
+                      </div>
+                  ) : (
+                      <Image 
+                          src={rowData.itemImage} 
+                          width={65}
+                          height={65}
+                          onError={() => setImgError(true)}
+                          alt={`Imagen de ${rowData.name}`}
+                          style={{ 
+                              objectFit: 'contain',
+                              maxWidth: '100%',
+                              maxHeight: '100%'
+                          }}
+                      />
+                  )}
+              </div>
+          </Cell>
+      );
+    };
 
     interface FieldProps {
         label: string;
@@ -280,7 +337,7 @@ export default function ItemTable() {
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
                     <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
                     <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
-                    <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)}/>
+                    <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)} onStockUpdated={handleRefreshData}/>
                     <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
         );   
@@ -396,7 +453,7 @@ export default function ItemTable() {
               <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
               <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
               <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
-              <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)}/>
+              <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)} onStockUpdated={handleRefreshData}/>
               <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
             </div>
           );

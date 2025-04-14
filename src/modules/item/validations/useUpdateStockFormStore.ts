@@ -8,6 +8,7 @@ interface UpdateStockFormStore {
     resetForm: () => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateField: (field: keyof NewStockDTO, value: any) => void;
+    loadData: (data: NewStockDTO) => void;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validationModel: any;
 }
@@ -27,6 +28,7 @@ export const useUpdateStockFormStore = create<UpdateStockFormStore>((set) => ({
             },
         })
     }, 
+    loadData: (data) => set({formData: data}),
     updateField: (field, value) =>
         set((state) => ({
             formData: { ...state.formData, [field]: value },
