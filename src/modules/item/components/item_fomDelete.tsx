@@ -4,7 +4,7 @@ import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { deleteItemAsync } from "../services/itemService";
+import { deleteItemAsync } from "../services/item.service";
 import { useAuthStore } from "../../../store/store";
 import { useEffect, useState } from "react";
 import { AuthUser } from "../../auth/models/auth.model";

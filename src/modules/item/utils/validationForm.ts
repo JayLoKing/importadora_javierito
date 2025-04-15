@@ -5,17 +5,15 @@ const { StringType, NumberType, ArrayType } = Schema.Types;
 export const validationItemCreateFormModel = Schema.Model({
     name: StringType()
         .isRequired('El nombre es requerido')
-        .minLength(3, 'El nombre debe tener al menos 3 caracteres.')
         .pattern(/^[a-zA-Z0-9\s]+$/, 'El nombre solo puede contener letras y números.'),
 
     alias: StringType()
         .isRequired('El alias es requerido')
-        .minLength(3, 'El alias debe tener al menos 3 caracteres.')
         .pattern(/^[a-zA-Z\s]+$/, 'El alias solo puede contener letras.'),
 
     description: StringType()
         .isRequired('La descripción es requerida')
-        .minLength(10, 'La descripción debe tener al menos 10 caracteres.'),
+        .minLength(5, 'La descripción debe tener al menos 10 caracteres.'),
 
     model: StringType()
         .isRequired('El modelo es requerido')
@@ -56,7 +54,7 @@ export const validationItemCreateFormModel = Schema.Model({
         .maxLength(5, 'No puede subir más de 5 imágenes')
         .of(
             StringType()
-                .pattern(/\.(jpg|jpeg|png)$/, 'Las imágenes deben estar en formato JPG o PNG.')
+                .pattern(/\.(jpg|jpeg|png)(\?.*)?$/, 'Las imágenes deben estar en formato JPG o PNG.')
         ),
 
     branchOfficeID: NumberType()
@@ -71,6 +69,7 @@ export const validationItemCreateFormModel = Schema.Model({
         .isRequired('El acrónimo es requerido')
         .minLength(2, 'El acrónimo debe tener al menos 2 caracteres.')
         .pattern(/^[a-zA-Z0-9]+$/, 'El acrónimo solo puede contener letras y números.'),
+
 });
 
 export const validationItemEditFormModel = Schema.Model({
@@ -126,4 +125,15 @@ export const validationItemEditFormModel = Schema.Model({
             StringType()
                 .pattern(/\.(jpg|jpeg|png)$/, 'Las imágenes deben estar en formato JPG o PNG.')
         ),
+});
+
+export const validationStockEditFormModel = Schema.Model({
+    
+    branchOfficeId: NumberType()
+        .isRequired('Debe seleccionar una sucursal') 
+        .min(1, 'Debe seleccionar una sucursal válida'), 
+
+    quantity: NumberType()
+        .isRequired('La cantidad es requerida')
+        .min(0, 'La cantidad debe ser un número positivo.'),
 });

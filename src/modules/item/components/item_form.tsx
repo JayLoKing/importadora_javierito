@@ -4,17 +4,18 @@ import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/itemService";
+import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/item.service";
 import "../styles/styles.css";
 import { FormEvent, useState, useRef, useMemo, useEffect} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
-import { deleteFile, fileUpload } from "../services/storageService";
-import { useCreateItemFormStore } from "../hooks/useCreateItemFormStore";
+import { deleteFile, fileUpload } from "../services/storage.service";
+import { useCreateItemFormStore } from "../validations/useCreateItemFormStore";
 import { useNotificationService } from "../../../context/NotificationContext";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useApi } from "../../../common/services/useApi";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
+import { useRegisterItem } from "../hooks/useRegisterItem";
 
 interface ItemModalParams {
     open: boolean;
@@ -27,7 +28,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
-
+    const { branchOfficeOptionsES,brandsOptionsES,itemAddressesOptionsES,subCategoriesOptionsES} = useRegisterItem();
     // Fetch para sucursales, marcas, direcciones y subcategorías
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
@@ -56,7 +57,6 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.id })) || [];
     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
-
 
     const showSuccessMessage = () => {
         toaster.push(
@@ -146,22 +146,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         }
     };
 
-    const branchOfficeOptionsES = {
-        searchPlaceholder: "Buscar Sucursal..."
-    };
-    
-    const brandsOptionsES = {
-        searchPlaceholder: "Buscar marca..."
-    };
-    
-    const itemAddressesOptionsES = {
-        searchPlaceholder: "Buscar direccion..."
-    };
-    
-    const subCategoriesOptionsES = {
-        searchPlaceholder: "Buscar sub-categoria..."
-    };
-
+   
     const getUsernameAndRoleName = () => {
         let roleName, userName, userId;
         if(jwt){
@@ -193,8 +178,12 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         const [roleName, userName, userId] = getUsernameAndRoleName();
         updateField('userID', userId as number);
 
-        if (formRef.current.check()) {
+        const result = await formRef.current.checkAsync();
+        if (!result.hasError) {
+            console.log("Formulario válido, procediendo...");
+        } else {
             console.error("El formulario no es válido");
+            console.warn("Errores de validación:", result);
             console.warn("Formulario:", formData);
             return;
         }
@@ -316,7 +305,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="price"
                                                         type="number"
-                                                        onChange={(value) => updateField('price', value)}
+                                                        onChange={(value) => updateField('price', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -329,7 +318,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="wholesalePrice"
                                                         type="number"
-                                                        onChange={(value) => updateField('wholesalePrice', value)}
+                                                        onChange={(value) => updateField('wholesalePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -344,7 +333,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="barePrice"
                                                         type="number"
-                                                        onChange={(value) => updateField('barePrice', value)}
+                                                        onChange={(value) => updateField('barePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -357,7 +346,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="purchasePrice"
                                                         type="number"
-                                                        onChange={(value) => updateField('purchasePrice', value)}
+                                                        onChange={(value) => updateField('purchasePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>
@@ -406,7 +395,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         defaultValue={111}
                                                         name="quantity"
                                                         type="number"
-                                                        onChange={(value) => updateField('quantity', value)}
+                                                        onChange={(value) => updateField('quantity', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                             </Form.Group>

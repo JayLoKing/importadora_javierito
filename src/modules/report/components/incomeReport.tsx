@@ -1,3 +1,5 @@
+/* eslint-disable no-constant-binary-expression */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Table, Tooltip, Whisper } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
@@ -12,6 +14,7 @@ import { exportToCSV } from "../hooks/report.csv";
 import { FetchDataByIdAsync } from "../../../common/services/generalService";
 import { GetReportData } from "../models/report.model";
 import { ItemUrl } from "../urls/report.url";
+import { useReport } from "../hooks/useReport";
 
 interface ReportData {
     datakey: number;
@@ -34,6 +37,8 @@ export default function IncomeReport() {
     };
 
     const { data: fetchedData, fetchData } = FetchDataByIdAsync<GetReportData[]>(ItemUrl.excelReport, requestData);
+    const {showSuccessMessage, showErrorMessage, showInfoMessage, showWarningMessage} = useReport();
+
 
     useEffect(() => {
         const sessionData = sessionStorage.getItem('reportData');
@@ -55,9 +60,11 @@ export default function IncomeReport() {
         }
     }, []);
 
+    
+
     const handleAddReport = async () => {
         if(!startDate || !endDate){
-            alert("Por favor, seleccione un rango de fechas.");
+            showInfoMessage();
             return;
         }
         try{
@@ -75,14 +82,15 @@ export default function IncomeReport() {
                 const updatedData = [...data, newReport];
                 setData(updatedData);
                 sessionStorage.setItem('reportData', JSON.stringify(updatedData));
+                showSuccessMessage();
                 
             } else {
-                alert("No se encontraron datos para el rango de fechas seleccionado.");
+                showWarningMessage();
             }
         }
         catch(error){
             console.error("Error al obtener los datos del reporte:", error);
-            alert("Ocurrió un error al obtener los datos del reporte.");
+            showErrorMessage();
         }
     };
 
@@ -99,7 +107,7 @@ export default function IncomeReport() {
             }
         } catch (error) {
             console.error("Error al descargar el reporte:", error);
-            alert("Ocurrió un error al descargar el reporte.");
+            showErrorMessage();
         }
     };
 

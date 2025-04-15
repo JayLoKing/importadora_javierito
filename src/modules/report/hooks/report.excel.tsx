@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import XLSXStyle from 'xlsx-js-style';

@@ -50,16 +50,19 @@ export const ChangePassword = ({open, hiddeModal, data, email}: ChangePasswordPr
             console.log(response.data);
             hiddeModal(false);
             resetForm();
+            setActive(true);
         } catch(error) {
             console.log(error);
         } finally {
             setIsLoading(false);
+            setActive(true);
         }
     }
 
     const handleCancel = () => {
         hiddeModal(false);
         resetForm();
+        setActive(true);
     }
 
     return (

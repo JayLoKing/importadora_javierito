@@ -5,16 +5,16 @@ import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToa
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { getBrandsAsync, getItemAdressesAsync, getItemAsyncById, getSubCategoryAsync, updateItemAsync } from "../services/itemService";
+import { getBrandsAsync, getItemAdressesAsync, getItemAsyncById, getSubCategoryAsync, updateItemAsync } from "../services/item.service";
 import "../styles/styles.css";
 import { FormEvent, useState, useRef, useMemo, useEffect} from "react";
 import { Brand, ItemAddress, ItemById, SubCategory } from "../models/item.model";
-import { deleteFile, fileUpload } from "../services/storageService";
+import { deleteFile, fileUpload } from "../services/storage.service";
 import { useNotificationService } from "../../../context/NotificationContext";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useApi } from "../../../common/services/useApi";
-import { useUpdateItemFormStore } from "../hooks/useUpdateItemFormStorn";
+import { useUpdateItemFormStore } from "../validations/useUpdateItemFormStorn";
 
 interface ItemModalParams {
     open: boolean;
