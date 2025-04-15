@@ -11,6 +11,7 @@ import IncomeReport from "../modules/report/components/incomeReport.tsx";
 import TrashTable from "../modules/trash/components/trash.tsx";
 import Register from "../modules/user/components/userContainer";
 import Profile from "../modules/user/components/profile.tsx";
+import SaleTable from "../modules/sale/components/saleTable.tsx";
 
 export default function Routing() {
     return (
@@ -22,6 +23,7 @@ export default function Routing() {
             <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
             <Route path="/inventoryreport" element={<Layout titleComponent={'REPORTES DE INVENTARIO'} children={<InventoryReport />} />} />
             <Route path="/incomereport" element={<Layout titleComponent={'REPORTES DE INGRESOS'} children={<IncomeReport />} />} />
+            <Route path="/sale" element={<Layout titleComponent={'VENTAS'} children={<SaleTable />} />} />
             <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<TrashTable />} />} />
             <Route path="/register" element={<Layout titleComponent={'USUARIOS'} children={<Register />} />} />
             <Route path="/profile" element={<Layout titleComponent={'PERFIL'} children={<Profile />} />} />

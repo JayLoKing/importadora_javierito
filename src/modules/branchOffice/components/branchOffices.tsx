@@ -4,7 +4,7 @@ import { IconButton, Input, InputGroup, Stack, Table, Tooltip, Whisper } from "r
 import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
 import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
-import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
+import { FaEdit, FaSearch, FaTrash, FaWrench } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
@@ -120,6 +120,16 @@ export default function BranchOffices() {
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
                     <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
                         {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
+                    </Cell>
+                </Column>
+                <Column align="center" flexGrow={1} minWidth={100}>
+                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Producto</HeaderCell>
+                    <Cell>
+                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver Productos</Tooltip>}>
+                                <IconButton icon={<FaWrench style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                            </Whisper>
+                        </Stack>
                     </Cell>
                 </Column>
             </Table>

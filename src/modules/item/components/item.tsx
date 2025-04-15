@@ -155,7 +155,6 @@ export default function ItemTable() {
                         <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                         <Stack spacing={6}>
                           <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Marca"/>
-                          <SelectPicker label="Filtro" data={[]} searchable={false} placeholder="Categoría"/>
                           <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Sub-Categoría"/>
                           <InputGroup style={{ width: 250 }}>
                               <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
@@ -165,7 +164,7 @@ export default function ItemTable() {
                           </InputGroup>
                         </Stack>
                     </Stack>
-                    <Table bordered cellBordered affixHorizontalScrollbar style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
+                    <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -194,16 +193,16 @@ export default function ItemTable() {
                                     <Cell dataKey="itmID" />
                                 </Column>
                             )}
-                            <Column align="center" flexGrow={1} minWidth={140} fixed="left" resizable>
+                            <Column align="center" flexGrow={1} minWidth={140} >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                             </Column>
                         
-                            <Column align="center" flexGrow={2} minWidth={150} fixed="left" resizable>
+                            <Column align="center" flexGrow={2} minWidth={150} >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
                                 <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                             </Column>
-                            <Column align="center" flexGrow={1} minWidth={150} fixed="left">
+                            <Column align="center" flexGrow={1} minWidth={150} >
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
                                 <ImageCell  rowData={(rowData: any ) => rowData}/>
                             </Column>
@@ -260,7 +259,7 @@ export default function ItemTable() {
                             </Column>
                         
                             <Column align="center" flexGrow={1} minWidth={100}>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Stock</HeaderCell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Stock Total</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalStock" />
                             </Column>
 

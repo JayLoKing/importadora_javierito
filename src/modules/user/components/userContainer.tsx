@@ -104,7 +104,7 @@ export default function UserContainer(){
                 </Stack>
             </Stack>
             <>
-                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} data={users} loading={loading} height={600} rowHeight={65} headerHeight={70}>
+                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} data={users} loading={loading} height={600} rowHeight={100} headerHeight={70}>
                     <Column align='center' flexGrow={1} minWidth={110} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell >
@@ -161,7 +161,7 @@ export default function UserContainer(){
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Celular</HeaderCell>
                         <Cell dataKey="phone"/>
                     </Column>
-                    <Column align="center" flexGrow={1} minWidth={200}>
+                    <Column align="center" flexGrow={1} minWidth={270}>
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Correo electrónico</HeaderCell>
                         <Cell dataKey="email"/>
                     </Column>

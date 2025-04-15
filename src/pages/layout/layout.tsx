@@ -157,7 +157,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 </Nav.Menu>
                 <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
-                  <Nav.Item eventKey="6-1" icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
+                  <Nav.Item eventKey="6-1" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
                   <Nav.Item eventKey="6-2" icon={<Icon as={FaPersonCircleCheck} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-2" ? "active" : ""}`}>Clientes</Nav.Item>
                 </Nav.Menu>
                 <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>

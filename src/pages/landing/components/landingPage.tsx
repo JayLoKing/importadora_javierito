@@ -150,15 +150,6 @@ const blogPosts = [
                     <Nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                     <IconButton icon={<FaWrench style={{marginRight:"5px"}}/>} style={{ fontSize:"19px", fontWeight:"bold", color:"white", background:"transparent"}}>Catálogo de Repuestos</IconButton>
                     <Dropdown trigger="hover" title="Categorías" placement="bottomStart" style={{ fontSize:"19px",}} >
-                        {/* <Dropdown.Item>Puertas</Dropdown.Item>
-                        <Dropdown.Item>Cajas</Dropdown.Item>
-                        <Dropdown.Item>Motores</Dropdown.Item>
-                        <Dropdown.Item>Inyectores</Dropdown.Item>
-                        <Dropdown.Item>Aros</Dropdown.Item>
-                        <Dropdown.Item>Sensores</Dropdown.Item>
-                        <Dropdown.Item>Faroles</Dropdown.Item>
-                        <Dropdown.Item>Frontales</Dropdown.Item>
-                        <Dropdown.Item disabled>Y mucho mas..</Dropdown.Item> */}
                         <div style={{ 
                             display: "grid", 
                             gridTemplateColumns: "repeat(4, 1fr)", 
