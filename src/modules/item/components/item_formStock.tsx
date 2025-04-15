@@ -14,7 +14,7 @@ import { FaBuilding, FaBoxOpen} from "react-icons/fa";
 import { createStockAsync } from "../services/stock.service";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { getAcronymAsync } from "../services/item.service";
-import { NewStockDTO } from "../models/stock.model";
+import { ItemAcronym } from "../models/item.model";
 
 interface StockModalParams {
     open: boolean;
@@ -31,22 +31,14 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
                 return getAcronymAsync(id);
             }
             return null;
-        },[]);
-    const { data: acronymData, fetch: fetchData } = useApi<NewStockDTO>(fetchAcronymByIdAsync!, { autoFetch: true });
+    },[id]);
+    const { data: acronymData, fetch: fetchData } = useApi<ItemAcronym>(fetchAcronymByIdAsync!, { autoFetch: true });
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
     const { branchOfficeOptionsES } = useRegisterItem();
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
     const {showErrorMessage, showSuccessMessage} = useUpdateStock();
     const [isLoading, setIsLoading] = useState(false);
     const formRef = useRef<any>();
-    useEffect(() => {
-        if (acronymData && !Array.isArray(acronymData)) {
-            loadData({
-              itemId: id,
-              acronym: acronymData.acronym,
-           });
-        }
-    }, [acronymData, id]);
 
     useEffect(() => {
         if(open && id){
@@ -55,6 +47,15 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
             fetchData();
         }
     }, [fetchBranchOffices, fetchData]);
+
+    useEffect(() => {
+        if (acronymData && !Array.isArray(acronymData)) {
+            loadData({
+              itemId: acronymData.id,
+              acronym: acronymData.acronym,
+           });
+        }
+    }, [acronymData]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();

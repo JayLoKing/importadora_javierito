@@ -11,10 +11,6 @@ export const validationItemCreateFormModel = Schema.Model({
         .isRequired('El alias es requerido')
         .pattern(/^[a-zA-Z\s]+$/, 'El alias solo puede contener letras.'),
 
-    description: StringType()
-        .isRequired('La descripción es requerida')
-        .minLength(5, 'La descripción debe tener al menos 10 caracteres.'),
-
     model: StringType()
         .isRequired('El modelo es requerido')
         .pattern(/^[a-zA-Z0-9\s]+$/, 'El modelo solo puede contener letras y números.'),
