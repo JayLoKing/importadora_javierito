@@ -139,7 +139,7 @@ export default function ItemTable() {
                               MozUserSelect: 'none' 
                               
                           }}>
-                              Imagen no disponible
+                              Imágen no disponible
                           </div>
                       </div>
                   ) : (
@@ -311,7 +311,7 @@ export default function ItemTable() {
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Total</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                             </Column>
-                        </Table>
+                    </Table>
                         <Pagination
                             prev
                             next

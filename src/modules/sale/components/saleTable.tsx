@@ -47,33 +47,43 @@ export default function SaleTable(){
                     </Column>
                 )}
                 <Column align="center" flexGrow={1} minWidth={140} >
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Venta</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="sale" />
+                </Column>
+
+                <Column align="center" flexGrow={1} minWidth={100}>
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalSale" />
                 </Column>
                         
                 <Column align="center" flexGrow={2} minWidth={150} >
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Observación</HeaderCell>
                     <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                 </Column>
                         
                 <Column align="center" flexGrow={1} minWidth={140}>
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Fabricación</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="dateManufacture" />
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Vendedor</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="employee" />
                 </Column>
                         
                 <Column align="center" flexGrow={1} minWidth={150}>
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Ubicación del Repuesto</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Comisión</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="comision" />
                 </Column>
                         
                 <Column align="center" flexGrow={1} minWidth={100}>
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Stock Total</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalStock" />
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Cliente</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="client" />
                 </Column>
 
                 <Column align="center" flexGrow={1} minWidth={100}>
-                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Total</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descuento</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="descount" />
+                </Column>
+
+                <Column align="center" flexGrow={1} minWidth={100}>
+                    <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Total</HeaderCell>
+                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalSale" />
                 </Column>
             </Table>
             <Pagination prev next first last ellipsis boundaryLinks maxButtons={5} size="xs" layout={['total', '-', '|', 'pager', 'skip']} total={total} limit={limit} activePage={page} style={{marginTop: "5px"}} />

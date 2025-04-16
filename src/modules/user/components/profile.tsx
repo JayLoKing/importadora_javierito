@@ -1,55 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
-import { InlineEdit, Input, Loader, Stack, Divider } from "rsuite";
+import { InlineEdit, Input, Loader, Stack, Panel } from "rsuite";
 import { UserProfile } from "../models/userProfile.model";
 import { editProfileAsync, getAccountByIdAsync } from "../services/user.service";
 import { useApi } from "../../../common/services/useApi";
 import { useAuthStore } from "../../../store/store";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useUpdateProfileFormStore } from "../hooks/useUserProfileFormStorm";
-import { FaUser, FaIdCard, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
-import { MdPerson, MdBadge } from "react-icons/md";
-
-interface SectionDividerProps {
-    title: string;
-    icon?: React.ReactNode;
-    children: React.ReactNode;
-}
-
-const SectionDivider: FC<SectionDividerProps> = ({ title, icon, children }) => {
-    return (
-        <div style={{
-            width: '100%',
-            marginBottom: 24,
-            marginTop: 16,
-            borderRadius: 8,
-            border: '2px solid var(--rs-border-primary)',
-            padding: '20px',
-            position: 'relative'
-        }}>
-            <div style={{
-                position: 'absolute',
-                top: -12,
-                left: 20,
-                padding: '0 10px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
-            }}>
-                {icon}
-                <span style={{
-                    fontWeight: 600,
-                    color: 'var(--rs-text-primary)'
-                }}>
-                    {title}
-                </span>
-            </div>
-            <div style={{ marginTop: 10 }}>
-                {children}
-            </div>
-        </div>
-    );
-};
+import { FaUser, FaIdCard, FaPhoneAlt } from "react-icons/fa";
 
 interface FieldProps {
     label: string;
@@ -178,18 +136,29 @@ export default function Profile() {
                         </Stack>
                         
                         
-                        <SectionDivider title="Información Personal" icon={<FaIdCard size={18} />}>
+                        <Panel  bordered >
+                            <Stack>
+                                <Stack direction="row" spacing={10} style={{marginBottom:10}} alignItems="center">
+                                    <FaIdCard size={20}/>
+                                    <h6>Información Personal</h6>
+                                </Stack>
+                            </Stack>
                             <Field label="Nombres" as={Input} value={formData.name || ''} name="name" onChange={handleFieldChange} />
                             <Field label="Apellido Paterno" as={Input} value={formData.lastName || ''} name="lastName" onChange={handleFieldChange} />
                             <Field label="Apellido Materno" as={Input} value={formData.secondLastName || ''} name="secondLastName" onChange={handleFieldChange} />
                             <Field label="Carnet de Identidad" as={Input} value={formData.ci || ''} name="ci" onChange={handleFieldChange} />
-                        </SectionDivider>
+                        </Panel>
                         
-
-                        <SectionDivider title="Información de Contacto" icon={<FaPhoneAlt size={18} />}>
+                        <Panel bordered>
+                            <Stack>
+                                <Stack direction="row" spacing={10} style={{marginBottom:10}} alignItems="center">
+                                    <FaPhoneAlt size={20}/>
+                                    <h6>Información de Contacto</h6>
+                                </Stack>
+                            </Stack>
                             <Field label="Número de Teléfono/Celular" as={Input} value={formData.phoneNumber || ''} name="phoneNumber" onChange={handleFieldChange} />
                             <Field label="Correo Electrónico" as={Input} value={formData.email || ''} name="email" onChange={handleFieldChange} />
-                        </SectionDivider>
+                        </Panel>
                     </>
                 )}
             </Stack>

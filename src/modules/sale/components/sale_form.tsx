@@ -8,7 +8,6 @@ import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { useEffect, useState } from "react";
 import { FaAlignJustify, FaSearch, FaUser, FaDollarSign } from "react-icons/fa";
-import FormControl from "rsuite/esm/FormControl";
 import { BiSolidUserBadge } from "react-icons/bi";
 
 interface ItemModalParams {
