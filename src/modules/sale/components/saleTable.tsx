@@ -14,12 +14,9 @@ export default function SaleTable(){
     const [total, setTotal] = useState(0);
     
     useEffect(() => {
-            loadSales();
-        }, []);
     
-    async function loadSales() {
-    }
-
+    }, []);
+    
     function handleModal(hidde: boolean, act: string): void {
         setShowModalSale(hidde)
     }
@@ -87,7 +84,7 @@ export default function SaleTable(){
                 </Column>
             </Table>
             <Pagination prev next first last ellipsis boundaryLinks maxButtons={5} size="xs" layout={['total', '-', '|', 'pager', 'skip']} total={total} limit={limit} activePage={page} style={{marginTop: "5px"}} />
-            <SaleForm open={showModalSale} hiddeModal={() => setShowModalSale(false)} refreshList={loadSales}/>
+            <SaleForm open={showModalSale} hiddeModal={() => setShowModalSale(false)} />
         </div>
     )
 }

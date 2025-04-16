@@ -13,12 +13,11 @@ import { BiSolidUserBadge } from "react-icons/bi";
 interface ItemModalParams {
     open: boolean;
     hiddeModal: () => void;
-    refreshList: () => Promise<void>;
 }
 
 const { Column, HeaderCell, Cell } = Table;
 
-export default function SaleForm({open, hiddeModal, refreshList} : ItemModalParams){
+export default function SaleForm({open, hiddeModal } : ItemModalParams){
     const [currentDate, setCurrentDate] = useState<string>("");
     const handleFormSubmit = async () => {
         hiddeModal();
