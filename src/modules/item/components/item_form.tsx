@@ -176,8 +176,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
         const [roleName, userName, userId] = getUsernameAndRoleName();
-        updateField('userID', userId as number);
-
+        formData.userID = userId as number;
         const result = await formRef.current.checkAsync();
         if (!result.hasError) {
             console.log("Formulario válido, procediendo...");

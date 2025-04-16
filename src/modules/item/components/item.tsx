@@ -3,7 +3,7 @@
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
 import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
-import { FaBoxOpen, FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
+import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
 import { Brand, GetItems, Item, SubCategory } from "../models/item.model";
 import ItemForm from "./item_form";
@@ -20,6 +20,7 @@ import { useUpdateItem } from "../hooks/useUpdateItem";
 import { useDeleteItem } from "../hooks/useDeleteItem";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { useBarcode } from "../hooks/useBarcode";
+import ImageCell from "./imageCell";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -83,83 +84,6 @@ export default function ItemTable() {
       );
       return result;
     }, [items, regex]);
-
-    const ImageCell = ({ rowData, ...props }: { rowData: any }) => {
-      const [imgError, setImgError] = useState(false);
-      
-      return (
-          <Cell {...props} style={{ 
-              padding: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-              userSelect: 'none'
-          }}>
-              <div style={{
-                  width: 70,
-                  height: 70,
-                  background: '#f5f5f5',
-                  borderRadius: 6,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 5,
-                  boxSizing: 'border-box',
-                  userSelect: 'none'
-              }}>
-                  {imgError || !rowData.itemImage ? (
-                      <div style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                          width: '100%',
-                          userSelect: 'none'
-                      }}>
-                          <FaBoxOpen style={{ 
-                              fontSize: 16,  
-                              color: '#999',
-                              marginBottom: 2,
-                              userSelect: 'none'  
-                          }} />
-                          <div style={{ 
-                              fontSize: 9,  
-                              color: '#999',
-                              lineHeight: 1.1,
-                              textAlign: 'center',
-                              width: '100%',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'wrap',
-                              userSelect: 'none', 
-                              WebkitUserSelect: 'none', 
-                              MozUserSelect: 'none' 
-                              
-                          }}>
-                              Imágen no disponible
-                          </div>
-                      </div>
-                  ) : (
-                      <Image 
-                          src={rowData.itemImage} 
-                          width={65}
-                          height={65}
-                          onError={() => setImgError(true)}
-                          alt={`Imagen de ${rowData.name}`}
-                          style={{ 
-                              objectFit: 'contain',
-                              maxWidth: '100%',
-                              maxHeight: '100%'
-                          }}
-                      />
-                  )}
-              </div>
-          </Cell>
-      );
-    };
 
     interface FieldProps {
         label: string;
