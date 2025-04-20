@@ -13,23 +13,41 @@ import Register from "../modules/user/components/userContainer";
 import Profile from "../modules/user/components/profile.tsx";
 import SaleTable from "../modules/sale/components/saleTable.tsx";
 import PrivateRoute from "./privateRoute.tsx";
+import RoleBasedRoute from "./roleBases.Route.tsx";
+import Unauthorized from "../pages/layout/components/unauthorized.tsx";
 
 
 export default function Routing() {
     return (
         <Routes>
+            {/* Rutas públicas */}
             <Route index element={<LandingPage />} />
             <Route path="/login" element={<AuthContainer children={<Login />} />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+
+            {/* Rutas protegidas (requieren autenticación) */}
             <Route element={<PrivateRoute />}>
                 <Route path="/home" element={<Layout titleComponent={'INICIO'} children={<Home/>}/>}/>
-                <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
-                <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
-                <Route path="/inventoryreport" element={<Layout titleComponent={'REPORTES DE INVENTARIO'} children={<InventoryReport />} />} />
-                <Route path="/incomereport" element={<Layout titleComponent={'REPORTES DE INGRESOS'} children={<IncomeReport />} />} />
-                <Route path="/sale" element={<Layout titleComponent={'VENTAS'} children={<SaleTable />} />} />
-                <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<TrashTable />} />} />
-                <Route path="/register" element={<Layout titleComponent={'USUARIOS'} children={<Register />} />} />
                 <Route path="/profile" element={<Layout titleComponent={'PERFIL'} children={<Profile />} />} />
+                
+                {/* Rutas para ADMIN */}
+                <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin']} />}>
+                    <Route path="/register" element={<Layout titleComponent={'USUARIOS'} children={<Register />} />} />
+                    <Route path="/branchOffice" element={<Layout titleComponent={'SUCURSALES'} children={<BranchOffices />} />} />
+                </Route>
+                
+                {/* Rutas para ADMIN y MANAGER */}
+                <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin', 'manager']} />}>
+                    <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
+                    <Route path="/inventoryreport" element={<Layout titleComponent={'REPORTES DE INVENTARIO'} children={<InventoryReport />} />} />
+                    <Route path="/incomereport" element={<Layout titleComponent={'REPORTES DE INGRESOS'} children={<IncomeReport />} />} />
+                    <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<TrashTable />} />} />
+                </Route>
+                
+                {/* Rutas para ADMIN, MANAGER y SALES */}
+                <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin', 'manager', 'sales']} />}>
+                    <Route path="/sale" element={<Layout titleComponent={'VENTAS'} children={<SaleTable />} />} />
+                </Route>
             </Route>
         </Routes>
     )

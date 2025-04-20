@@ -9,10 +9,8 @@ type AuthStore = {
 
 export const useAuthStore = create<AuthStore>((set) => ({
 
-    //Initial Values
     jwt: null,
 
-    //Set values
     setAuthUser: (resource: string) => {
         set(() => ({
             jwt: resource
