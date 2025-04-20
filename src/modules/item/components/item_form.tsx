@@ -1,5 +1,5 @@
-import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input } from "rsuite";
+import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWrench } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input, Checkbox, Divider } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
@@ -16,6 +16,7 @@ import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useApi } from "../../../common/services/useApi";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useRegisterItem } from "../hooks/useRegisterItem";
+import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 
 interface ItemModalParams {
     open: boolean;
@@ -247,56 +248,31 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     return (
         <>
             <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow>
-                <ModalTitle>
-                    <Stack justifyContent="center" alignItems="center">
-                        <strong>Nuevo Respuesto</strong>
-                    </Stack>   
-                </ModalTitle>
+            <ModalHeader>
+                <ModalTitle style={{ fontWeight: "bold" }}>Nuevo Repuesto</ModalTitle> 
+            </ModalHeader>
                 <ModalBody>
                     <Grid fluid>
                         <Stack spacing={24} direction="row" alignItems="flex-start" justifyContent="center">
                             <Form ref={formRef} model={validationModel} formValue={formData} fluid>
                                 <Row>
+                                    <Divider style={{ fontWeight: 'bold', marginTop:"7px" }}>Información del Repuesto</Divider>
                                     <Col xs={24} md={8}>
-                                            <Form.Group controlId={'name'}>
-                                                <Form.ControlLabel>Nombre del Repuesto</Form.ControlLabel>
+                                        <Form.Group controlId={'name'}>
+                                            <Form.ControlLabel>Nombre del Repuesto</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaCog />
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="name"
+                                                        placeholder="Ingrese el nombre del repuesto *"
                                                         onChange={(value) => updateField('name', value)}
                                                     />
                                                 </InputGroup>
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'alias'}>
-                                                <Form.ControlLabel>Alias del repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaTag />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="alias"
-                                                        onChange={(value) => updateField('alias', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'model'}>
-                                                <Form.ControlLabel>Modelo del repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaCubes />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control 
-                                                        name="model"
-                                                        onChange={(value) => updateField('model', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'price'}>
-                                                <Form.ControlLabel>Precio del Repuesto</Form.ControlLabel>
+                                        </Form.Group>
+                                        <Form.Group controlId={'price'}>
+                                            <Form.ControlLabel>Precio Unitario</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaDollarSign />
@@ -304,88 +280,36 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="price"
                                                         type="number"
-                                                        onChange={(value) => updateField('price', parseFloat(value))}
-                                                    />
+                                                        onChange={(value) => updateField('price', parseFloat(value))} />
                                                 </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'wholesalePrice'}>
-                                                <Form.ControlLabel>Precio al por mayor</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaDollarSign />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="wholesalePrice"
-                                                        type="number"
-                                                        onChange={(value) => updateField('wholesalePrice', parseFloat(value))}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                    </Col>
-                                    <Col xs={24} md={8}>
-                                        <Form.Group controlId={'barePrice'}>
-                                            <Form.ControlLabel >Precio base</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaDollarSign />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="barePrice"
-                                                        type="number"
-                                                        onChange={(value) => updateField('barePrice', parseFloat(value))}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'purchasePrice'}>
-                                            <Form.ControlLabel >Precio Pelado</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaDollarSign />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="purchasePrice"
-                                                        type="number"
-                                                        onChange={(value) => updateField('purchasePrice', parseFloat(value))}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'brandID'}>
-                                                <Form.ControlLabel>Marca del Repuesto</Form.ControlLabel>
-                                                <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'subCategoryID'}>
-                                                <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                                <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'dateManufacture'}>
-                                                <Form.ControlLabel>Fecha de la Fabricacion</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaCalendar />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control
-                                                        name="dateManufacture"
-                                                        type="date"
-                                                        onChange={(value) => updateField('dateManufacture', value)}
-                                                    />
-                                                </InputGroup>
-                                            </Form.Group>
-                                    </Col> 
-                                    <Col xs={24} md={8}>
+                                        </Form.Group>
                                         <Form.Group controlId={'itemAddressID'}>
                                             <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
-                                                <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
-                                            </Form.Group>
-                                            <Form.Group controlId={'branchOfficeID'}>
-                                                <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                                <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
-                                            </Form.Group>
-
-                                            <Form.Group controlId={'quantity'}>
-                                                <Form.ControlLabel>Cantidad del Repuesto</Form.ControlLabel>
+                                            <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'brandID'}>
+                                            <Form.ControlLabel>Marca</Form.ControlLabel>
+                                            <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'alias'}>
+                                            <Form.ControlLabel>Año </Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaTag />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="alias"
+                                                        placeholder="año entre año *"
+                                                        onChange={(value) => updateField('alias', value)}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'subCategoryID'}>
+                                            <Form.ControlLabel>Transmisión</Form.ControlLabel>    
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'quantity'}>
+                                            <Form.ControlLabel>Stock</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaBoxOpen />
@@ -397,9 +321,83 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         onChange={(value) => updateField('quantity', parseFloat(value))}
                                                     />
                                                 </InputGroup>
-                                            </Form.Group>
-                                            <Form.Group controlId={'acronym'}>
-                                                <Form.ControlLabel>Acronimo del Articulo</Form.ControlLabel>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs={24} md={8}>
+                                        <Form.Group controlId={'newor'}>
+                                            <Form.ControlLabel>Estado del Repuesto</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaWrench />
+                                                    </InputGroup.Addon>
+                                                    <Checkbox>Nuevo</Checkbox>
+                                                    <Checkbox>Usado</Checkbox>
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'wholesalePrice'}>
+                                            <Form.ControlLabel>Precio Por Mayor</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaDollarSign />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="wholesalePrice"
+                                                        type="number"
+                                                        onChange={(value) => updateField('wholesalePrice', parseFloat(value))}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'branchOfficeID'}>
+                                            <Form.ControlLabel>Sucursal</Form.ControlLabel>
+                                            <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'model'}>
+                                            <Form.ControlLabel>Modelo</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaCubes />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control 
+                                                        name="model"
+                                                        placeholder="Ingrese el modelo del repuesto *"
+                                                        onChange={(value) => updateField('model', value)}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'subCategoryID'}>
+                                            <Form.ControlLabel>Combustible</Form.ControlLabel>    
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'model'}>
+                                            <Form.ControlLabel>Serie del Motor</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaCubes />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control 
+                                                        name="model"
+                                                        placeholder="Ingrese el modelo del repuesto *"
+                                                        onChange={(value) => updateField('model', value)}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'barePrice'}>
+                                            <Form.ControlLabel >Precio Pelado</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaDollarSign />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="barePrice"
+                                                        type="number"
+                                                        onChange={(value) => updateField('barePrice', parseFloat(value))}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                    </Col> 
+                                    <Col xs={24} md={8}>
+                                        <Form.Group controlId={'acronym'}>
+                                            <Form.ControlLabel>Código de Barra</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaSignature />
@@ -410,12 +408,62 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         onChange={(value) => updateField('acronym', value)}
                                                     />
                                                 </InputGroup>
-                                            </Form.Group>
-                                    
+                                        </Form.Group>
+                                        <Form.Group controlId={'purchasePrice'}>
+                                            <Form.ControlLabel >Precio Publico</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaDollarSign />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="purchasePrice"
+                                                        type="number"
+                                                        onChange={(value) => updateField('purchasePrice', parseFloat(value))}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'dateManufacture'}>
+                                            <Form.ControlLabel>Fecha de Fabricacion</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaCalendar />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="dateManufacture"
+                                                        type="date"
+                                                        onChange={(value) => updateField('dateManufacture', value)}
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'name'}>
+                                            <Form.ControlLabel>Cilindrada</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaCog />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control
+                                                        name="cilindrada"
+                                                    />
+                                                </InputGroup>
+                                        </Form.Group>
+                                        <Form.Group controlId={'subCategoryID'}>
+                                            <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                        </Form.Group>
+                                        <Form.Group controlId={'newor'}>
+                                            <Form.ControlLabel>Tracción</Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaWrench />
+                                                    </InputGroup.Addon>
+                                                    <Checkbox>4 x 2</Checkbox>
+                                                    <Checkbox>4 x 4</Checkbox>
+                                                </InputGroup>
+                                        </Form.Group>
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
                                     <Form.Group controlId={'description'}>
-                                        <Form.ControlLabel>Descripción del Repuesto</Form.ControlLabel>
+                                        <Form.ControlLabel>Especificaciones</Form.ControlLabel>
                                         <InputGroup inside>
                                             <InputGroup.Addon>
                                                 <FaAlignJustify />

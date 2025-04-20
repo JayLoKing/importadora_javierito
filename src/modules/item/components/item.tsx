@@ -133,7 +133,7 @@ export default function ItemTable() {
                         </Stack>
                     </Stack>
                     <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
-                            <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" >
+                            <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
                                     { rowData => ( 
@@ -161,78 +161,82 @@ export default function ItemTable() {
                                     <Cell dataKey="itmID" />
                                 </Column>
                             )}
-                            <Column align="center" flexGrow={1} minWidth={140} >
+                            <Column align="center" flexGrow={1} minWidth={160} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                             </Column>
                         
-                            <Column align="center" flexGrow={2} minWidth={150} >
+                            <Column align="center" flexGrow={2} minWidth={150} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
                                 <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                             </Column>
-                            <Column align="center" flexGrow={1} minWidth={150} >
+                            <Column align="center" flexGrow={1} minWidth={150} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
                                 <ImageCell  rowData={(rowData: any ) => rowData}/>
                             </Column>
 
-                            <Column align="center" flexGrow={1} minWidth={150}>
+                            <Column align="center" flexGrow={1} minWidth={150} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
                                 <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={105}>
+                            <Column align="center" flexGrow={1} minWidth={105} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de compra</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
-
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio por mayor</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.wholesalePrice}</span>)}</Cell>
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de venta</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
 
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio pelado</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Marca</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="brand" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={120}>
+                            <Column align="center" flexGrow={1} minWidth={120} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Categoría</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="category" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={120}>
+                            <Column align="center" flexGrow={1} minWidth={120} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Sub-Categoría</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="subCategory" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={140}>
+                            <Column align="center" flexGrow={1} minWidth={140} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Fabricación</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="dateManufacture" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={150}>
+                            <Column align="center" flexGrow={1} minWidth={150} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Ubicación del Repuesto</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                             </Column>
                         
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Stock Total</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="totalStock" />
                             </Column>
 
-                            <Column align="center" flexGrow={1} minWidth={100}>
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Total</HeaderCell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
+                            </Column>
+
+                            <Column align="center" flexGrow={1} minWidth={100} resizable>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Registro</HeaderCell>
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                             </Column>
                     </Table>
