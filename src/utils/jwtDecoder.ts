@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 export interface DecodedJwt extends JwtPayload {
