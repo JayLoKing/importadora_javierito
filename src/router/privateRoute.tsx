@@ -1,10 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthStore } from "../store/store";
 
-export default function PrivateRoute({ token }: { token: string }) {
-    const redirectTo = '/login'
 
-    if (token === null) {
-        return <Navigate to={redirectTo} replace />
+export default function PrivateRoute() {
+    const { jwt } = useAuthStore();
+    const redirectTo = '/login';
+
+    if (!jwt) {
+        return <Navigate to={redirectTo} replace />;
     }
-    return <Outlet />
+    return <Outlet />;
 }

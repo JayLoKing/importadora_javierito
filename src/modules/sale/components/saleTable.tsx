@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-binary-expression */
 import {  Stack, IconButton, Table,  Pagination, Input, InputGroup, SelectPicker } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaSearch } from "react-icons/fa";

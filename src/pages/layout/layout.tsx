@@ -16,6 +16,7 @@ import { useAuthStore } from "../../store/store";
 import { jwtDecoder } from "../../utils/jwtDecoder";
 import { AuthUser } from "../../modules/auth/models/auth.model";
 import { NotificationComponent } from "../../modules/notification/components/Notification";
+import { useLayaout } from "./hooks/useLayaout";
 
 interface LayoutProps {
   titleComponent: ReactNode;
@@ -32,6 +33,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const navigate = useNavigate();
   const jwt = useAuthStore(state => state.jwt);
   const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
+  const { handleLogout } = useLayaout();
 
   useEffect(() => {
     getRoleNUsername();
@@ -135,7 +137,9 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   //   window.open('https://www.tiktok.com/@importjavierito?is_from_webapp=1&sender_device=pc');
   // };
 
-  function signOut() { }
+  function signOut() { 
+    handleLogout();
+  }
   if (!isMobile) {
     return (
       <Container style={{ display: "flex", height: '100vh' }}>
@@ -165,7 +169,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Sidenav.Body>
           </Sidenav>
-
         </Sidebar>
 
         <Container style={{ flex: 1, display: "flex", flexDirection: "column" }}>
