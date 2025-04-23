@@ -1,9 +1,21 @@
 :root {
     --rs-primary-500: #f08b33;
-    --rs-primary-600: #de7214;
+    --rs-primary-600: #db7114;
     --rs-primary-700: #c46715;
     --rs-gray-0: transparent;
     --rs-gray-0: white;
     --rs-primary-800: white;
     --rs-primary-900: white;
 }
+div.rs-table-body-row-wrapper div.rs-table-row:nth-of-type(odd) {
+    background-color: white !important;
+  }
+  
+  div.rs-table-body-row-wrapper div.rs-table-row:nth-of-type(even) {
+    background-color: #f5f5f5 !important;
+  }
+  
+  /* Asegúrate de que las celdas heredan el color de fondo */
+  div.rs-table-body-row-wrapper div.rs-table-row div.rs-table-cell {
+    background-color: inherit !important;
+  }

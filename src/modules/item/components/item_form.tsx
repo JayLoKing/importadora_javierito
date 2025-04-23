@@ -267,7 +267,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="name"
                                                         placeholder="Ingrese el nombre del repuesto *"
-                                                        onChange={(value) => updateField('name', value)}
+                                                        onChange={(value) => updateField('name', value.toUpperCase())}
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
@@ -405,7 +405,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Form.Control
                                                         name="acronym"
                                                         placeholder="Acrónimo del artículo"
-                                                        onChange={(value) => updateField('acronym', value)}
+                                                        onChange={(value) => updateField('acronym', value.toUpperCase())}
                                                     />
                                                 </InputGroup>
                                         </Form.Group>

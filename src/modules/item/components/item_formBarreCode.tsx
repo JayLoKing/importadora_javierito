@@ -95,9 +95,11 @@ export default function ItemBareCode({ open, hiddeModal, id }: ItemModalParams) 
                                     <div key={index} style={{ textAlign: 'center', backgroundColor: "white" }}>
                                         <BarcodeComponent value={barcode.barcode} />
                                         <Stack spacing={8} direction="column" style={{ marginTop: 20 }}>
-                                            <Field label="Repuesto" as={Text} defaultValue={barcode.itemName} />
-                                            <Field label="MARCA" as={Text} defaultValue={barcode.brandName} />
-                                            <Field label="MODELO" as={Text} defaultValue={barcode.itemModel} />
+                                            
+                                            <Field label="Repuesto:" as={Text} defaultValue={barcode.itemName} />
+                                            <Field label="Marca:" as={Text} defaultValue={barcode.brandName} />
+                                            <Field label="Modelo:" as={Text} defaultValue={barcode.itemModel} />
+                                            <Field label="Fecha de Registro:" as={Text} defaultValue={barcode.itemModel} />
                                         </Stack>
                                     </div>
                                 ))}

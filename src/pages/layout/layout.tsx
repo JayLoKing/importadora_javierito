@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle, } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle, Panel, } from "rsuite";
 import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
 import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
@@ -143,8 +143,8 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   if (!isMobile) {
     return (
       <Container style={{ display: "flex", height: '100vh' }}>
-        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#EEEDED', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-          <Sidenav.Header style={{ backgroundColor: '#EEEDED', padding: "10px", marginTop: "10px" }}>
+        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#F5F5F5', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+          <Sidenav.Header style={{ backgroundColor: '#F5F5F5', padding: "10px", marginTop: "10px" }}>
             <Brand expand={expand} />
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
@@ -227,10 +227,10 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
-          <Content style={{ background: "#f5f5f5", height: "100vh", overflow: "auto", }}>
+          <Content style={{ background: "white", height: "100vh", overflow: "auto", }}>
             {children}
           </Content>
-          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
+          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: 'white' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>
     );

@@ -6,22 +6,20 @@ import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { FaAlignJustify, FaSearch, FaUser, FaDollarSign } from "react-icons/fa";
 import { BiSolidUserBadge } from "react-icons/bi";
 
-interface ItemModalParams {
+interface SaleModalParams {
     open: boolean;
     hiddeModal: () => void;
+    onSaleCreated?: () => void;
 }
 
 const { Column, HeaderCell, Cell } = Table;
 
-export default function SaleForm({open, hiddeModal } : ItemModalParams){
+export default function SaleForm({open, hiddeModal, onSaleCreated } : SaleModalParams){
     const [currentDate, setCurrentDate] = useState<string>("");
-    const handleFormSubmit = async () => {
-        hiddeModal();
-    };
     
     const handleCancel = () => {
         // resetForm();
@@ -39,6 +37,12 @@ export default function SaleForm({open, hiddeModal } : ItemModalParams){
         const year = now.getFullYear();
         setCurrentDate(`${day} de ${month} de ${year}`);
     },[])
+
+    const handleFormSubmit = async () => {
+        if (onSaleCreated) {
+            onSaleCreated();
+        }
+    }
 
     return(
         <>

@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Table, Tooltip, Whisper } from "rsuite";
+import { DatePicker, FlexboxGrid, Form, IconButton, InputGroup, Panel, Table, Tooltip, Whisper } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import FlexboxGridItem from "rsuite/esm/FlexboxGrid/FlexboxGridItem";
 import FormGroup from "rsuite/esm/FormGroup";
@@ -108,11 +108,12 @@ export default function InventoryReport() {
     };
 
     return (
-        <div style={{ padding: 35 }}>
+        <div style={{ padding: 30 }}>
             {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{ marginTop: "-7px", color: "black" }}>Creación de reportes Excel - CSV</Heading></Stack> */}
+            <Panel bordered style={{ marginBottom: 15 }}>
             <Form fluid style={{ marginBottom: 25}}>
                 <FlexboxGrid style={{ display: "flex", justifyContent: "center", gap: "10px", fontSize: "15px" }} >
-                    <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }} >
+                    <FlexboxGrid.Item colspan={6}  >
                         <FormGroup>
                             <Form.ControlLabel>Fecha de Registro - <strong>Desde</strong></Form.ControlLabel>
                             <InputGroup inside style={{ width: '100%' }}>
@@ -129,7 +130,7 @@ export default function InventoryReport() {
                         </FormGroup>
                     </FlexboxGrid.Item>
 
-                    <FlexboxGrid.Item colspan={6} style={{ marginTop: 20, marginBottom: 20 }}>
+                    <FlexboxGrid.Item colspan={6} >
                         <FormGroup>
                             <Form.ControlLabel>Fecha de Registro - <strong>Hasta</strong></Form.ControlLabel>
                             <InputGroup inside style={{ width: '100%' }}>
@@ -146,14 +147,15 @@ export default function InventoryReport() {
                         </FormGroup>
                     </FlexboxGrid.Item>
                 </FlexboxGrid>
-                <FlexboxGrid style={{ display: "flex", justifyContent: "end", marginTop: -60 }}>
+                <FlexboxGrid style={{ display: "flex", justifyContent: "end", marginTop: -40 }}>
                     <FlexboxGridItem >
                         <IconButton icon={< PlusIcon />} appearance="primary" onClick={handleAddReport} loading={isLoading} > {isLoading ? 'Generando..': 'Nuevo Reporte'} </IconButton>
                     </FlexboxGridItem>
                 </FlexboxGrid>
             </Form>
-
-            <Table bordered cellBordered data={data} height={530} rowHeight={100} headerHeight={70} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden" }} >
+            </Panel>
+            <Panel bordered>
+            <Table bordered cellBordered data={data} height={530} rowHeight={100} headerHeight={70} style={{ textAlign: 'center', background: "white", fontSize: "15px", overflow: "hidden", borderRadius:"5px" }} >
                 {false && (
                     <Column align="center" >
                         <HeaderCell>ID</HeaderCell>
@@ -194,6 +196,7 @@ export default function InventoryReport() {
                     </Cell>
                 </Column>
             </Table>
+            </Panel>
         </div>
     )
 }

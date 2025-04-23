@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 import { useEffect, useState } from "react";
-import { IconButton, Input, InputGroup, Stack, Table, Tooltip, Whisper } from "rsuite";
+import { IconButton, Input, InputGroup, Panel, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
 import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
@@ -58,82 +58,84 @@ export default function BranchOffices() {
     }
 
     return (
-        <div style={{padding:35}}>
-            <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
-                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nueva Sucursal </IconButton>
-                <Stack spacing={6}>
-                    <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar sucursal.." />
-                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                <FaSearch />
-                            </InputGroup.Addon>
-                        </InputGroup>
+        <div style={{padding:30}}>
+            <Panel bordered style={{ marginBottom: 15, }}>
+                <Stack spacing={2} justifyContent="space-between" >
+                    <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nueva Sucursal </IconButton>
+                    <Stack spacing={6}>
+                        <InputGroup style={{ width: 250 }}>
+                            <Input placeholder="Buscar sucursal.." />
+                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                    <FaSearch />
+                                </InputGroup.Addon>
+                            </InputGroup>
+                    </Stack>
                 </Stack>
-            </Stack>
+            </Panel>
+            <Panel bordered>
+                <Table bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={100} height={600} headerHeight={70} data={branchOffices} >
+                    <Column align="center" flexGrow={1} minWidth={100}>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
+                        <Cell>
+                            {(rowData) => (
+                                <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                    <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
+                                        <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
+                                            onClick={() => {
+                                                getBranchOfficeById(rowData.id)
+                                                handleModal(true, 'update')
+                                            }} />
+                                    </Whisper>
+                                    <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
+                                        <IconButton icon={<LuMapPinned style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                    </Whisper>
+                                    <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                        <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
+                                            onClick={() => {
+                                                remove(rowData.id, rowData.name)
+                                                handleModalDelete(true);
+                                            }} />
+                                    </Whisper>
+                                </Stack>
+                            )}
+                        </Cell>
+                    </Column>
 
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} rowHeight={100} height={600} headerHeight={70} data={branchOffices} >
-                <Column align="center" flexGrow={1} minWidth={100}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
-                    <Cell>
-                        {(rowData) => (
+                    {false && (
+                        <Column>
+                            <HeaderCell>Id</HeaderCell>
+                            <Cell dataKey="id" />
+                        </Column>
+                    )}
+
+                    <Column align="center" flexGrow={1} minWidth={140}>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
+                    </Column>
+
+                    <Column align="center" flexGrow={1} minWidth={120}>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
+                    </Column>
+
+                    <Column align="center" flexGrow={1} minWidth={140}>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                            {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
+                        </Cell>
+                    </Column>
+                    <Column align="center" flexGrow={1} minWidth={100}>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Producto</HeaderCell>
+                        <Cell>
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                                    <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
-                                        onClick={() => {
-                                            getBranchOfficeById(rowData.id)
-                                            handleModal(true, 'update')
-                                        }} />
-                                </Whisper>
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
-                                    <IconButton icon={<LuMapPinned style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                                </Whisper>
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                    <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
-                                        onClick={() => {
-                                            remove(rowData.id, rowData.name)
-                                            handleModalDelete(true);
-                                        }} />
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver Productos</Tooltip>}>
+                                    <IconButton icon={<FaWrench style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                             </Stack>
-                        )}
-                    </Cell>
-                </Column>
-
-                {false && (
-                    <Column>
-                        <HeaderCell>Id</HeaderCell>
-                        <Cell dataKey="id" />
+                        </Cell>
                     </Column>
-                )}
-
-                <Column align="center" flexGrow={1} minWidth={140}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
-                </Column>
-
-                <Column align="center" flexGrow={1} minWidth={120}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
-                </Column>
-
-                <Column align="center" flexGrow={1} minWidth={140}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
-                    <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-                        {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
-                    </Cell>
-                </Column>
-                <Column align="center" flexGrow={1} minWidth={100}>
-                    <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Producto</HeaderCell>
-                    <Cell>
-                        <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver Productos</Tooltip>}>
-                                <IconButton icon={<FaWrench style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                            </Whisper>
-                        </Stack>
-                    </Cell>
-                </Column>
-            </Table>
-
+                </Table>
+            </Panel>
             <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
             <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
         </div>

@@ -1,5 +1,5 @@
 /* eslint-disable no-constant-binary-expression */
-import {  Stack, IconButton, Table,  Pagination, Input, InputGroup, SelectPicker } from "rsuite";
+import {  Stack, IconButton, Table,  Pagination, Input, InputGroup, SelectPicker, Panel } from "rsuite";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaSearch } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import SaleForm from "./sale_form";
 const { Column, HeaderCell, Cell } = Table;
 
 export default function SaleTable(){
-    const [showModalSale, setShowModalSale] = useState<boolean>(false)
+    const [showModalSale, setShowModalSale] = useState(false);
     const [limit, setLimit] = useState(5); 
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -18,26 +18,33 @@ export default function SaleTable(){
     
     }, []);
     
-    function handleModal(hidde: boolean, act: string): void {
-        setShowModalSale(hidde)
+    function handleOpenModalCreate() {
+        setShowModalSale(true);
+    }
+
+    function handleCloseModalCreate() {
+        setShowModalSale(false);
     }
 
     return(
-        <div style={{padding:"35px"}}>
-            <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px"}}>
-                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}>Nueva Venta</IconButton>
-                <Stack spacing={6}>
-                    <SelectPicker label="Filtro" searchable={false} placeholder="Marca" data={[]}/>
-                    <SelectPicker label="Filtro" searchable={false} placeholder="Sub-Categoría" data={[]}/>
-                    <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar venta.." />
-                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                <FaSearch />
-                            </InputGroup.Addon>
-                            </InputGroup>
+        <div style={{padding:30 }}>
+            <Panel bordered style={{ marginBottom: 15 }}>
+                <Stack spacing={2} justifyContent="space-between" >
+                    <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleOpenModalCreate()}>Nueva Venta</IconButton>
+                    <Stack spacing={6}>
+                        <SelectPicker label="Filtro" searchable placeholder="Marca" data={[]}/>
+                        <SelectPicker label="Filtro" searchable placeholder="Sub-Categoría" data={[]}/>
+                        <InputGroup style={{ width: 250 }}>
+                            <Input placeholder="Buscar venta.." />
+                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                    <FaSearch />
+                                </InputGroup.Addon>
+                                </InputGroup>
+                    </Stack>
                 </Stack>
-            </Stack>
-            <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}}  height={600} rowHeight={100} headerHeight={70}>
+            </Panel>
+            <Panel bordered>
+            <Table bordered cellBordered style={{ background: "white", fontSize:"15px", borderRadius:"5px"}}  height={600} rowHeight={100} headerHeight={70}>
                 {false && (
                     <Column width={200} >
                         <HeaderCell>ID</HeaderCell>
@@ -85,7 +92,8 @@ export default function SaleTable(){
                 </Column>
             </Table>
             <Pagination prev next first last ellipsis boundaryLinks maxButtons={5} size="xs" layout={['total', '-', '|', 'pager', 'skip']} total={total} limit={limit} activePage={page} style={{marginTop: "5px"}} />
-            <SaleForm open={showModalSale} hiddeModal={() => setShowModalSale(false)} />
+            </Panel>
+            <SaleForm open={showModalSale} hiddeModal={handleCloseModalCreate} />
         </div>
     )
 }

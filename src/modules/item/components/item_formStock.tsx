@@ -93,7 +93,7 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
             <Modal size={"xs"} open={open} onClose={() => hiddeModal(false)} overflow>
                 <ModalTitle>
                     <Stack justifyContent="center" alignItems="center">
-                        <strong>Actualizacion de Stock</strong>
+                        <strong>Actualización de Stock</strong>
                     </Stack>   
                 </ModalTitle>
                 <ModalBody>

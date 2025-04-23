@@ -1,25 +1,27 @@
 import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
-import { Input, InputGroup, Stack, IconButton, Table, Whisper, Tooltip } from "rsuite";
+import { Input, InputGroup, Stack, IconButton, Table, Whisper, Tooltip, Panel } from "rsuite";
 import { Cell, HeaderCell } from "rsuite-table";
 import Column from "rsuite/esm/Table/TableColumn";
 
 
 export default function TrashTable (){
     return(
-        <div style={{padding:35}}>
-            <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
-                {/* <IconButton icon={<PlusIcon />} appearance="primary" > Recuperar </IconButton> */}
-                <Stack spacing={6}>
-                    <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar.." />
-                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                <FaSearch />
-                            </InputGroup.Addon>
-                        </InputGroup>
+        <div style={{padding:30}}>
+            <Panel bordered style={{ marginBottom: 15 }}>
+                <Stack spacing={2} justifyContent="space-between" >
+                    {/* <IconButton icon={<PlusIcon />} appearance="primary" > Recuperar </IconButton> */}
+                    <Stack spacing={6}>
+                        <InputGroup style={{ width: 250 }}>
+                            <Input placeholder="Buscar.." />
+                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                    <FaSearch />
+                                </InputGroup.Addon>
+                            </InputGroup>
+                    </Stack>
                 </Stack>
-            </Stack>
-
-            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", }} rowHeight={100} height={600} headerHeight={70} >
+            </Panel>
+            <Panel bordered>
+            <Table bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={100} height={600} headerHeight={70} >
                 <Column align="center" flexGrow={1} minWidth={120}>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                     <Cell>
@@ -41,7 +43,7 @@ export default function TrashTable (){
                     </Column>
                 )}
 
-                <Column align="center" flexGrow={1} minWidth={140}>
+                <Column align="center" flexGrow={1} minWidth={140} resizable>
                     <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Repuesto</HeaderCell>
                     <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                 </Column>
@@ -82,6 +84,7 @@ export default function TrashTable (){
                     </Cell>
                 </Column>
             </Table>
+            </Panel>
         </div>
     )
 }

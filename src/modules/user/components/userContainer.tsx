@@ -2,7 +2,7 @@
 import PlusIcon from '@rsuite/icons/Plus';
 import { useEffect, useMemo, useState } from 'react';
 import { FaSearch, FaTrash } from 'react-icons/fa';
-import { IconButton, Input, InputGroup, Message, Pagination, SelectPicker, Stack, Table, Tooltip, Whisper,  } from "rsuite";
+import { IconButton, Input, InputGroup, Message, Pagination, Panel, SelectPicker, Stack, Table, Tooltip, Whisper,  } from "rsuite";
 import { Cell, HeaderCell } from "rsuite-table";
 import Column from "rsuite/esm/Table/TableColumn";
 import CreateUserModal from './createUserModal';
@@ -88,23 +88,25 @@ export default function UserContainer(){
     
 
     return(
-        <div style={{ padding:35 }}>
-            <Stack spacing={2} justifyContent="space-between" style={{ marginBottom: "25px" }}>
-                <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleOpenModalCreate()}> Nuevo Usuario </IconButton>
-                <Stack spacing={6}>
-                    <SelectPicker label="Filtro" data={statusOptions} value={params.status} onChange={(value) => setParams(prev => ({...prev, status: value}))} searchable={false} placeholder="Estado"/>
-                    <SelectPicker label="Filtro" data={roleOptions} value={params.role} onChange={(value) => setParams(prev => ({...prev, role: value}))} searchable={false} placeholder="Cargo"/>
-                    <SelectPicker label="Filtro" data={branchOfficeOptions} value={params.officeId} onChange={(value) => setParams(prev => ({...prev, officeId: value}))} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
-                    <InputGroup style={{ width: 250 }}>
-                        <Input placeholder="Buscar usuario.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
-                            <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                <FaSearch />
-                            </InputGroup.Addon>
-                        </InputGroup>
+        <div style={{ padding:30 }}>
+            <Panel bordered style={{ marginBottom: 15 }}>
+                <Stack spacing={2} justifyContent="space-between" >
+                    <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleOpenModalCreate()}> Nuevo Usuario </IconButton>
+                    <Stack spacing={6}>
+                        <SelectPicker label="Filtro" data={statusOptions} value={params.status} onChange={(value) => setParams(prev => ({...prev, status: value}))} searchable={false} placeholder="Estado"/>
+                        <SelectPicker label="Filtro" data={roleOptions} value={params.role} onChange={(value) => setParams(prev => ({...prev, role: value}))} searchable={false} placeholder="Cargo"/>
+                        <SelectPicker label="Filtro" data={branchOfficeOptions} value={params.officeId} onChange={(value) => setParams(prev => ({...prev, officeId: value}))} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
+                        <InputGroup style={{ width: 250 }}>
+                            <Input placeholder="Buscar usuario.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
+                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
+                                    <FaSearch />
+                                </InputGroup.Addon>
+                            </InputGroup>
+                    </Stack>
                 </Stack>
-            </Stack>
-            <>
-                <Table bordered cellBordered style={{ background: "white", fontSize:"15px" }} data={users} loading={loading} height={600} rowHeight={100} headerHeight={70}>
+            </Panel>
+            <Panel bordered>
+                <Table bordered cellBordered style={{ background: "white", fontSize:"15px", borderRadius:"5px" }} data={users} loading={loading} height={600} rowHeight={100} headerHeight={70}>
                     <Column align='center' flexGrow={1} minWidth={110} >
                         <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell >
@@ -170,7 +172,6 @@ export default function UserContainer(){
                         <Cell dataKey="office"/>
                     </Column>
                 </Table>
-                <div style={{ padding: 20 }}>
                     <Pagination
                     prev
                     next
@@ -187,9 +188,9 @@ export default function UserContainer(){
                     onChangePage={setPage}
                     onChangeLimit={handleChangeLimit}
                     locale={paginationLocaleES}
+                    style={{marginTop: "5px"}}
                     />
-                </div>
-            </>
+            </Panel>
             <CreateUserModal open={showModalCreate} hiddeModal={handleCloseModalCreate} onUserCreated={fetch} />
         </div>
     );
