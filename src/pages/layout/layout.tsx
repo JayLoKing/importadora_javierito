@@ -219,10 +219,10 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
               </Nav>
             </Navbar>
           </Header>
-          <Content style={{ background: "#f5f5f5", height: "100vh", overflow: "auto", }}>
+          <Content style={{ background: "white", height: "100vh", overflow: "auto" }}>
             {children}
           </Content>
-          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: '#f5f5f5' }}>IMPORTADORA JAVIERITO ®</Footer>
+          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: 'white' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
       </Container>
     );

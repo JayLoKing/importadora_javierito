@@ -13,6 +13,13 @@ export interface NewItemDTO {
     userID?: number;
     purchasePrice: number;
     pathItems: string[];
+
+    itemStatus?: string;
+    transmission?: string;
+    cylinderCapacity?: string;
+    traction?: string;
+    itemSeries?: string;
+
     branchOfficeID: number;
     quantity: number;
     barcodes?: string[];

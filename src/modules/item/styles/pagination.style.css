@@ -1,0 +1,81 @@
+.custom-pagination {
+    color: black !important;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Botones normales */
+  .custom-pagination .rs-pagination-btn {
+    color: black !important;
+    background-color: #fff !important;
+    border: 1px solid #f08b33 !important;
+    border-radius: 4px !important;
+    margin: 0 3px !important;
+    min-width: 32px !important;
+  }
+  
+  /* Hover en botones */
+  .custom-pagination .rs-pagination-btn:hover {
+    color: #fff !important;
+    background-color: #f08b33 !important;
+  }
+  
+  /* Botón activo (página actual) */
+  .custom-pagination .rs-pagination-btn-active {
+    color: white !important;
+    background-color: #f08b33 !important;
+    border-color: #f08b33 !important;
+    font-weight: bold !important;
+  }
+  
+  /* Botones deshabilitados */
+  .custom-pagination .rs-pagination-btn-disabled {
+    color: black !important;
+    background-color: white     !important;
+    border-color: #f08b33 !important;
+  }
+  
+  /* Input del "Go to" */
+  .custom-pagination .rs-pagination-skip {
+    color: white !important;
+  }
+  
+  .custom-pagination .rs-pagination-skip-input {
+    border-color: #666 !important;
+    background-color: #534f4f !important;
+    color: white !important;
+    width: 60px !important;
+    margin: 0 5px !important;
+    border-radius: 4px !important;
+    padding: 5px !important;
+  }
+  
+  .custom-pagination .rs-pagination-skip-input:focus {
+    border-color: #f08b33 !important;
+    box-shadow: 0 0 0 2px rgba(240, 139, 51, 0.2) !important;
+  }
+  
+  /* Selector de límite por página */
+  .custom-pagination .rs-pagination-select {
+    color: white !important;
+  }
+  
+  .custom-pagination .rs-pagination-select-menu {
+    background-color: #534f4f !important;
+    border-color: #666 !important;
+  }
+  
+  .custom-pagination .rs-pagination-select-option:hover,
+  .custom-pagination .rs-pagination-select-option:focus {
+    background-color: #636060 !important;
+  }
+  
+  .custom-pagination .rs-pagination-select-option-active {
+    background-color: #f08b33 !important;
+    color: white !important;
+  }
+  
+  /* Separadores */
+  .custom-pagination .rs-pagination-group {
+    color: white !important;
+  }

@@ -1,22 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWrench } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input, Checkbox, Divider } from "rsuite";
+import { Button, Col, Form, Grid, InputGroup, Row, Stack, Uploader, SelectPicker, Input, Checkbox, Divider, Modal } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/item.service";
 import "../styles/styles.css";
-import { FormEvent, useState, useRef, useMemo, useEffect} from "react";
+import { FormEvent, useRef, useMemo, useEffect} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
-import { deleteFile, fileUpload } from "../services/storage.service";
+import { deleteFile } from "../services/storage.service";
 import { useCreateItemFormStore } from "../validations/useCreateItemFormStore";
 import { useNotificationService } from "../../../context/NotificationContext";
 import { useAuthStore } from "../../../store/store";
-import { jwtDecoder } from "../../../utils/jwtDecoder";
 import { useApi } from "../../../common/services/useApi";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useRegisterItem } from "../hooks/useRegisterItem";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
+import { FileType } from "rsuite/esm/Uploader";
 
 interface ItemModalParams {
     open: boolean;
@@ -25,11 +26,19 @@ interface ItemModalParams {
 }
 
 export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalParams){
-    const toaster = useToaster();
+    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
-    const { branchOfficeOptionsES,brandsOptionsES,itemAddressesOptionsES,subCategoriesOptionsES} = useRegisterItem();
+    const { 
+        branchOfficeOptionsES,
+        brandsOptionsES,itemAddressesOptionsES,
+        subCategoriesOptionsES, 
+        showErrorMessage,
+        showSuccessMessage,
+        showWarningFilesMessage,
+        handleFileChange, 
+        isValidImgs} = useRegisterItem();
     // Fetch para sucursales, marcas, direcciones y subcategorías
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
@@ -43,140 +52,36 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     const fetchItemBrandsAsync = useMemo(() => getBrandsAsync(), []);
     const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
 
-    const [isValidImgs, setIsValidImgs] = useState<boolean>(false);
     const notificationService = useNotificationService();
-    const jwt = useAuthStore(state => state.jwt);
+    const {userId, userName, role} = useAuthStore();
 
     useEffect(() => {
-        fetchBranchOffices();
-        fetchItemSubCategory();
-        fetchItemAdresses();
-        fetchBrands();
-    }, [fetchBranchOffices, fetchItemSubCategory, fetchItemAdresses, fetchBrands]);
+        if(open) {
+            fetchBranchOffices();
+            fetchItemSubCategory();
+            fetchItemAdresses();
+            fetchBrands();
+        }
+    }, [open, fetchBranchOffices, fetchItemSubCategory, fetchItemAdresses, fetchBrands]);
 
     const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
     const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.id })) || [];
     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
 
-    const showSuccessMessage = () => {
-        toaster.push(
-            <Message closable showIcon type="success" >
-                Registro exitoso
-            </Message>,
-            { placement: 'topCenter', duration: 3000 }
-        );
-    };
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleFileChange = async (files: any[]) => {
-        try {
-            console.log(`Item: ${formData.name}`);
-            console.log('Iniciando manejo de archivos...');
-            const currentUrls = formData.pathItems;
-            console.log('URLs actuales en pathItems:', currentUrls);
-            const removedUrls = currentUrls.filter(
-                (url) => !files.some((file) => file.url === url)
-            );
-            console.log('URLs eliminadas:', removedUrls);
-    
-            if (removedUrls.length > 0) {
-                console.log('Eliminando archivos del storage...');
-                await Promise.all(removedUrls.map(async (url) => {
-                    try {
-                        console.log(`Eliminando archivo con URL: ${url}`);
-                        await deleteFile(url);
-                        console.log(`Archivo eliminado correctamente: ${url}`);
-                    } catch (error) {
-                        console.error(`Error al eliminar el archivo ${url}:`, error);
-                    }
-                }));
-            } else {
-                console.log('No hay archivos para eliminar.');
-            }
-    
-            const newImages = files.filter((file) => file.blobFile).map((file) => file.blobFile);
-    
-            console.log('Nuevas imágenes a subir:', newImages);
-    
-            const totalImagesAfterUpdate = newImages.length + currentUrls.length - removedUrls.length;
-            console.log('Total de imágenes después de la actualización:', totalImagesAfterUpdate);
-    
-            if (totalImagesAfterUpdate > 5) {
-                console.log('Límite de imágenes excedido. No se subirán más imágenes.');
-                toaster.push(
-                    <Message closable showIcon type="warning">
-                        No puede subir mas de 5 imágenes
-                    </Message>,
-                    { placement: 'topCenter', duration: 3000 }
-                );
-                setIsValidImgs(true);
-                return; 
-            }
-    
-            console.log('Subiendo nuevas imágenes al storage...');
-            const uploadPromises = newImages.map(async (file) => {
-                try {
-                    console.log(`Subiendo archivo: ${file.name || 'archivo sin nombre'}`);
-                    const pathImage = await fileUpload(file, formData.name ?? "DefaultNAME");
-                    console.log(`Archivo subido correctamente. URL: ${pathImage}`);
-                    return pathImage;
-                } catch (error) {
-                    console.error('Error al subir el archivo:', error);
-                    return null;
-                }
-            });
-    
-            const pathImages = (await Promise.all(uploadPromises)).filter((url) => url !== null);
-            console.log('URLs de las nuevas imágenes subidas:', pathImages);
-    
-            const updatedUrls = [...currentUrls.filter((url) => !removedUrls.includes(url)), ...pathImages];
-            console.log('URLs actualizadas en pathItems:', updatedUrls);
-            updateField('pathItems', updatedUrls);
-    
-            setIsValidImgs(false);
-            console.log('Manejo de archivos completado correctamente.');
-        } catch (error) {
-            console.error('Error al manejar archivos:', error);
-            toaster.push(
-                <Message closable showIcon type="error">
-                    Error al manejar las imágenes
-                </Message>,
-                { placement: 'topCenter', duration: 3000 }
-            );
-        }
-    };
-
-   
-    const getUsernameAndRoleName = () => {
-        let roleName, userName, userId;
-        if(jwt){
-            const decode = jwtDecoder(jwt);
-            switch(decode.role){
-                case "ROLE_Admin":
-                    roleName = "Administrador"; 
-                    userName = decode.sub;
-                    userId = decode.id;
-                    break;
-                case "ROLE_Owner":
-                    roleName = "Dueño"; 
-                    userName = decode.sub;
-                    userId = decode.id;
-                    break;
-                default:
-                    roleName = "Vendedor";
-                    userName = decode.sub;
-                    userId = decode.id;
-                    break;
-            }
-            return [roleName, userName, userId];
-        }
-        return "";
-    }
+    const handleAsyncFileUpload = async (filesList: FileType[]) => {
+        const files = filesList
+                        .map(file => file.blobFile) 
+                        .filter(Boolean) 
+                        .map(blobFile => ({
+                            name: blobFile!.name, 
+                            blobFile, 
+                        }));
+        await handleFileChange(files, formData, updateField);
+    } 
 
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        const [roleName, userName, userId] = getUsernameAndRoleName();
         formData.userID = userId as number;
         const result = await formRef.current.checkAsync();
         if (!result.hasError) {
@@ -189,12 +94,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         }
 
         if (isValidImgs) {
-            toaster.push(
-                <Message closable showIcon type="warning">
-                    Tienen que ser 5 imágenes.
-                </Message>,
-                { placement: 'topCenter', duration: 3000 }
-            );
+            showWarningFilesMessage();
             return;
         }
 
@@ -207,7 +107,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                     actionType: 'REGISTRO',
                     type: 'Repuesto',
                     userName: userName as string,
-                    targetRole: roleName as string,
+                    targetRole: role as string,
                 });
                 formRef.current.reset();
                 resetForm();
@@ -215,14 +115,8 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                 if(onItemCreated){
                     onItemCreated();
                 }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
-            toaster.push(
-                <Message closable showIcon type="error">
-                    Error al crear el item
-                </Message>,
-                { placement: 'topCenter', duration: 3000 }
-            );
+            showErrorMessage();
         }
     };
 
@@ -236,19 +130,14 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
             formRef.current.reset();
         } catch (error) {
             console.error('Error al cancelar el formulario:', error);
-            toaster.push(
-                <Message closable showIcon type="error">
-                    Error al cancelar el formulario
-                </Message>,
-                { placement: 'topCenter', duration: 3000 }
-            );
+            showErrorMessage();
         }
     }
 
     return (
         <>
-            <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow>
-            <ModalHeader>
+            <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow backdrop="static">
+            <ModalHeader closeButton={false}>
                 <ModalTitle style={{ fontWeight: "bold" }}>Nuevo Repuesto</ModalTitle> 
             </ModalHeader>
                 <ModalBody>
@@ -488,16 +377,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                 multiple
                                                 listType="picture-text"
                                                 action="/"
-                                                onChange={async (filesList) => {
-                                                    const files = filesList
-                                                        .map(file => file.blobFile) 
-                                                        .filter(Boolean) 
-                                                        .map(blobFile => ({
-                                                            name: blobFile!.name, 
-                                                            blobFile, 
-                                                        }));
-                                                    await handleFileChange(files);
-                                                }}
+                                                onChange={handleAsyncFileUpload}
                                                 defaultFileList={formData.pathItems as []}
                                             >
                                                 <button>

@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker } from "rsuite";
+import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel } from "rsuite";
 import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
@@ -21,6 +21,7 @@ import { useDeleteItem } from "../hooks/useDeleteItem";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { useBarcode } from "../hooks/useBarcode";
 import ImageCell from "./imageCell";
+import '../styles/pagination.style.css';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -117,9 +118,9 @@ export default function ItemTable() {
 
     if(!isMobile){
         return (
-            <div style={{padding:35}}>
-                    {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack> */}
-                    <Stack spacing={2} justifyContent="space-between" style={{marginBottom: "25px"}}>
+            <div style={{ overflow: "hidden", padding:"20px" }}>
+               <Panel bordered style={{marginBottom: "10px", backgroundColor: "#f5f5f5"}}>
+                    <Stack spacing={2} justifyContent="space-between">
                         <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                         <Stack spacing={6}>
                           <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Marca"/>
@@ -132,7 +133,9 @@ export default function ItemTable() {
                           </InputGroup>
                         </Stack>
                     </Stack>
-                    <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
+                    </Panel>
+                    <Panel bordered style={{backgroundColor: "#f5f5f5"}}>
+                      <Table bordered cellBordered style={{ background: "white", fontSize:"15px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
                             <Column align="center" flexGrow={3.7} minWidth={130} fixed="left" resizable>
                                 <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                 <Cell>
@@ -240,8 +243,8 @@ export default function ItemTable() {
                                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                             </Column>
                     </Table>
-                        <Pagination
-                            prev
+                      <Pagination
+                          prev
                             next
                             first
                             last
@@ -259,8 +262,11 @@ export default function ItemTable() {
                             }}
                             onChangeLimit={handleChangeLimit}
                             locale={paginationLocaleES}
-                            style={{marginTop: "5px"}}
-                            />
+                          style={{marginTop: "5px"}}
+                          className="custom-pagination"
+                      />
+                    </Panel>
+
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
                     <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
                     <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
