@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel } from "rsuite";
+import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel, Button } from "rsuite";
 import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
@@ -26,26 +26,20 @@ import '../styles/pagination.style.css';
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES} = useItemTable();
+    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES, page,setPage, limit, handleChangeLimit, handleClearSearch} = useItemTable();
     const {handleModalCreate,showModal} = useRegisterItem();
     const {handleModalUpdate,showModalUpdate, getIDUpdate, setGetIDUpdate} = useUpdateItem();
     const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
     const {handleModalStock, showModalStock, setGetIDStock, getIDStock} = useUpdateStock();
     const {handleModalBareCode, showModalBareCode, setGetIDBarcode, getIDBarcode} = useBarcode();
-
-    const [limit, setLimit] = useState(5); 
-    const [page, setPage] = useState(1);
     const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
 
-    function handleChangeLimit(newLimit: number) {
-      setPage(1);
-      setLimit(newLimit);
-    }
     const fetchItemsAsync = useMemo(() => {
       return getItemsAsync(page, limit, searchTerm);
     }, [limit, page, searchTerm]);
     const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: false });
+
     useEffect(() => {
       fetch();
     }, [fetch, page, limit]);
@@ -83,6 +77,7 @@ export default function ItemTable() {
         regex.test(item.subCategory) ||
         regex.test(item.category)
       );
+      
       return result;
     }, [items, regex]);
 
@@ -125,6 +120,7 @@ export default function ItemTable() {
                         <Stack spacing={6}>
                           <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Marca"/>
                           <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable={false} placeholder="Sub-Categoría"/>
+                          <Button appearance="primary" onClick={handleClearSearch} >Limpiar Buscador</Button>
                           <InputGroup style={{ width: 250 }}>
                               <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                   <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
