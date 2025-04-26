@@ -6,9 +6,10 @@ import { useForgotPasswordModal, useValidateEmailForm } from "../hooks/useResetP
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
-import { getCodeByEmailAsync } from "../services/user.service";
+
 import { ChangePassword } from "./changePassword";
 import { AxiosResponse } from "axios";
+import { getCodeByEmailAsync } from "../services/authService";
 
 interface ResetPasswordModalParams {
     open: boolean;

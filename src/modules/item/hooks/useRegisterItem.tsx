@@ -57,6 +57,24 @@ export const useRegisterItem = () => {
         searchPlaceholder: "Buscar sub-categoria..."
     };
 
+    const transmissionsOptionsES = {
+        searchPlaceholder: "Buscar transmision..."
+    };
+
+    const combustibleTypesOptionsES = {
+        searchPlaceholder: "Buscar tipo de combustible..."
+    };
+
+    const transmitionsOptions = ['Automático', 'Manual'].map((transmission) => ({
+        label: transmission,
+        value: transmission,
+    }));
+
+    const combustibleTypesOptions = ['Gasolina', 'Diesel', 'Gas', 'Electrico'].map((combustibleType) => ({
+        label: combustibleType,
+        value: combustibleType,
+    }));
+
     const handleRoles = (role: string) => {
         switch (role) {
             case "admin":
@@ -161,5 +179,9 @@ export const useRegisterItem = () => {
         showErrorMessage,
         showWarningFilesMessage,
         isValidImgs,
+        transmitionsOptions,
+        combustibleTypesOptions,
+        transmissionsOptionsES,
+        combustibleTypesOptionsES,
     }
 }

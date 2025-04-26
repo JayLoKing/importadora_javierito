@@ -6,10 +6,10 @@ import { Button, Form, Heading, InputGroup, Modal, Stack } from "rsuite"
 import ModalBody from "rsuite/esm/Modal/ModalBody"
 import ModalFooter from "rsuite/esm/Modal/ModalFooter"
 import ModalTitle from "rsuite/esm/Modal/ModalTitle"
-import { resetPasswordAsync } from "../services/user.service"
 import { useResetPasswordForm } from "../hooks/useResetPassword"
 import { MdVisibility } from "react-icons/md"
 import { AiFillEyeInvisible } from "react-icons/ai"
+import { resetPasswordAsync } from "../services/authService"
 
 interface ChangePasswordProps {
     open: boolean;

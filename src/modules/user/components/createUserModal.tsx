@@ -64,6 +64,8 @@ export default function CreateUserModal({ open, hiddeModal, onUserCreated}: Crea
                 await createUserAsync(formData);
                 hiddeModal();
                 resetForm();
+                formRef.current.reset();
+                formRef.current.cleanErrors();
                 showSuccessMessage();
                 showSuccessNotification();
                 if(onUserCreated){
@@ -78,6 +80,8 @@ export default function CreateUserModal({ open, hiddeModal, onUserCreated}: Crea
     const handleCancel = () => {
         resetForm();
         hiddeModal();
+        formRef.current.reset();
+        formRef.current.cleanErrors();
     }
 
     return(

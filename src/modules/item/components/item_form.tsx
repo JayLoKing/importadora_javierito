@@ -38,6 +38,10 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         showSuccessMessage,
         showWarningFilesMessage,
         handleFileChange, 
+        transmitionsOptions,
+        combustibleTypesOptions,
+        transmissionsOptionsES,
+        combustibleTypesOptionsES,
         isValidImgs} = useRegisterItem();
     // Fetch para sucursales, marcas, direcciones y subcategorías
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
@@ -193,9 +197,10 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
-                                        <Form.Group controlId={'subCategoryID'}>
+                                        <Form.Group controlId={'transmission'}>
                                             <Form.ControlLabel>Transmisión</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker locale={transmissionsOptionsES} value={formData.transmission} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={transmitionsOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una transmision"} style={{width: "100%"}} />
+                                            <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'quantity'}>
                                             <Form.ControlLabel>Stock</Form.ControlLabel>
@@ -255,7 +260,8 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Combustible</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.traction} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'model'}>
                                             <Form.ControlLabel>Serie del Motor</Form.ControlLabel>
@@ -269,6 +275,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         onChange={(value) => updateField('model', value)}
                                                     />
                                                 </InputGroup>
+                                                <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'barePrice'}>
                                             <Form.ControlLabel >Precio Pelado</Form.ControlLabel>
@@ -282,6 +289,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         onChange={(value) => updateField('barePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
+                                                <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                     </Col> 
                                     <Col xs={24} md={8}>
@@ -334,6 +342,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         name="cilindrada"
                                                     />
                                                 </InputGroup>
+                                                <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
@@ -348,6 +357,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <Checkbox>4 x 2</Checkbox>
                                                     <Checkbox>4 x 4</Checkbox>
                                                 </InputGroup>
+                                                <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                     </Col>
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
@@ -384,7 +394,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <FaCamera />
                                                 </button>
                                             </Uploader>
-                                                <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
+                                            <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
                                         </Form.Group>
                                     </Col>          
                                 </Row>
