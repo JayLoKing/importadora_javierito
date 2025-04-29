@@ -78,31 +78,14 @@ export default function SaleForm({open, hiddeModal, onSaleCreated } : SaleModalP
                                                 <Form.Control name="client" placeholder="Razón Social / Cliente"/>
                                             </InputGroup>
                                         </FormGroup>
+                                        
                                         <FormGroup>
-                                            <FormControlLabel style={{fontWeight:"bold"}}>Vendedor:</FormControlLabel>
-                                            <InputGroup inside>
-                                                <InputGroup.Addon>
-                                                    <BiSolidUserBadge/>
-                                                </InputGroup.Addon>
-                                                <SelectPicker style={{width:"190px"}} name="employee" placeholder="Seleccione Vendedor" data={[]}/>
-                                            </InputGroup>
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <FormControlLabel style={{fontWeight:"bold"}}>Comisión (%):</FormControlLabel>
-                                            <InputGroup inside>
-                                                <InputGroup.Addon>
-                                                    <FaUser/>
-                                                </InputGroup.Addon>
-                                                <Input type="number" min="5" max="100" placeholder="5" />
-                                            </InputGroup>
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <FormControlLabel style={{fontWeight:"bold"}}>Descuento (Bs.):</FormControlLabel>
+                                            <FormControlLabel style={{fontWeight:"bold"}}>Descuento (%):</FormControlLabel>
                                             <InputGroup inside>
                                                 <InputGroup.Addon>
                                                     <FaDollarSign/>
                                                 </InputGroup.Addon>
-                                                <Input type="number" min="0" placeholder="0.00" />
+                                                <Input type="number" min="0" placeholder="0" />
                                             </InputGroup>
                                         </FormGroup>
                                         <FormGroup>
@@ -138,9 +121,9 @@ export default function SaleForm({open, hiddeModal, onSaleCreated } : SaleModalP
                                             </Col>
                                         </Row>
                                     </Grid>
-                                    <h5 style={{ marginTop: 20 }}>Lista de Productos</h5>
+                                    <h5 style={{ marginTop: 20 }}>Productos Seleccionados</h5>
                                     <Table rowHeight={40} data={[]}>
-                                        <Column width={70} align="center">
+                                         <Column width={70} align="center">
                                             <HeaderCell>Acciones</HeaderCell>
                                             <Cell>
                                                 <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
@@ -150,22 +133,6 @@ export default function SaleForm({open, hiddeModal, onSaleCreated } : SaleModalP
                                                 </Stack>
                                             </Cell>
                                         </Column>
-                                        <Column width={70} align="center">
-                                            <HeaderCell>Código</HeaderCell>
-                                            <Cell dataKey="code" />
-                                        </Column>
-                                        <Column flexGrow={1}>
-                                            <HeaderCell>Producto</HeaderCell>
-                                            <Cell dataKey="name" />
-                                        </Column>
-                                        <Column width={100}>
-                                            <HeaderCell>Precio</HeaderCell>
-                                            <Cell dataKey="price" />
-                                        </Column>
-                                    </Table>
-
-                                    <h5 style={{ marginTop: 20 }}>Productos Seleccionados</h5>
-                                    <Table rowHeight={40}>
                                         <Column width={70} align="center">
                                             <HeaderCell>Código</HeaderCell>
                                             <Cell dataKey="code" />

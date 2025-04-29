@@ -285,11 +285,11 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'itemAddressID'}>
                                             <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
-                                            <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                            <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una dirección *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'brandID'}>
                                             <Form.ControlLabel>Marca</Form.ControlLabel>
-                                            <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                            <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'alias'}>
                                             <Form.ControlLabel>Año </Form.ControlLabel>
@@ -299,14 +299,14 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="alias"
-                                                        placeholder="año entre año *"
+                                                        placeholder="Desde AÑO entre AÑO *"
                                                         onChange={(value) => updateField('alias', value)}
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Transmisión</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona la transmisión *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'quantity'}>
                                             <Form.ControlLabel>Stock</Form.ControlLabel>
@@ -349,7 +349,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'branchOfficeID'}>
                                             <Form.ControlLabel>Sucursal</Form.ControlLabel>
-                                            <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                            <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'model'}>
                                             <Form.ControlLabel>Modelo</Form.ControlLabel>
@@ -366,7 +366,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Combustible</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona el tipo de combustible *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'model'}>
                                             <Form.ControlLabel>Serie del Motor</Form.ControlLabel>
@@ -404,7 +404,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="acronym"
-                                                        placeholder="Acrónimo del artículo"
+                                                        placeholder="Acrónimo del artículo *"
                                                         onChange={(value) => updateField('acronym', value.toUpperCase())}
                                                     />
                                                 </InputGroup>
@@ -443,12 +443,13 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="cilindrada"
+                                                        placeholder="Ingrese la cilindrada del repuesto *"
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria *"} style={{width: "100%"}} />
                                         </Form.Group>
                                         <Form.Group controlId={'newor'}>
                                             <Form.ControlLabel>Tracción</Form.ControlLabel>
@@ -473,7 +474,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                 name="description"
                                                 as={'textarea'}
                                                 rows={5}
-                                                placeholder="Descripción del repuesto"
+                                                placeholder="Especificaciones del repuesto *"
                                                 onChange={(value) => updateField('description', value)} />
                                         </InputGroup>
                                     </Form.Group>
