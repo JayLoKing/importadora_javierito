@@ -1,23 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Message, useToaster } from "rsuite";
-import { deleteFile, fileUpload } from "../services/storage.service";
+import { Message, toaster } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader";
-import { NewItemDTO } from "../models/item.model";
+import { deleteFile, fileUpload } from "../services/storage.service";
+import { ItemById } from "../models/item.model";
 
-export const useRegisterItem = () => {
-    const [showModal, setShowModal] = useState<boolean>(false);
-    const toaster = useToaster();
+export const useUpdateItem = () => {
+    const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
+    const [getIDUpdate, setGetIDUpdate] = useState(0);
     const [files, setFiles] = useState<FileType[]>([]);
+    const [filesToRemove, setFilesToRemove] = useState<string[]>([]);
+    const [originalImages, setOriginalImages] = useState<string[]>([]);
 
-    function handleModalCreate(hidde: boolean){
-        setShowModal(hidde);
-    }
+    let remainingOriginalFiles;
+
+    const handleModalUpdate = (isOpen: boolean) => {
+        if (!isOpen) {
+            setGetIDUpdate(0); 
+        }
+        setShowModalUpdate(isOpen);
+    };
 
     const showSuccessMessage = () => {
         toaster.push(
             <Message closable showIcon type="success" >
-                Registro exitoso
+                Editado Correctamente!
             </Message>,
             { placement: 'topCenter', duration: 3000 }
         );
@@ -39,17 +46,7 @@ export const useRegisterItem = () => {
             </Message>,
             { placement: 'topCenter', duration: 3000 }
         );
-   };
-
-    const transmitionsOptions = ['Automático', 'Manual'].map((transmission) => ({
-        label: transmission,
-        value: transmission,
-    }));
-
-    const combustibleTypesOptions = ['Gasolina', 'Diesel', 'Gas', 'Electrico'].map((combustibleType) => ({
-        label: combustibleType,
-        value: combustibleType,
-    }));
+    };
 
     const handleRoles = (role: string) => {
         switch (role) {
@@ -66,7 +63,7 @@ export const useRegisterItem = () => {
 
     const handleFileRemove =  async (files: string[]) => {
         try {
-         
+             
             if (files.length > 0) {
                 console.log('Eliminando archivos del storage...');
                 await Promise.all(files.map(async (url) => {
@@ -91,18 +88,18 @@ export const useRegisterItem = () => {
             );
         } 
     }
-
-
+    
+    
     const handleFileUpload = async (files: FileType[]) => {
         try {
-         
+             
             const newImages = files.filter((file) => file.blobFile).map((file) => file.blobFile);
-        
+            
             console.log('Nuevas imágenes a subir:', newImages);
-    
+        
             console.log('Subiendo nuevas imágenes al storage...');
             const uploadImages = newImages.map(async (files) => {
-                    try {
+                try {
                     console.log(`Subiendo archivo: ${files!.name || 'archivo sin nombre'}`);
                     const pathImage = await fileUpload(files as File, files!.name ?? "DefaultNAME");
                     console.log(`Archivo subido correctamente. URL: ${pathImage}`);
@@ -113,7 +110,7 @@ export const useRegisterItem = () => {
                 }
             });
             const uploadImagesResults = await Promise.all(uploadImages);
-           
+               
             return uploadImagesResults as string[];
         } catch (error) {
             console.error('Error al manejar archivos:', error);
@@ -125,53 +122,60 @@ export const useRegisterItem = () => {
             );
         } 
     };
-
-    const handleFileChange =  (filesList: FileType[], updateField: (field: keyof NewItemDTO, value: any) => void) => {
-        const fileNames = filesList
-        .map(file => file.name || file.blobFile?.name)
-        .filter(Boolean);
-
-        const invalidFiles = fileNames.some(name => 
-            !/\.(jpg|jpeg|png)$/i.test(name as string)
-        );
-
-        if (invalidFiles) {
-            showWarningFilesMessage('Solo se permiten JPG, JPEG o PNG');
-            return;
-        }
-        updateField('pathItems', fileNames as string[]);
+    
+    const handleFileChange = (filesList: FileType[], updateField: (field: keyof ItemById, value: any) => void) => {
+        // Filtrar solo archivos válidos
         const validFiles = filesList.filter(file => 
             /\.(jpg|jpeg|png)$/i.test(file.name || file.blobFile?.name || '')
         );
+        console.log('Archivos válidos:', validFiles);
         setFiles(validFiles);
-    } 
-
-    const handleFileRemoveFromList = (file: FileType, updateField: (field: keyof NewItemDTO, value: any) => void) => {
-        console.log('Eliminando archivo:', file.name || file.blobFile?.name);
+        updateField('itemImages', validFiles.map(f => f.name || f.url));
+    };
+    
+    const handleFileRemoveFromList = (file: FileType, updateField: (field: keyof ItemById, value: any) => void) => {
         const fileNameToRemove = file.name || file.blobFile?.name;
         const updatedFiles = files.filter(f => 
             f.name !== fileNameToRemove && 
             f.blobFile?.name !== fileNameToRemove
         );
-        console.log('Archivos restantes:', updatedFiles);
         setFiles(updatedFiles);
-        updateField('pathItems', updatedFiles.map(f => f.name));
+        updateField('itemImages', updatedFiles.map(f => f.name || f.url));
+        // Si el archivo tiene URL (ya estaba en el storage), agregar a filesToRemove
+        // Luego manejar la URL para eliminar (si existe)
+        if (file.url) {
+            setFilesToRemove(prev => {
+                const newFilesToRemove = [...prev, file.url as string];
+                console.log('Archivos a eliminar actualizados:', newFilesToRemove);
+                return newFilesToRemove;
+            });
+        }
+        
+        // Actualizar lista de archivos visibles
+        
+        
+        
     };
 
     return {
-        handleModalCreate,
+        handleModalUpdate,
         handleRoles,
+        handleFileRemove,
+        handleFileUpload,
         handleFileChange,
-        showModal,
+        handleFileRemoveFromList,
+        showModalUpdate,
+        getIDUpdate,
+        setGetIDUpdate,
         showSuccessMessage,
         showErrorMessage,
         showWarningFilesMessage,
-        transmitionsOptions,
-        combustibleTypesOptions,
-        handleFileUpload,
-        handleFileRemove,
-        handleFileRemoveFromList,
         files,
-        setFiles
+        originalImages,
+        setFiles,
+        setFilesToRemove,
+        remainingOriginalFiles,
+        filesToRemove,
+        setOriginalImages,
     }
 }

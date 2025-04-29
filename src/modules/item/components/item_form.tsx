@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { FaAlignJustify, FaBoxOpen, FaBuilding, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaMapMarkerAlt, FaSignature, FaTag, FaWrench } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Row, Stack, Uploader, SelectPicker, Input, Checkbox, Divider, Modal } from "rsuite";
+import { FaAlignJustify, FaBoxOpen, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaListAlt, FaSignature, FaTag } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Row, Stack, Uploader, SelectPicker, Input, Divider, Modal, InputNumber, RadioGroup, Radio } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/item.service";
 import "../styles/styles.css";
-import { FormEvent, useRef, useMemo, useEffect} from "react";
+import { FormEvent, useRef, useMemo, useEffect, useState} from "react";
 import { Brand, ItemAddress, SubCategory } from "../models/item.model";
-import { deleteFile } from "../services/storage.service";
 import { useCreateItemFormStore } from "../validations/useCreateItemFormStore";
 import { useNotificationService } from "../../../context/NotificationContext";
 import { useAuthStore } from "../../../store/store";
@@ -17,7 +15,6 @@ import { useApi } from "../../../common/services/useApi";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useRegisterItem } from "../hooks/useRegisterItem";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
-import { FileType } from "rsuite/esm/Uploader";
 
 interface ItemModalParams {
     open: boolean;
@@ -29,20 +26,21 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
+    const [loading, setLoading] = useState<boolean>(false);
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
-    const { 
-        branchOfficeOptionsES,
-        brandsOptionsES,itemAddressesOptionsES,
-        subCategoriesOptionsES, 
+    const {
         showErrorMessage,
         showSuccessMessage,
         showWarningFilesMessage,
-        handleFileChange, 
+        handleFileChange,
+        handleFileUpload,
+        handleFileRemove,
+        handleFileRemoveFromList,
+        handleRoles,
+        files,
+        setFiles,
         transmitionsOptions,
-        combustibleTypesOptions,
-        transmissionsOptionsES,
-        combustibleTypesOptionsES,
-        isValidImgs} = useRegisterItem();
+        combustibleTypesOptions} = useRegisterItem();
     // Fetch para sucursales, marcas, direcciones y subcategorías
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
@@ -73,68 +71,80 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
 
-    const handleAsyncFileUpload = async (filesList: FileType[]) => {
-        const files = filesList
-                        .map(file => file.blobFile) 
-                        .filter(Boolean) 
-                        .map(blobFile => ({
-                            name: blobFile!.name, 
-                            blobFile, 
-                        }));
-        await handleFileChange(files, formData, updateField);
-    } 
-
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         formData.userID = userId as number;
+        
+
         const result = await formRef.current.checkAsync();
-        if (!result.hasError) {
-            console.log("Formulario válido, procediendo...");
-        } else {
+        if (result.hasError) {
             console.error("El formulario no es válido");
             console.warn("Errores de validación:", result);
-            console.warn("Formulario:", formData);
+            setLoading(false);
+            showErrorMessage("Formulario no válido, por favor revise los campos resaltados en rojo.");
+            if(result.formError?.pathItems){
+                showWarningFilesMessage("Suba al menos 1 imagen y un máximo de 5 imágenes (JPG, PNG)"); 
+            } 
             return;
         }
-
-        if (isValidImgs) {
-            showWarningFilesMessage();
-            return;
-        }
-
+    
         try {
-            await createItemAsync(formData);
-                showSuccessMessage();
-                notificationService.addNotification({
-                    message: 'creó un nuevo ítem',
-                    timestamp: new Date(),
-                    actionType: 'REGISTRO',
-                    type: 'Repuesto',
-                    userName: userName as string,
-                    targetRole: role as string,
-                });
-                formRef.current.reset();
-                resetForm();
-                hiddeModal(false);
-                if(onItemCreated){
-                    onItemCreated();
-                }
+            const uploadedUrls = await handleFileUpload(files) || [];
+            updateField('pathItems', uploadedUrls);
+            formData.pathItems = uploadedUrls;
+    
+            console.log("Datos finales del formulario:", formData);
+    
+            const  {call} = await createItemAsync(formData);
+            if((await call).status !== 200) {
+                await handleFileRemove(formData.pathItems);
+                showErrorMessage("Error al crear el ítem respuesta del servidor");
+                setLoading(false);
+                return;
+
+            }
+            
+            showSuccessMessage();
+            notificationService.addNotification({
+                message: 'creó un nuevo ítem',
+                timestamp: new Date(),
+                actionType: 'REGISTRO',
+                type: 'Repuesto',
+                userName: userName as string,
+                targetRole: handleRoles(role as string),
+            });
+            
+            formRef.current.reset();
+            resetForm();
+            hiddeModal(false);
+            setFiles([]);
+            
+            if (onItemCreated) {
+                onItemCreated();
+            }
         } catch (error) {
-            showErrorMessage();
+            console.error("Error al crear el ítem:", error);
+            await handleFileRemove(formData.pathItems as string[]);
+            showErrorMessage("Error al crear el ítem");
+            setLoading(false);
+        } finally {
+            setLoading(false); 
         }
     };
 
     const handleCancel = async () => {
         try {
-            if (formData.pathItems.length > 0) {
-                await Promise.all(formData.pathItems.map((url) => deleteFile(url)));
-            }
             hiddeModal(false);
             resetForm();
             formRef.current.reset();
+            setFiles([]);
+            
         } catch (error) {
             console.error('Error al cancelar el formulario:', error);
-            showErrorMessage();
+            showErrorMessage("Error al cancelar el formulario");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -172,17 +182,43 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="price"
-                                                        type="number"
+                                                        accepter={InputNumber}
+                                                        min={0}
+                                                        formatter={(value) => `${value} Bs.`}
+                                                        placeholder="Ingrese el precio unitario *"
+                                                        
                                                         onChange={(value) => updateField('price', parseFloat(value))} />
                                                 </InputGroup>
                                         </Form.Group>
-                                        <Form.Group controlId={'itemAddressID'}>
-                                            <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
-                                            <SelectPicker locale={itemAddressesOptionsES} value={formData.itemAddressID} onChange={(value) => updateField('itemAddressID', value)} label={<FaMapMarkerAlt/>} data={itemAddressesOptions} searchable loading={loadingItemAddressess} placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una direccion"} style={{width: "100%"}} />
+                                        <Form.Group controlId="itemAddressID">
+                                        <Form.ControlLabel>Dirección del Repuesto</Form.ControlLabel>
+                                        <Form.Control
+                                            name="itemAddressID"
+                                            accepter={SelectPicker}
+                                            value={formData.itemAddressID}
+                                            onChange={(value) => updateField('itemAddressID', value)}
+                                            data={itemAddressesOptions}
+                                            searchable
+                                            loading={loadingItemAddressess}
+                                            placeholder={loadingItemAddressess ? "Cargando..." : "Selecciona una dirección"}
+                                            style={{ width: "100%" }}
+                                        />
                                         </Form.Group>
                                         <Form.Group controlId={'brandID'}>
                                             <Form.ControlLabel>Marca</Form.ControlLabel>
-                                            <SelectPicker locale={brandsOptionsES} value={formData.brandID} onChange={(value) => updateField('brandID', value)} label={<FaTag/>} data={brandsOptions} searchable loading={loadingBrands} placeholder={ loadingBrands? "Cargando..." : "Selecciona una marca"} style={{width: "100%"}} />
+                                            <Form.Control
+                                                name="brandID"
+                                                accepter={SelectPicker}
+                                               
+                                                value={formData.brandID}
+                                                onChange={(value) => updateField('brandID', value)}
+                                                label={<FaTag/>}
+                                                data={brandsOptions}
+                                                searchable
+                                                loading={loadingBrands}
+                                                placeholder={loadingBrands ? "Cargando..." : "Selecciona una marca"}
+                                                style={{width: "100%"}}
+                                            />
                                         </Form.Group>
                                         <Form.Group controlId={'alias'}>
                                             <Form.ControlLabel>Año </Form.ControlLabel>
@@ -199,7 +235,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'transmission'}>
                                             <Form.ControlLabel>Transmisión</Form.ControlLabel>    
-                                            <SelectPicker locale={transmissionsOptionsES} value={formData.transmission} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={transmitionsOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una transmision"} style={{width: "100%"}} />
+                                            <SelectPicker value={formData.transmission} onChange={(value) => updateField('transmission', value)} label={<FaListAlt/>} data={transmitionsOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una transmision"} style={{width: "100%"}} />
                                             <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'quantity'}>
@@ -209,24 +245,22 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         <FaBoxOpen />
                                                     </InputGroup.Addon>
                                                     <Form.Control
-                                                        defaultValue={111}
                                                         name="quantity"
-                                                        type="number"
+                                                        accepter={InputNumber}
+                                                        min={0}
+                                                        formatter={(value) => `${value} Unidades.`}
                                                         onChange={(value) => updateField('quantity', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
                                     </Col>
                                     <Col xs={24} md={8}>
-                                        <Form.Group controlId={'newor'}>
+                                        <Form.Group controlId={'itemStatus'}>
                                             <Form.ControlLabel>Estado del Repuesto</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaWrench />
-                                                    </InputGroup.Addon>
-                                                    <Checkbox>Nuevo</Checkbox>
-                                                    <Checkbox>Usado</Checkbox>
-                                                </InputGroup>
+                                                <Form.Control name="itemStatus" inline accepter={RadioGroup} onChange={(value) => updateField('itemStatus', value)} defaultValue={formData.itemStatus}>
+                                                    <Radio value="N">Nuevo</Radio>
+                                                    <Radio value="U">Usado</Radio>
+                                                </Form.Control>
                                         </Form.Group>
                                         <Form.Group controlId={'wholesalePrice'}>
                                             <Form.ControlLabel>Precio Por Mayor</Form.ControlLabel>
@@ -236,14 +270,26 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="wholesalePrice"
-                                                        type="number"
+                                                        accepter={InputNumber}
+                                                        min={0}
+                                                        formatter={(value) => `${value} Bs.`}
                                                         onChange={(value) => updateField('wholesalePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
-                                        <Form.Group controlId={'branchOfficeID'}>
+                                        <Form.Group controlId="branchOfficeID">
                                             <Form.ControlLabel>Sucursal</Form.ControlLabel>
-                                            <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeID} onChange={(value) => updateField('branchOfficeID', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                            <Form.Control
+                                                name="branchOfficeID"
+                                                accepter={SelectPicker}
+                                                value={formData.branchOfficeID}
+                                                onChange={(value) => updateField('branchOfficeID', value)}
+                                                data={branchOfficeOptions}
+                                                searchable
+                                                loading={loadingBranchOffice}
+                                                placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"}
+                                                style={{ width: "100%" }}
+                                            />
                                         </Form.Group>
                                         <Form.Group controlId={'model'}>
                                             <Form.ControlLabel>Modelo</Form.ControlLabel>
@@ -260,19 +306,19 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                         </Form.Group>
                                         <Form.Group controlId={'subCategoryID'}>
                                             <Form.ControlLabel>Combustible</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.traction} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                            <SelectPicker  value={formData.traction} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona un tipo de combustible"} style={{width: "100%"}} />
                                             <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
-                                        <Form.Group controlId={'model'}>
+                                        <Form.Group controlId={'itemSeries'}>
                                             <Form.ControlLabel>Serie del Motor</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaCubes />
                                                     </InputGroup.Addon>
                                                     <Form.Control 
-                                                        name="model"
-                                                        placeholder="Ingrese el modelo del repuesto *"
-                                                        onChange={(value) => updateField('model', value)}
+                                                        name="itemSeries"
+                                                        placeholder="Ingrese la serie del repuesto *"
+                                                        onChange={(value) => updateField('itemSeries', value)}
                                                     />
                                                 </InputGroup>
                                                 <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
@@ -285,7 +331,9 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="barePrice"
-                                                        type="number"
+                                                        accepter={InputNumber}
+                                                        min={0}
+                                                        formatter={(value) => `${value} Bs.`}
                                                         onChange={(value) => updateField('barePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
@@ -314,7 +362,9 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     </InputGroup.Addon>
                                                     <Form.Control
                                                         name="purchasePrice"
-                                                        type="number"
+                                                        accepter={InputNumber}
+                                                        min={0}
+                                                        formatter={(value) => `${value} Bs.`}
                                                         onChange={(value) => updateField('purchasePrice', parseFloat(value))}
                                                     />
                                                 </InputGroup>
@@ -332,31 +382,40 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
-                                        <Form.Group controlId={'name'}>
+                                        <Form.Group controlId={'cylinderCapacity'}>
                                             <Form.ControlLabel>Cilindrada</Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
                                                         <FaCog />
                                                     </InputGroup.Addon>
                                                     <Form.Control
-                                                        name="cilindrada"
+                                                        name="cylinderCapacity"
+                                                        value={formData.cylinderCapacity}
+                                                        onChange={(value) => updateField('cylinderCapacity', value)}
                                                     />
                                                 </InputGroup>
                                                 <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
-                                        <Form.Group controlId={'subCategoryID'}>
-                                            <Form.ControlLabel>Sub-Categoria</Form.ControlLabel>    
-                                            <SelectPicker locale={subCategoriesOptionsES} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una sub-categoria"} style={{width: "100%"}} />
+                                        <Form.Group controlId="subCategoryID">
+                                            <Form.ControlLabel>Sub-Categoría</Form.ControlLabel>
+                                            <Form.Control
+                                                name="subCategoryID"
+                                                accepter={SelectPicker}
+                                                value={formData.subCategoryID}
+                                                onChange={(value) => updateField('subCategoryID', value)}
+                                                data={subCategoriesOptions}
+                                                searchable
+                                                loading={loadingSubCategories}
+                                                placeholder={loadingSubCategories ? "Cargando..." : "Selecciona una subcategoría"}
+                                                style={{ width: "100%" }}
+                                            />                                          
                                         </Form.Group>
-                                        <Form.Group controlId={'newor'}>
+                                        <Form.Group controlId={'traction'}>
                                             <Form.ControlLabel>Tracción</Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaWrench />
-                                                    </InputGroup.Addon>
-                                                    <Checkbox>4 x 2</Checkbox>
-                                                    <Checkbox>4 x 4</Checkbox>
-                                                </InputGroup>
+                                                <Form.Control name="traction" inline accepter={RadioGroup} onChange={(value) => updateField('traction', value)} defaultValue={formData.traction}>
+                                                    <Radio value="4">4x4</Radio>
+                                                    <Radio value="2">4x2</Radio>
+                                                </Form.Control>
                                                 <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                     </Col>
@@ -379,22 +438,43 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                        
                                     </Col>  
                                     <Col xs={24} md={24} style={{marginTop:'12px'}}>
-                                        <Form.Group controlId={'pathItems'}>
-                                            <Form.ControlLabel>Imagenes del Repuesto</Form.ControlLabel>
-                                            <Uploader
-                                                id="fileImage"
-                                                autoUpload={false}
-                                                multiple
-                                                listType="picture-text"
-                                                action="/"
-                                                onChange={handleAsyncFileUpload}
-                                                defaultFileList={formData.pathItems as []}
-                                            >
-                                                <button>
-                                                    <FaCamera />
-                                                </button>
-                                            </Uploader>
-                                            <Form.HelpText>Maximo 5 Imagenes</Form.HelpText>
+                                    <Form.Group controlId="pathItems">
+                                        <Form.ControlLabel>Imágenes del Repuesto</Form.ControlLabel>
+                                        <Form.Control
+                                            name="pathItems"
+                                            
+                                            accepter={Uploader}
+                                            autoUpload={false}
+                                            multiple
+                                            listType="picture-text"
+                                            action="/"
+                                            onChange={(file) => {
+                                                handleFileChange(file, updateField);
+                                            }}
+                                            onRemove={(file) => {
+                                                handleFileRemoveFromList(file, updateField);
+                                            }}
+                                            defaultFileList={[]}
+                                            draggable
+                                            style={{ width: '100%' }}
+                                        >
+                                            <button style={{ 
+                                            width: '100%',
+                                            padding: '10px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexDirection: 'column',
+                                            border: '1px dashed #ddd',
+                                            borderRadius: '4px',
+                                            background: '#f7f7f7',
+                                            cursor: 'pointer'
+                                            }}>
+                                            <FaCamera style={{ fontSize: '24px', marginBottom: '8px', color: '#555' }} />
+                                            <span>Haz clic o arrastra imágenes aquí</span>
+                                            </button>
+                                        </Form.Control>
+                                        <Form.HelpText>Máximo 5 imágenes (JPG, PNG)</Form.HelpText>
                                         </Form.Group>
                                     </Col>          
                                 </Row>
@@ -403,7 +483,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                     </Grid>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={(e) => handleFormSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
+                    <Button onClick={(e) => handleFormSubmit(e)} type="submit" loading={loading} appearance="primary">Aceptar</Button>
                     <Button onClick={handleCancel} appearance="default">Cancelar</Button>
                 </ModalFooter>
             </Modal>

@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { FormEvent, useEffect, useState } from "react";
 import { Button, Container, Form, Input, Modal, Uploader, Grid, Row, Col, InputGroup } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
@@ -171,8 +174,8 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
                 </Grid>
             </ModalBody>
             <ModalFooter>
-                {/* <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button> */}
-                <Button onClick={(e) => console.log(details)} type="submit" appearance="primary">Aceptar</Button>
+                <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
+                {/* <Button onClick={(e) => console.log(details)} type="submit" appearance="primary">Aceptar</Button> */}
                 <Button onClick={() => {
                     resetValues()
                     hiddeModal(false, action)

@@ -28,7 +28,8 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
         pathItems: [],
         branchOfficeID: 0,
         quantity: 0,
-        acronym: ''
+        acronym: '',
+        itemStatus: ''
     }, 
     resetForm: () => {
         set({
@@ -48,7 +49,8 @@ export const useCreateItemFormStore = create<CreateItemFormStore>((set) => ({
                 pathItems: [],
                 branchOfficeID: 0,
                 quantity: 0,
-                acronym: ''
+                acronym: '',
+                itemStatus: ''
             },
         })
     }, 

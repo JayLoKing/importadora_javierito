@@ -8,8 +8,8 @@ export const validationItemCreateFormModel = Schema.Model({
         .pattern(/^[a-zA-Z0-9\s]+$/, 'El nombre solo puede contener letras y números.'),
 
     alias: StringType()
-        .isRequired('El alias es requerido')
-        .pattern(/^[a-zA-Z\s]+$/, 'El alias solo puede contener letras.'),
+        .isRequired('El año es requerido')
+        .pattern(/^[a-zA-Z0-9\s]+$/, 'El año solo puede contener letras y numeros.'),
 
     model: StringType()
         .isRequired('El modelo es requerido')
@@ -17,16 +17,13 @@ export const validationItemCreateFormModel = Schema.Model({
 
     price: NumberType()
         .isRequired('El precio es requerido')
-        .min(0, 'El precio debe ser un número positivo.'),
+        .min(1, 'El precio debe ser mayor a 0.'),
 
     wholesalePrice: NumberType()
         .isRequired('El precio al por mayor es requerido')
-        .min(0, 'El precio al por mayor debe ser un número positivo.'),
+        .min(1, 'El precio al por mayor debe ser mayor a 0.'),
 
-    barePrice: NumberType()
-        .isRequired('El precio base es requerido')
-        .min(0, 'El precio base debe ser un número positivo.'),
-
+   
     brandID: NumberType()
         .isRequired('Debe seleccionar una marca')
         .min(1, 'Debe seleccionar una marca válida'), 
@@ -43,15 +40,11 @@ export const validationItemCreateFormModel = Schema.Model({
         .min(1, 'Debe seleccionar una dirección válida'), 
     purchasePrice: NumberType()
         .isRequiredOrEmpty('El precio de compra es requerido')
-        .min(0, 'El precio de compra debe ser un número positivo.'),
+        .min(1, 'El precio de compra debe ser mayor a 0.'),
     pathItems: ArrayType()
         .isRequired('Debe subir al menos una imagen')
         .minLength(1, 'Debe subir al menos una imagen')
-        .maxLength(5, 'No puede subir más de 5 imágenes')
-        .of(
-            StringType()
-                .pattern(/\.(jpg|jpeg|png)(\?.*)?$/, 'Las imágenes deben estar en formato JPG o PNG.')
-        ),
+        .maxLength(5, 'No puede subir más de 5 imágenes'),
 
     branchOfficeID: NumberType()
         .isRequired('Debe seleccionar una sucursal') 
@@ -59,12 +52,15 @@ export const validationItemCreateFormModel = Schema.Model({
 
     quantity: NumberType()
         .isRequired('La cantidad es requerida')
-        .min(0, 'La cantidad debe ser un número positivo.'),
+        .min(1, 'La cantidad debe ser mayor a 0.'),
 
     acronym: StringType()
         .isRequired('El acrónimo es requerido')
         .minLength(2, 'El acrónimo debe tener al menos 2 caracteres.')
         .pattern(/^[a-zA-Z0-9]+$/, 'El acrónimo solo puede contener letras y números.'),
+        
+    itemStatus: StringType()
+        .isRequired('El estado del artículo es requerido')
 
 });
 
@@ -89,15 +85,15 @@ export const validationItemEditFormModel = Schema.Model({
 
     price: NumberType()
         .isRequired('El precio es requerido')
-        .min(0, 'El precio debe ser un número positivo.'),
+        .min(1, 'El precio debe ser mayor a 0.'),
 
     wholesalePrice: NumberType()
         .isRequired('El precio al por mayor es requerido')
-        .min(0, 'El precio al por mayor debe ser un número positivo.'),
+        .min(1, 'El precio al por mayor debe ser mayor a 0.'),
 
     barePrice: NumberType()
         .isRequired('El precio base es requerido')
-        .min(0, 'El precio base debe ser un número positivo.'),
+        .min(1, 'El precio base debe ser mayor a 0.'),
 
     brandID: NumberType()
         .isRequired('Debe seleccionar una marca')
@@ -116,11 +112,7 @@ export const validationItemEditFormModel = Schema.Model({
     itemImages: ArrayType()
         .isRequired('Debe subir al menos una imagen')
         .minLength(1, 'Debe subir al menos una imagen')
-        .maxLength(5, 'No puede subir más de 5 imágenes')
-        .of(
-            StringType()
-                .pattern(/\.(jpg|jpeg|png)$/, 'Las imágenes deben estar en formato JPG o PNG.')
-        ),
+        .maxLength(5, 'No puede subir más de 5 imágenes'),
 });
 
 export const validationStockEditFormModel = Schema.Model({
