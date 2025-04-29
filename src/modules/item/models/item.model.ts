@@ -12,7 +12,14 @@ export interface NewItemDTO {
     itemAddressID: number;
     userID?: number;
     purchasePrice: number;
-    pathItems: string[];
+    pathItems: string[] ;
+
+    itemStatus?: string;
+    transmission?: string;
+    cylinderCapacity?: string;
+    traction?: string;
+    itemSeries?: string;
+
     branchOfficeID: number;
     quantity: number;
     barcodes?: string[];

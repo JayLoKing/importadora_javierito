@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel } from "rsuite";
+import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel, Button } from "rsuite";
 import { getBrandsAsync, getItemsAsync, getSubCategoryAsync } from "../services/item.service";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaEdit, FaSearch, FaSync, FaTrash} from "react-icons/fa";
@@ -21,30 +21,25 @@ import { useDeleteItem } from "../hooks/useDeleteItem";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { useBarcode } from "../hooks/useBarcode";
 import ImageCell from "./imageCell";
+import '../styles/pagination.style.css';
 
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES} = useItemTable();
+    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES, page,setPage, limit, handleChangeLimit, handleClearSearch} = useItemTable();
     const {handleModalCreate,showModal} = useRegisterItem();
     const {handleModalUpdate,showModalUpdate, getIDUpdate, setGetIDUpdate} = useUpdateItem();
     const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
     const {handleModalStock, showModalStock, setGetIDStock, getIDStock} = useUpdateStock();
     const {handleModalBareCode, showModalBareCode, setGetIDBarcode, getIDBarcode} = useBarcode();
-
-    const [limit, setLimit] = useState(5); 
-    const [page, setPage] = useState(1);
     const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
 
-    function handleChangeLimit(newLimit: number) {
-      setPage(1);
-      setLimit(newLimit);
-    }
     const fetchItemsAsync = useMemo(() => {
       return getItemsAsync(page, limit, searchTerm);
     }, [limit, page, searchTerm]);
     const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: false });
+
     useEffect(() => {
       fetch();
     }, [fetch, page, limit]);
@@ -82,6 +77,7 @@ export default function ItemTable() {
         regex.test(item.subCategory) ||
         regex.test(item.category)
       );
+      
       return result;
     }, [items, regex]);
 
@@ -117,6 +113,7 @@ export default function ItemTable() {
 
     if(!isMobile){
         return (
+
             <div style={{padding:30}}>
                     {/* <Stack direction="row" justifyContent="center" alignItems="center"><Heading level={3} style={{marginTop:"-7px", color:"black"}}>Lista de Repuestos</Heading></Stack> */}
                     <Panel bordered style={{ marginBottom: 15 }} >
@@ -125,6 +122,7 @@ export default function ItemTable() {
                           <Stack spacing={6}>
                             <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Marca"/>
                             <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Sub-Categoría"/>
+                            <Button appearance="primary" onClick={handleClearSearch} >Limpiar Buscador</Button>
                             <InputGroup style={{ width: 250 }}>
                                 <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
                                     <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
@@ -239,30 +237,31 @@ export default function ItemTable() {
                               </Column>
 
                               <Column align="center" flexGrow={1} minWidth={100} resizable>
-                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Registro</HeaderCell>
-                                  <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
+                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Registro</HeaderCell>
+                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                               </Column>
-                      </Table>
+                    </Table>
                       <Pagination
-                              prev
-                              next
-                              first
-                              last
-                              ellipsis
-                              boundaryLinks
-                              maxButtons={5}
-                              size="xs"
-                              layout={['total', '-', '|', 'pager', 'skip']}
-                              total={total}
-                              limit={limit}
-                              activePage={page}
-                              onChangePage={(newPage) => {
-                                  console.log('Cambiando a página:', newPage);
-                                  setPage(newPage);
-                              }}
-                              onChangeLimit={handleChangeLimit}
-                              locale={paginationLocaleES}
-                              style={{marginTop: "5px"}}
+                          prev
+                            next
+                            first
+                            last
+                            ellipsis
+                            boundaryLinks
+                            maxButtons={5}
+                            size="xs"
+                            layout={['total', '-', '|', 'pager', 'skip']}
+                            total={total}
+                            limit={limit}
+                            activePage={page}
+                            onChangePage={(newPage) => {
+                                console.log('Cambiando a página:', newPage);
+                                setPage(newPage);
+                            }}
+                            onChangeLimit={handleChangeLimit}
+                            locale={paginationLocaleES}
+                          style={{marginTop: "5px"}}
+                          className="custom-pagination"
                       />
                     </Panel>
                     <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />

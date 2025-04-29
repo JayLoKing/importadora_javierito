@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function useItemTable (){
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -12,9 +12,15 @@ export function useItemTable (){
     };
     
     const handleSearch = (value: string) => {
+        setPage(1);
         setSearchTerm(value);
     };
     
+    const handleClearSearch = () => {
+        setPage(1);
+        setSearchTerm("");
+    }
+
     const tableLoadingES = {
         loading: "Cargando Registros..."
       };
@@ -44,6 +50,7 @@ export function useItemTable (){
     return {
         handleChangeLimit,
         handleSearch,
+        handleClearSearch,
         limit,
         page,
         setPage,

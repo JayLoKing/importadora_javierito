@@ -46,7 +46,6 @@ export default function Login() {
             const { call } = authenticateAsync(formValues);
             const res = await call;
             setUserAuth(res.data.token);
-            localStorage.setItem('jwt', res.data.token);
             navigate('/branchOffice');
             resetForm();
         } catch {

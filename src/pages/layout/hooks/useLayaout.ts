@@ -5,7 +5,6 @@ export const useLayaout = () => {
 
     const handleLogout = () => {
         clearUser();
-        localStorage.removeItem('jwt');
     }
 
     return {

@@ -13,7 +13,6 @@ import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
 import "../layout/styles/styles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/store";
-import { jwtDecoder } from "../../utils/jwtDecoder";
 import { AuthUser } from "../../modules/auth/models/auth.model";
 import { NotificationComponent } from "../../modules/notification/components/Notification";
 import { useLayaout } from "./hooks/useLayaout";
@@ -31,7 +30,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   const [visible, setVisible] = useState(false);
   const handleVisibility = () => setVisible(!visible);
   const navigate = useNavigate();
-  const jwt = useAuthStore(state => state.jwt);
+  const {role, userName, userId} = useAuthStore();
   const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
   const { handleLogout } = useLayaout();
 
@@ -49,18 +48,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   }, []);
 
   function getRoleNUsername() {
-    if (jwt) {
-      const decode = jwtDecoder(jwt);
-      console.log(decode)
-      decode.role = setRole(decode.role)
-      setUser({
-        id: decode.id,
-        userName: decode.sub,
-        role: decode.role
-      })
-    } else {
-      console.error("User authentication token is null");
-    }
+    setUser({
+      id: userId!,
+      userName: userName!,
+      role: setRole(role!),
+    })
   }
 
   function setRole(role: string): string {
