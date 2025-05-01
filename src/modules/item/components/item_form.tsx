@@ -97,12 +97,11 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
             console.log("Datos finales del formulario:", formData);
     
             const  {call} = await createItemAsync(formData);
-            if((await call).status !== 200) {
+            if((await call).status !== 201 || (await call).status !== 200) {
                 await handleFileRemove(formData.pathItems);
-                showErrorMessage("Error al crear el ítem respuesta del servidor");
+                showErrorMessage("Error al crear el ítem respuesta del servidor. /n" + (await call).statusText);
                 setLoading(false);
                 return;
-
             }
             
             showSuccessMessage();
