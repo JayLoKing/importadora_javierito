@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ComponentType, FC, FormEvent, useEffect, useMemo, useState } from "react";
+import { ComponentType, CSSProperties, FC, FormEvent, useEffect, useMemo, useState } from "react";
 import { Button, InlineEdit, Loader, Modal, Stack, Text, Carousel } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
@@ -89,7 +89,7 @@ export default function ItemBareCode({ open, hiddeModal, id }: ItemModalParams) 
                                     width: '100%',
                                     marginBottom: 20,
                                     '--rs-carousel-indicator': '#8e8e93',
-                                } as React.CSSProperties}
+                                } as CSSProperties}
                             >
                                 {barcodes.map((barcode, index) => (
                                     <div key={index} style={{ textAlign: 'center', backgroundColor: "white" }}>

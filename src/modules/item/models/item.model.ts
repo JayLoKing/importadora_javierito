@@ -19,11 +19,13 @@ export interface NewItemDTO {
     cylinderCapacity?: string;
     traction?: string;
     itemSeries?: string;
+    fuel: string;
 
     branchOfficeID: number;
     quantity: number;
     barcodes?: string[];
     acronym: string;
+   
 }
 
 

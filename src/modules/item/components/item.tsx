@@ -49,19 +49,24 @@ export default function ItemTable() {
     const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
     const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
 
-
     useEffect(() => {
       if (itemsData) {
-          if (Array.isArray(itemsData)) {
-              setItems([]); 
-          } else {
-              setItems(itemsData.data);
-              setTotal(itemsData.total); 
-          }
-      } 
+        const processedItems = Array.isArray(itemsData) 
+          ? [] 
+          : itemsData.data.map(item => ({
+              ...item,
+              description: item.description || "Sin Descripción" 
+            }));
+        
+        setItems(processedItems);
+        setTotal(Array.isArray(itemsData) ? 0 : itemsData.total);
+      }
+    }, [itemsData]);
+
+    useEffect(() => {
       fetchBrands();
       fetchItemSubCategory();
-    }, [itemsData, fetchBrands, fetchItemSubCategory]); 
+    }, [fetchBrands, fetchItemSubCategory]); 
 
     const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.name })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.name })) || [];
@@ -287,26 +292,7 @@ export default function ItemTable() {
                     </InputGroup>
                   ) : (
                     <>
-                      <Pagination
-                            prev
-                            next
-                            first
-                            last
-                            ellipsis
-                            boundaryLinks
-                            maxButtons={5}
-                            size="xs"
-                            layout={['total', '-', '|', 'pager']}
-                            total={total}
-                            limit={limit}
-                            activePage={page}
-                            onChangePage={(newPage) => {
-                                console.log('Cambiando a página:', newPage);
-                                setPage(newPage);
-                            }}
-                            onChangeLimit={handleChangeLimit}
-                            locale={paginationLocaleES}
-                            />
+                      
                     <IconButton
                         icon={<PlusIcon />}
                         appearance="primary"
@@ -344,7 +330,7 @@ export default function ItemTable() {
                                   <Stack direction="column" justifyContent="center" alignItems="center">
                                     <Image
                                       rounded
-                                      src="https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?w=265"
+                                      src={item.itemImage}
                                       alt="brown french bulldog puppy lying on yellow textile"
                                       width={140}
                                     />
@@ -376,6 +362,26 @@ export default function ItemTable() {
                           </Card>
                         </Col>
                       ))}
+                      <Pagination
+                            prev
+                            next
+                            first
+                            last
+                            ellipsis
+                            boundaryLinks
+                            maxButtons={1}
+                            size="xs"
+                            layout={['-', 'pager']}
+                            total={total}
+                            limit={limit}
+                            activePage={page}
+                            onChangePage={(newPage) => {
+                                console.log('Cambiando a página:', newPage);
+                                setPage(newPage);
+                            }}
+                            onChangeLimit={handleChangeLimit}
+                            locale={paginationLocaleES}
+                            />
                     </Row>
                   </Grid>
               </div>

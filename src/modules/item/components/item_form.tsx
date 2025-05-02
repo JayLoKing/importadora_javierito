@@ -97,7 +97,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
             console.log("Datos finales del formulario:", formData);
     
             const  {call} = await createItemAsync(formData);
-            if((await call).status !== 201 || (await call).status !== 200) {
+            if((await call).status !== 201) {
                 await handleFileRemove(formData.pathItems);
                 showErrorMessage("Error al crear el ítem respuesta del servidor. /n" + (await call).statusText);
                 setLoading(false);
@@ -303,9 +303,9 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     />
                                                 </InputGroup>
                                         </Form.Group>
-                                        <Form.Group controlId={'subCategoryID'}>
+                                        <Form.Group controlId={'fuel'}>
                                             <Form.ControlLabel>Combustible</Form.ControlLabel>    
-                                            <SelectPicker  value={formData.traction} onChange={(value) => updateField('subCategoryID', value)} label={<FaListAlt/>} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona un tipo de combustible"} style={{width: "100%"}} />
+                                            <SelectPicker  value={formData.fuel} onChange={(value) => updateField('fuel', value)} label={<FaListAlt/>} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona un tipo de combustible"} style={{width: "100%"}} />
                                             <Form.HelpText>Solo si es motor/bomba</Form.HelpText>
                                         </Form.Group>
                                         <Form.Group controlId={'itemSeries'}>
