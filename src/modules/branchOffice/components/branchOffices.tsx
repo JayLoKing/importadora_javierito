@@ -103,7 +103,7 @@ export default function BranchOffices() {
             </div>
             
             <Panel bordered style={{ marginBottom:15 }}>
-                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={370} headerHeight={50} data={dataBranchOffice!} >
+                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={370} headerHeight={50} data={branchOffices!} >
                     <Column align="center" flexGrow={1} minWidth={100}>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                         <Cell>
@@ -175,7 +175,7 @@ export default function BranchOffices() {
                     maxButtons={5}
                     size="xs"
                     layout={['total', '-', '|', 'pager', 'skip']}
-                    total={50}
+                    total={total}
                     limit={10}
                     activePage={1}
                     onChangePage={() => {}}

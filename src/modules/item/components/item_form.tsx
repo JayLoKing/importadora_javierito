@@ -3,7 +3,7 @@ import { Button, Col, Form, Grid, InputGroup, Row, Stack, Uploader, SelectPicker
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
+import { BranchOffice, GetDataBranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { createItemAsync, getBrandsAsync, getItemAdressesAsync, getSubCategoryAsync } from "../services/item.service";
 import "../styles/styles.css";
 import { FormEvent, useRef, useMemo, useEffect, useState} from "react";
@@ -24,9 +24,9 @@ interface ItemModalParams {
 }
 
 export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalParams){
-    
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const formRef = useRef<any>();
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const {formData, updateField, resetForm, validationModel} = useCreateItemFormStore();
     const {
@@ -46,16 +46,16 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
     const {limit, page, paramQuery} = useBranchOfficeTable();
     // Fetch para sucursales, marcas, direcciones y subcategorías
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,paramQuery), [limit,page,paramQuery]);
-    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: false });
 
     const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
-    const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: true });
+    const { data: dataSubCategories, loading: loadingSubCategories, fetch: fetchItemSubCategory } = useApi<SubCategory[]>(fetchItemSubCategoryAsync, { autoFetch: false });
 
     const fetchItemAdressesAsync = useMemo(() => getItemAdressesAsync(), []);
     const { data: dataItemAddresses, loading: loadingItemAddressess, fetch: fetchItemAdresses } = useApi<ItemAddress[]>(fetchItemAdressesAsync, { autoFetch: true });
 
     const fetchItemBrandsAsync = useMemo(() => getBrandsAsync(), []);
-    const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
+    const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: false });
 
     const notificationService = useNotificationService();
     const {userId, userName, role} = useAuthStore();
@@ -67,9 +67,16 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
             fetchItemAdresses();
             fetchBrands();
         }
-    }, [open, fetchBranchOffices, fetchItemSubCategory, fetchItemAdresses, fetchBrands]);
+        if(dataBranchOffice){
+            if(Array.isArray(dataBranchOffice)){
+                setBranchOffices([]);
+            } else {
+                setBranchOffices(dataBranchOffice.first);
+            }
+        }
+    }, [open, fetchBranchOffices, fetchItemSubCategory, fetchItemAdresses, fetchBrands,dataBranchOffice]);
 
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+    const branchOfficeOptions = branchOffices?.map(branch => ({ label: branch.name, value: branch.id })) || [];
     const brandsOptions = dataBrands?.map(brand => ({ label: brand.name, value: brand.id })) || [];
     const itemAddressesOptions = dataItemAddresses?.map(itemAddress => ({ label: itemAddress.name, value: itemAddress.id })) || [];
     const subCategoriesOptions = dataSubCategories?.map(subCategory => ({ label: subCategory.name, value: subCategory.id })) || [];
