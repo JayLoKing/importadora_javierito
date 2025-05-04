@@ -4,7 +4,9 @@ export function useItemTable (){
     const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchBrand, setSearchBrand] = useState<string>('');
+    const [searchSubCategory, setSearchSubCategory] = useState<string>('');
     
     const handleChangeLimit = (datakey : number) => {
         setPage(1);
@@ -48,6 +50,20 @@ export function useItemTable (){
         
     }, []);
     
+    const formatDate = (dateString: string | Date): string => {
+        if (!dateString) return "Sin fecha";
+  
+        const date = new Date(dateString);
+        
+        if (isNaN(date.getTime())) return "Fecha inválida";
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    };
+
     return {
         handleChangeLimit,
         handleSearch,
@@ -59,6 +75,11 @@ export function useItemTable (){
         setSearchTerm,
         isMobile,
         tableLoadingES,
-        paginationLocaleES
+        paginationLocaleES,
+        searchBrand,
+        setSearchBrand,
+        searchSubCategory,
+        setSearchSubCategory,
+        formatDate
     };
 }

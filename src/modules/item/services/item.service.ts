@@ -1,13 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {httpClient} from "../../../api/httpClient.ts";
 import { Brand, GetItems, ItemAcronym, ItemAddress, ItemById, NewItemDTO, SubCategory } from "../models/item.model.ts";
 import { ItemUrl } from "../urls/item.url.ts";
 import { loadAbort } from "../../../utils/loadAbort.utility.ts";
 import { UseApiCall } from "../../../utils/useApi.model.ts";
 
-export const getItemsAsync = (page: number, limit: number, query?: string) : UseApiCall<GetItems> => {
+export const getItemsAsync = (page: number, limit: number, query: string, subCategory?: string, brand?: string) : UseApiCall<GetItems> => {
     const controller = loadAbort();
+    const params: Record<string, any> = {
+        page,
+        limit,
+    };
+
+    if (query) params.query = query;
+    if (subCategory) params.subCategory = subCategory;
+    if (brand) params.brand = brand;
+
     return { 
-        call: httpClient.get<GetItems>(ItemUrl.getAll(page, limit, query), {signal: controller.signal}), 
+        call: httpClient.get<GetItems>(ItemUrl.getAll, {signal: controller.signal, params: params}), 
         controller
     }
 }

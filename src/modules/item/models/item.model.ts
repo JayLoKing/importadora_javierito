@@ -44,6 +44,7 @@ export interface Item {
     itemImage: string;
     address: string;
     totalStock: number;
+    registerDate: string;
 }
 
 export interface GetItems {

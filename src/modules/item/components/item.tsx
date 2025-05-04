@@ -28,7 +28,7 @@ import '../styles/pagination.style.css';
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ItemTable() {
-    const {searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES, page,setPage, limit, handleChangeLimit, handleClearSearch} = useItemTable();
+    const { formatDate,setSearchSubCategory,searchSubCategory, searchBrand,setSearchBrand,  searchTerm,setSearchTerm,handleSearch, isMobile, tableLoadingES, paginationLocaleES, page,setPage, limit, handleChangeLimit, handleClearSearch} = useItemTable();
     const {handleModalCreate,showModal} = useRegisterItem();
     const {handleModalUpdate,showModalUpdate, getIDUpdate, setGetIDUpdate} = useUpdateItem();
     const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
@@ -38,8 +38,8 @@ export default function ItemTable() {
     const [total, setTotal] = useState(0);
 
     const fetchItemsAsync = useMemo(() => {
-      return getItemsAsync(page, limit, searchTerm);
-    }, [limit, page, searchTerm]);
+      return getItemsAsync(page, limit, searchTerm, searchSubCategory, searchBrand);
+    }, [limit, page, searchTerm, searchSubCategory, searchBrand]);
     const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: false });
 
     useEffect(() => {
@@ -127,13 +127,13 @@ export default function ItemTable() {
                       <Stack spacing={2} justifyContent="space-between" >
                           <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModalCreate(true)}> Nuevo Repuesto </IconButton>
                           <Stack spacing={6}>
-                            <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Marca"/>
-                            <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Sub-Categoría"/>
+                            <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchBrand(value as string)} searchable placeholder="Marca"/>
+                            <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchSubCategory(value as string)} searchable placeholder="Sub-Categoría"/>
                             <InputGroup style={{ width: 250 }}>
                                 <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
                                   <FaSearch />
                                 </InputGroup.Addon>
-                                <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
+                                <Input placeholder="Buscar repuesto.." value={searchTerm!} onChange={(value) => handleSearch(value)}/>
                             </InputGroup>
                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
                               <IconButton icon={<PiBroomDuotone/>} appearance="primary" onClick={handleClearSearch} ></IconButton>
@@ -186,7 +186,16 @@ export default function ItemTable() {
                                   )}
                                   </Cell>
                               </Column>
-                          
+                              <Column align="center" flexGrow={2} minWidth={150} resizable>
+                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Registro</HeaderCell>
+                                  <Cell dataKey="registerDate" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}>
+                                    {rowData => (
+                                        <span style={{ color: "#333" }}>
+                                          {formatDate(rowData.registerDate)}
+                                        </span>
+                                      )}
+                                  </Cell>
+                              </Column>
                               <Column align="center" flexGrow={2} minWidth={150} resizable>
                                   <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Especificaciones</HeaderCell>
                                   <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
@@ -255,11 +264,6 @@ export default function ItemTable() {
                                   <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Total</HeaderCell>
                                   <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
                               </Column>
-
-                              <Column align="center" flexGrow={1} minWidth={100} resizable>
-                                <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Fecha de Registro</HeaderCell>
-                                <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "red", fontWeight: "bold" }}>Bs. {rowData.price * rowData.totalStock}</span>)}</Cell>
-                              </Column>
                     </Table>
                       <Pagination
                           prev
@@ -301,7 +305,7 @@ export default function ItemTable() {
                 <Stack spacing={2} direction="row-reverse"  justifyContent="space-between" style={{ marginBottom: "5px", width: "100%" }}>
                   {!isMobile ? (
                     <InputGroup style={{ width: 250 }}>
-                      <Input placeholder="Buscar repuesto..." value={searchTerm} onChange={(value) => setSearchTerm(value)} />
+                      <Input placeholder="Buscar repuesto..." value={searchTerm!} onChange={(value) => setSearchTerm(value)} />
                       <InputGroup.Addon>
                         <FaSearch />
                       </InputGroup.Addon>

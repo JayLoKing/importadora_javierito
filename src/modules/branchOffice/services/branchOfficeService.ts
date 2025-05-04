@@ -2,24 +2,25 @@
 import { httpClient } from "../../../api/httpClient";
 import { loadAbort } from "../../../utils/loadAbort.utility";
 import { UseApiCall } from "../../../utils/useApi.model";
-import { NewBranchOfficeDTO, BranchOfficeDetailsDTO, BranchOffice } from "../models/branchOffice.model";
+import { NewBranchOfficeDTO, BranchOfficeDetailsDTO, GetDataBranchOffice } from "../models/branchOffice.model";
+import { ParamsDTO } from "../models/params.model";
 import { BranchOfficeUrl } from "../urls/branchOffice.url";
 
-export async function getBranchOfficesAsync() {
-    try {
-        const res = await httpClient.get("/branchOffice/getAll")
-        if (res.status === 200) {
-            return res.data;
-        }
-    } catch (error) {
-        throw error;
-    }
-}
+// export async function getBranchOfficesAsync() {
+//     try {
+//         const res = await httpClient.get("/branchOffice/getAll")
+//         if (res.status === 200) {
+//             return res.data;
+//         }
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
-export const getBranchOfficesAsync2 = () : UseApiCall<BranchOffice[]> => {
+export const getBranchOfficesAsync2 = (limit: number, offset: number, paramsBody: ParamsDTO) : UseApiCall<GetDataBranchOffice> => {
     const controller = loadAbort();
     return { 
-        call: httpClient.get<BranchOffice[]>(BranchOfficeUrl.getAll, {signal: controller.signal}), 
+        call: httpClient.post<GetDataBranchOffice>(BranchOfficeUrl.getAll, paramsBody, {signal: controller.signal, params: {limit, offset}}), 
         controller
     }
 }

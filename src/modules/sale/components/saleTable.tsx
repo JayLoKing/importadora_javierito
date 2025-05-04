@@ -1,4 +1,3 @@
-/* eslint-disable no-constant-binary-expression */
 import {  Stack, IconButton, Table,  Pagination, Input, InputGroup, Panel, FlexboxGrid, Whisper, Tooltip, Form, Dropdown, Button, Modal } from "rsuite";
 import { FaArrowLeft, FaSearch, FaRegCalendar, FaExclamationTriangle } from "react-icons/fa";
 import { useEffect, useState } from "react";

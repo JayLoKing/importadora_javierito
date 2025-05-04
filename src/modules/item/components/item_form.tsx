@@ -15,6 +15,7 @@ import { useApi } from "../../../common/services/useApi";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useRegisterItem } from "../hooks/useRegisterItem";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
+import { useBranchOfficeTable } from "../../branchOffice/hooks/useBranchOfficeTable";
 
 interface ItemModalParams {
     open: boolean;
@@ -40,9 +41,11 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         files,
         setFiles,
         transmitionsOptions,
-        combustibleTypesOptions} = useRegisterItem();
+        combustibleTypesOptions
+    } = useRegisterItem();
+    const {limit, page, paramQuery} = useBranchOfficeTable();
     // Fetch para sucursales, marcas, direcciones y subcategorías
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,paramQuery), [limit,page,paramQuery]);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
 
     const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);

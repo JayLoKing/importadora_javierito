@@ -1,20 +1,24 @@
 /* eslint-disable no-constant-binary-expression */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IconButton, Input, InputGroup, Panel, Stack, Table, Tooltip, Whisper } from "rsuite";
-import { BranchOffice, BranchOfficeDetailsDTO } from "../models/branchOffice.model";
-import { getBranchOfficeDetailsAsync, getBranchOfficesAsync } from "../services/branchOfficeService";
-import BranchOfficeModal from "./branchOfficeModal";
+import { BranchOffice, BranchOfficeDetailsDTO, GetDataBranchOffice } from "../models/branchOffice.model";
+import { getBranchOfficeDetailsAsync, getBranchOfficesAsync2 } from "../services/branchOfficeService";
 import { FaEdit, FaSearch, FaTrash, FaWrench } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
-import RemoveOfficeModal from "./removeOfficeModal";
 import { LuMapPinned } from "react-icons/lu";
+import { useBranchOfficeTable } from "../hooks/useBranchOfficeTable";
+import { useApi } from "../../../common/services/useApi";
 
 export default function BranchOffices() {
 
-    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([])
+    const {limit, page, paramQuery} = useBranchOfficeTable();
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,paramQuery), [limit,page,paramQuery]);
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: true });
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
+    const [total, setTotal] = useState(0);
     const [details, setDetails] = useState<BranchOfficeDetailsDTO>({
         id: 0,
         name: '',
@@ -31,13 +35,20 @@ export default function BranchOffices() {
     const [removeOffice, setRemoveOffice] = useState<{ id: number, name: string }>({ id: 0, name: '' })
 
     useEffect(() => {
-        loadBranchOffices();
-    }, []);
+        fetchBranchOffices();
+    }, [fetchBranchOffices]);
 
-    async function loadBranchOffices() {
-        const data = await getBranchOfficesAsync()
-        setBranchOffices(data)
-    }
+    useEffect(() => {
+        if(dataBranchOffice) {
+            if(Array.isArray(dataBranchOffice)){
+                setBranchOffices([]);
+            } else {
+                setBranchOffices(dataBranchOffice.first);
+                setTotal(dataBranchOffice.second);
+            }
+        }
+    }, [dataBranchOffice]);
+
 
     async function getBranchOfficeById(id: number) {
         const office = await getBranchOfficeDetailsAsync(id)
@@ -73,7 +84,7 @@ export default function BranchOffices() {
                 </Stack>
             </Panel>
             <Panel bordered>
-                <Table bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={100} height={600} headerHeight={70} data={branchOffices} >
+                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={100} height={600} headerHeight={70} data={dataBranchOffice!} >
                     <Column align="center" flexGrow={1} minWidth={100}>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                         <Cell>
@@ -136,8 +147,8 @@ export default function BranchOffices() {
                     </Column>
                 </Table>
             </Panel>
-            <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
-            <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} />
+            {/* <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
+            <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} /> */}
         </div>
     );
 }
