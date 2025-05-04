@@ -2,18 +2,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { FormEvent, useEffect, useState } from "react";
-import { Button, Container, Form, Input, Modal, Uploader, Grid, Row, Col, InputGroup } from "rsuite";
+import { Button, Container, Form, Input, Modal, Uploader, InputGroup, Tabs, SelectPicker } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
-import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import Map from "./map";
 import InputGroupAddon from "rsuite/esm/InputGroup/InputGroupAddon";
-import { FaCamera, FaMapPin, FaStore } from "react-icons/fa";
+import { FaCamera, FaMapPin, FaStore, FaUser } from "react-icons/fa";
 import { useBranchOfficeForm } from "../hooks/useBranchOfficeForm";
 import { uploadImageToFirebase } from "../services/firebaseImageService";
 import { newBranchOfficeAsync, updateBranchOfficeAsync } from "../services/branchOfficeService";
 import { BranchOfficeDetailsDTO } from "../models/branchOffice.model";
+import { FaCheck } from "react-icons/fa6";
 
 interface BranchOfficeModalProps {
     open: boolean,
@@ -94,92 +94,108 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
     return (
         <Modal size={"lg"} open={open} onClose={() => hiddeModal(false, action)} overflow>
             <ModalHeader>
-                <ModalTitle>
-                    {action === 'insert' ? <strong>Nueva Sucursal</strong> : <strong>Editar Sucursal</strong>}
-                </ModalTitle>
+                    {action === 'insert' ?
+                        <div>
+                            <h4>Nueva Sucursal</h4>
+                            <p style={{ color:'#878787' }}>Complete la información para registrar una nueva sucursal.</p>
+                        </div>
+                        :
+                        <div>
+                            <h4>Editar Sucursal</h4>
+                            <p style={{ color:'#878787' }}>Complete la información para editar la información de la sucursal.</p>
+                        </div>
+                    }
             </ModalHeader>
+            <ModalBody >
+                <Tabs defaultActiveKey='1' appearance='pills' >
+                    <Tabs.Tab eventKey="1" title="Información General">
+                        <Form fluid>
+                            
+                                <Form.Group style={{ flex:1 }}>
+                                    <Form.ControlLabel><strong>Nombre de la sucursal</strong></Form.ControlLabel>
+                                    <Form.Control value={formValues.name} name="name" placeholder="Ingrese el nombre de la sucursal *" onChange={(value) => handleInputChange('name', value)} />
+                                </Form.Group>
+                                
+                                    <div style={{ display: 'flex', justifyContent:'space-between', gap:20 }}>
+                                        <Form.Group style={{flex:1}}>
+                                            <Form.ControlLabel><strong>Estado</strong></Form.ControlLabel>
+                                            <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el estado *"/>
+                                        </Form.Group>
+                                        <Form.Group style={{flex:1}}>
+                                            <Form.ControlLabel><strong>Responsable</strong></Form.ControlLabel>
+                                            <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el nombre del responsable *"/>
+                                        </Form.Group>
+                                    </div>
+                                
+                                <Form.Group>
+                                    <Form.ControlLabel><strong>Dirección de la Sucursal</strong></Form.ControlLabel>
+                                    <Input placeholder="Ingrese la dirección de la sucursal *" value={formValues.address} name="address" as={'textarea'} rows={5} onChange={(value) => handleInputChange('address', value)} />
+                                </Form.Group>
+                        </Form>
+                    </Tabs.Tab>
+                    <Tabs.Tab eventKey="2" title="Ubicación">
+                        <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'row' }}>
+                            <div>
+                                <h5>Ubicación</h5>
+                                <p>Seleccione la ubicación exacta de la sucursal en el mapa</p>
+                            </div>
+                            <div style={{ display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                <strong style={{ color:'#878787' }}>Coordenadas:</strong>
+                                <p style={{ color:'#878787' }}>{formValues.latitude && formValues.longitude ? `${formValues.latitude}, ${formValues.longitude}` : 'Seleccione en el mapa'}</p>
+                            </div>
+                        </div>
+                        <Form.Group>
+                            <Container>
+                                <Map latFromParent={formValues.latitude} lonFromParent={formValues.longitude} onMarkerChange={handleMarkerChange} />
+                            </Container>
+                        </Form.Group>
+                    </Tabs.Tab>
+                    <Tabs.Tab eventKey="3" title="Imágenes">
+                        <div style={{ marginBottom:15 }}>
+                            <h5>Imágenes de la Sucursal</h5>
+                            <p>Suba imágenes de la fachada, interior u otros aspectos relevantes de la sucursal</p>
+                        </div>
+                        <Form.Group>
+                                <Uploader
+                                    key={details?.id || "new"}
+                                    listType="picture-text"
+                                    action="/"
+                                    draggable
+                                    autoUpload={false}
+                                    onChange={async (fileList) => {
+                                        const filesOnLoad = fileList.map(file => file.blobFile).filter(Boolean) as File[];
+                                        setFiles(filesOnLoad);
+                                    }}
+                                    onRemove={(file) => {
+                                        if (file.url) {
+                                            details?.images.find(image => image.path === file.url)?.status === 1
+                                        }
 
-            <ModalBody>
-                <Grid fluid>
-                    <Row>
-                        <Col xs={12}>
-                            <Form fluid>
-                                <Form.Group>
-                                    <Form.ControlLabel>Nombre de la sucursal</Form.ControlLabel>
-                                    <InputGroup inside>
-                                        <InputGroupAddon>
-                                            <FaStore />
-                                        </InputGroupAddon>
-                                        <Form.Control
-                                            value={formValues.name}
-                                            name="name"
-                                            placeholder="Ingresa el nombre de la sucursal"
-                                            onChange={(value) => handleInputChange('name', value)} />
-                                    </InputGroup>
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.ControlLabel>Dirección de la sucursal</Form.ControlLabel>
-                                    <InputGroup inside>
-                                        <InputGroupAddon>
-                                            <FaMapPin />
-                                        </InputGroupAddon>
-                                        <Input
-                                            value={formValues.address}
-                                            name="address"
-                                            as={'textarea'}
-                                            rows={5}
-                                            onChange={(value) => handleInputChange('address', value)} />
-                                    </InputGroup>
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.ControlLabel>Imágenes de la sucursal</Form.ControlLabel>
-                                    <Uploader
-                                        key={details?.id || "new"}
-                                        listType="picture-text"
-                                        action="/"
-                                        autoUpload={false}
-                                        onChange={async (fileList) => {
-                                            const filesOnLoad = fileList.map(file => file.blobFile).filter(Boolean) as File[];
-                                            setFiles(filesOnLoad);
-                                        }}
-                                        onRemove={(file) => {
-                                            if (file.url) {
-                                                details?.images.find(image => image.path === file.url)?.status === 1
-                                            }
-
-                                        }}
-                                        defaultFileList={action === 'update' && details?.images.length! > 0 ?
-                                            details?.images.map(image => ({
-                                                name: `image-${image.id}`,
-                                                url: image.path,
-                                            })) :
-                                            []}>
-                                        <Button appearance="default" startIcon={<FaCamera />}>Seleccionar Imágenes...</Button>
-                                    </Uploader>
-                                </Form.Group>
-                            </Form>
-                        </Col>
-                        <Col xs={12}>
-                            <Form.Group>
-                                <Form.ControlLabel>Ubicación</Form.ControlLabel>
-                                <Container>
-                                    <Map
-                                        latFromParent={formValues.latitude}
-                                        lonFromParent={formValues.longitude}
-                                        onMarkerChange={handleMarkerChange} />
-                                </Container>
+                                    }}
+                                    defaultFileList={action === 'update' && details?.images.length! > 0 ?
+                                        details?.images.map(image => ({
+                                            name: `image-${image.id}`,
+                                            url: image.path,
+                                        })) :
+                                    []}>
+                                    <div style={{ height: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '2px dashed #ddd', borderRadius: 6 }}>
+                                        <FaCamera size={48} color="#ccc" style={{ marginBottom: 10 }} />
+                                        <p>Arrastre y suelte imágenes aquí o haga clic para seleccionar</p>
+                                        <Button appearance="default" startIcon={<FaCheck />} style={{ marginTop: 10 }}>
+                                            Seleccionar imágenes
+                                        </Button>
+                                    </div>
+                                </Uploader>
                             </Form.Group>
-                        </Col>
-                    </Row>
-                </Grid>
+                    </Tabs.Tab>
+                </Tabs>
             </ModalBody>
             <ModalFooter>
-                <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
-                {/* <Button onClick={(e) => console.log(details)} type="submit" appearance="primary">Aceptar</Button> */}
                 <Button onClick={() => {
                     resetValues()
                     hiddeModal(false, action)
                 }} appearance="default">Cancelar</Button>
+                <Button onClick={(e) => handleSubmit(e)} type="submit" appearance="primary">Aceptar</Button>
             </ModalFooter>
         </Modal>
     );
