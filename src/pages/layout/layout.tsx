@@ -3,13 +3,12 @@
 import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle } from "rsuite";
 import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaHistory, FaAngleLeft, FaAngleRight, FaEdit, FaPowerOff } from "react-icons/fa";
+import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaEdit, FaPowerOff } from "react-icons/fa";
 import { MdOutlineInventory } from "react-icons/md";
-import { PiListNumbersFill } from "react-icons/pi";
 import { IoMdSettings } from "react-icons/io";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
-import { FaPersonCircleCheck, FaShop, FaBars } from "react-icons/fa6";
+import { FaShop, FaBars } from "react-icons/fa6";
 import "../layout/styles/styles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/store";

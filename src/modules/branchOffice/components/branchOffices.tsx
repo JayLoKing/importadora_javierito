@@ -1,9 +1,11 @@
 /* eslint-disable no-constant-binary-expression */
-import { useEffect, useMemo, useState } from "react";
-import { IconButton, Input, InputGroup, Panel, Stack, Table, Tooltip, Whisper } from "rsuite";
+
+import { useEffect,useMemo ,useState } from "react";
+import { Dropdown, FlexboxGrid, Col, Form, IconButton, Input, InputGroup, Pagination, Panel, Stack, Table, Tooltip, Whisper } from "rsuite";
 import { BranchOffice, BranchOfficeDetailsDTO, GetDataBranchOffice } from "../models/branchOffice.model";
 import { getBranchOfficeDetailsAsync, getBranchOfficesAsync2 } from "../services/branchOfficeService";
-import { FaEdit, FaSearch, FaTrash, FaWrench } from "react-icons/fa";
+import BranchOfficeModal from "./branchOfficeModal";
+import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
 import Column from "rsuite/esm/Table/TableColumn";
@@ -11,6 +13,9 @@ import { Cell, HeaderCell } from "rsuite-table";
 import { LuMapPinned } from "react-icons/lu";
 import { useBranchOfficeTable } from "../hooks/useBranchOfficeTable";
 import { useApi } from "../../../common/services/useApi";
+import { BsWrenchAdjustable } from "react-icons/bs";
+import { FaShop } from "react-icons/fa6";
+import { BsBoxSeam } from "react-icons/bs";
 
 export default function BranchOffices() {
 
@@ -70,21 +75,35 @@ export default function BranchOffices() {
 
     return (
         <div style={{padding:30}}>
-            <Panel bordered style={{ marginBottom: 15, }}>
-                <Stack spacing={2} justifyContent="space-between" >
-                    <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nueva Sucursal </IconButton>
-                    <Stack spacing={6}>
-                        <InputGroup style={{ width: 250 }}>                        
-                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
-                                <FaSearch />
-                            </InputGroup.Addon>
-                            <Input placeholder="Buscar sucursal.." />
-                        </InputGroup>
-                    </Stack>
-                </Stack>
-            </Panel>
-            <Panel bordered>
-                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={100} height={600} headerHeight={70} data={dataBranchOffice!} >
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:15}}>
+                <div>
+                    <h4>Gestión de Sucursales</h4>
+                    <p style={{ color:'#878787' }}>Crea sucursales y visualiza el inventario de cada sucursal</p>         
+                </div>
+                <div >
+                    <IconButton appearance='primary' icon={<PlusIcon />} size="lg" onClick={() => handleModal(true, 'insert')}>
+                        Nueva Sucursal
+                    </IconButton>
+                </div>
+            </div>
+            <div style={{ marginBottom: 15, gap:10, display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                <Form.Group style={{ flex: 1, minWidth: 200 }}>      
+                    <InputGroup style={{ width: "100%" }}>
+                        <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                            <FaSearch />
+                        </InputGroup.Addon>
+                        <Input placeholder="Buscar por sucursal, responsable y dirección" />
+                    </InputGroup>
+                </Form.Group>
+                <Dropdown title="Todos los estados" placement="bottomEnd">
+                    <Dropdown.Item>Todos los estados</Dropdown.Item>
+                    <Dropdown.Item>Activo</Dropdown.Item>
+                    <Dropdown.Item>Inactivo</Dropdown.Item>
+                </Dropdown>
+            </div>
+            
+            <Panel bordered style={{ marginBottom:15 }}>
+                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={370} headerHeight={50} data={dataBranchOffice!} >
                     <Column align="center" flexGrow={1} minWidth={100}>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                         <Cell>
@@ -140,14 +159,54 @@ export default function BranchOffices() {
                         <Cell>
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver Productos</Tooltip>}>
-                                    <IconButton icon={<FaWrench style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                                    <IconButton icon={<BsBoxSeam style={{width:20, height:20, fontWeight:"bolder"}} />} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
                                 </Whisper>
                             </Stack>
                         </Cell>
                     </Column>
                 </Table>
+                <Pagination
+                    prev
+                    next
+                    first
+                    last
+                    ellipsis
+                    boundaryLinks
+                    maxButtons={5}
+                    size="xs"
+                    layout={['total', '-', '|', 'pager', 'skip']}
+                    total={50}
+                    limit={10}
+                    activePage={1}
+                    onChangePage={() => {}}
+                    style={{marginTop:7}}
+                    className="custom-pagination"
+                />
             </Panel>
-            {/* <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
+
+            <FlexboxGrid justify="space-between" >
+                <FlexboxGrid.Item as={Col} colspan={24} md={8} style={{ marginBottom:10, flex:1}}>
+                    <Panel bordered >
+                        <div style={{ display:'flex', justifyContent:'space-between'}}>
+                            <h5>Total de Sucursales</h5>
+                            <FaShop style={{fontSize:'1.5em'}}/>
+                        </div>
+                        <h3 style={{ margin: '10px 0' }}>5</h3>
+                        <small>3 activas 1 activa</small>
+                    </Panel>
+                </FlexboxGrid.Item>
+                <FlexboxGrid.Item as={Col} colspan={24} md={8}  style={{ marginBottom:10, flex:1}}>
+                    <Panel bordered>
+                        <div style={{ display:'flex', justifyContent:'space-between'}}>
+                            <h5>Total de repuestos</h5>
+                            <BsWrenchAdjustable style={{fontSize:'1.5em'}}/>
+                        </div>
+                        <h3 style={{ margin: '10px 0' }}>10</h3>
+                        <small>Distribuidos en 4 sucursales</small>
+                    </Panel>
+                </FlexboxGrid.Item>
+            </FlexboxGrid>
+           {/* <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
             <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} /> */}
         </div>
     );
