@@ -9,7 +9,7 @@ import { PiListNumbersFill } from "react-icons/pi";
 import { IoMdSettings } from "react-icons/io";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
-import { FaPersonCircleCheck, FaShop } from "react-icons/fa6";
+import { FaPersonCircleCheck, FaShop, FaBars } from "react-icons/fa6";
 import "../layout/styles/styles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/store";
@@ -146,11 +146,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 <Nav.Item eventKey="1" onClick={() => navigate('/home')} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
                 <Nav.Item eventKey="2" style={{  }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
                 <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                {/* <Nav.Menu eventKey="5" onClick={() => navigate('/report')} icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reportes */}
-                <Nav.Menu eventKey="4" placement="rightStart" trigger="hover" title="Reportes" icon={<Icon as={FaFileAlt} style={{ height: "20px", width: "20px" }} />}  >  
-                  <Nav.Item eventKey="4-1" onClick={() => navigate('/inventoryreport')} icon={<Icon as={MdOutlineInventory} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-1" ? "active" : ""}`}>Inventario </Nav.Item>
-                  <Nav.Item eventKey="4-2" onClick={() => navigate('/incomereport')} icon={<Icon as={PiListNumbersFill} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "4-2" ? "active" : ""}`}>Ingresos </Nav.Item>
-                </Nav.Menu>
+                <Nav.Item eventKey="4" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Reportes </Nav.Item>  
                 <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Menu eventKey="6" placement="rightStart" trigger="hover" title="Movimientos" icon={<Icon as={FaHistory} style={{ height: "20px", width: "20px" }} />}  >
                   <Nav.Item eventKey="6-1" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ marginRight: "7px", height: "18px", width: "18px" }} />} className={`navmenu ${expand ? "" : "collapsed"} ${activeKey === "6-1" ? "active" : ""}`}>Ventas</Nav.Item>
@@ -319,7 +315,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
 const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void }) => {
   return (
     <Stack >
-      <IconButton style={{ fontSize: "22px", background: "transparent", color: "white" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaAngleLeft /> : <FaAngleRight />} />
+      <IconButton style={{ fontSize: "22px", background: "transparent", color: "white" }} onClick={onChange} appearance="subtle" size="lg" icon={expand ? <FaBars /> : <FaBars />} />
     </Stack>
   );
 };

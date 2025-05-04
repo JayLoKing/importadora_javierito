@@ -12,11 +12,11 @@ export default function TrashTable (){
                     {/* <IconButton icon={<PlusIcon />} appearance="primary" > Recuperar </IconButton> */}
                     <Stack spacing={6}>
                         <InputGroup style={{ width: 250 }}>
+                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
                             <Input placeholder="Buscar.." />
-                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                    <FaSearch />
-                                </InputGroup.Addon>
-                            </InputGroup>
+                        </InputGroup>
                     </Stack>
                 </Stack>
             </Panel>

@@ -97,11 +97,11 @@ export default function UserContainer(){
                         <SelectPicker label="Filtro" data={roleOptions} value={params.role} onChange={(value) => setParams(prev => ({...prev, role: value}))} searchable={false} placeholder="Cargo"/>
                         <SelectPicker label="Filtro" data={branchOfficeOptions} value={params.officeId} onChange={(value) => setParams(prev => ({...prev, officeId: value}))} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
                         <InputGroup style={{ width: 250 }}>
+                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
                             <Input placeholder="Buscar usuario.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
-                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                    <FaSearch />
-                                </InputGroup.Addon>
-                            </InputGroup>
+                        </InputGroup>
                     </Stack>
                 </Stack>
             </Panel>

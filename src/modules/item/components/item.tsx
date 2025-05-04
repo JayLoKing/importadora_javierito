@@ -21,6 +21,8 @@ import { useDeleteItem } from "../hooks/useDeleteItem";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { useBarcode } from "../hooks/useBarcode";
 import ImageCell from "./imageCell";
+import { CiCircleInfo } from "react-icons/ci";
+import { PiBroomDuotone } from "react-icons/pi";
 import '../styles/pagination.style.css';
 
 const { Column, HeaderCell, Cell } = Table;
@@ -122,18 +124,20 @@ export default function ItemTable() {
                           <Stack spacing={6}>
                             <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Marca"/>
                             <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchTerm(value as string)} searchable placeholder="Sub-Categoría"/>
-                            <Button appearance="primary" onClick={handleClearSearch} >Limpiar Buscador</Button>
                             <InputGroup style={{ width: 250 }}>
+                                <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                  <FaSearch />
+                                </InputGroup.Addon>
                                 <Input placeholder="Buscar repuesto.." value={searchTerm} onChange={(value) => handleSearch(value)}/>
-                                    <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                        <FaSearch />
-                                    </InputGroup.Addon>
                             </InputGroup>
+                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
+                              <IconButton icon={<PiBroomDuotone/>} appearance="primary" onClick={handleClearSearch} ></IconButton>
+                            </Whisper>
                           </Stack>
                       </Stack>
                     </Panel>
                     <Panel bordered >
-                      <Table bordered cellBordered style={{ background: "white", fontSize:"15px", borderRadius:"5px"}} locale={tableLoadingES} loading={ loading}  height={600} data={filteredData} rowHeight={100} headerHeight={70}>
+                      <Table bordered cellBordered style={{ background: "white", fontSize:"15px", borderRadius:"5px"}} locale={tableLoadingES} loading={ loading}  height={590} data={filteredData} rowHeight={100} headerHeight={70}>
                               <Column align="center" flexGrow={3.7} minWidth={130} fixed resizable >
                                   <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                                   <Cell>
@@ -162,13 +166,24 @@ export default function ItemTable() {
                                       <Cell dataKey="itmID" />
                                   </Column>
                               )}
-                              <Column align="center" flexGrow={1} minWidth={160} resizable>
+                              <Column align="center" flexGrow={2} minWidth={200} resizable>
                                   <HeaderCell style={{backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
-                                  <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
+                                  <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" >
+                                  {rowData => (
+                                    <div>
+                                      {rowData.name}
+                                      <Whisper placement="top" trigger="hover" speaker={<Tooltip>Información</Tooltip>} >
+                                        <Button appearance="subtle" size="xs" style={{ background:"transparent" }}>
+                                          <CiCircleInfo style={{ fontSize:"15px", fontWeight:"bold" }}/>
+                                        </Button>
+                                      </Whisper>
+                                    </div>
+                                  )}
+                                  </Cell>
                               </Column>
                           
                               <Column align="center" flexGrow={2} minWidth={150} resizable>
-                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
+                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Especificaciones</HeaderCell>
                                   <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                               </Column>
                               <Column align="center" flexGrow={1} minWidth={150} resizable>
@@ -182,7 +197,7 @@ export default function ItemTable() {
                               </Column>
                           
                               <Column align="center" flexGrow={1} minWidth={105} resizable>
-                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de compra</HeaderCell>
+                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Unitario</HeaderCell>
                                   <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.price}</span>)}</Cell>
                               </Column>
                           
@@ -192,7 +207,7 @@ export default function ItemTable() {
                               </Column>
                           
                               <Column align="center" flexGrow={1} minWidth={100} resizable>
-                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio de venta</HeaderCell>
+                                  <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Precio Público</HeaderCell>
                                   <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{rowData => (<span style={{ color: "green", fontWeight: "bold" }}>Bs. {rowData.barePrice}</span>)}</Cell>
                               </Column>
 
@@ -221,7 +236,7 @@ export default function ItemTable() {
                                   <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="dateManufacture" />
                               </Column>
                           
-                              <Column align="center" flexGrow={1} minWidth={150} resizable>
+                              <Column align="center" width={350} resizable>
                                   <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '15px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Ubicación del Repuesto</HeaderCell>
                                   <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                               </Column>

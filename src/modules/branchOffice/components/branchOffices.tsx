@@ -63,12 +63,12 @@ export default function BranchOffices() {
                 <Stack spacing={2} justifyContent="space-between" >
                     <IconButton icon={<PlusIcon />} appearance="primary" onClick={() => handleModal(true, 'insert')}> Nueva Sucursal </IconButton>
                     <Stack spacing={6}>
-                        <InputGroup style={{ width: 250 }}>
+                        <InputGroup style={{ width: 250 }}>                        
+                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                <FaSearch />
+                            </InputGroup.Addon>
                             <Input placeholder="Buscar sucursal.." />
-                                <InputGroup.Addon style={{background:"#de7214", color:"white"}}>
-                                    <FaSearch />
-                                </InputGroup.Addon>
-                            </InputGroup>
+                        </InputGroup>
                     </Stack>
                 </Stack>
             </Panel>
