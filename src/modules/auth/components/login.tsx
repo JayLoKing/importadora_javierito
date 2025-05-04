@@ -1,4 +1,4 @@
-import { FormEvent, KeyboardEvent, useState } from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { Panel, Form, Button, VStack, Text, Image, InputGroup, useToaster, Message } from 'rsuite';
 import LOGO from '../../../assets/LogoJavier.jpg';
 import FormControl from 'rsuite/esm/FormControl';
@@ -20,13 +20,14 @@ import ForgotPasswordForm from './forgotPassword';
 export default function Login() {
 
     const [visible, setVisible] = useState(false);
-    const { formValues, handleInputChange, resetForm } = useLoginForm({ username: '', password: '' });
+    const { formValues, handleInputChange, resetForm, clearUser } = useLoginForm({ username: '', password: '' });
     const toaster = useToaster();
     const navigate = useNavigate();
     const { handleModalForgotPassword, showModal} = useForgotPasswordModal();
-
+    useEffect(() => {
+        clearUser();
+    }, [clearUser])
     const setUserAuth = useAuthStore(state => state.setAuthUser);
-
     function showErrorMessage() {
         toaster.push(
             <Message  centered type="error" closable showIcon header="Error de inicio de sesión">
@@ -42,6 +43,7 @@ export default function Login() {
     async function handleSubmit(e?: FormEvent) {
         if (e) e.preventDefault();
         try {
+            
             console.log(formValues);
             const { call } = authenticateAsync(formValues);
             const res = await call;

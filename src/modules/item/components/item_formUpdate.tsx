@@ -48,6 +48,12 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
     const { data: dataBrands, loading: loadingBrands, fetch: fetchBrands } = useApi<Brand[]>(fetchItemBrandsAsync, { autoFetch: true });
 
     
+    useEffect(() => {
+        if (open && id) {
+            fetchData();
+        }
+    }, [open, id, fetchData]);
+
     const notificationService = useNotificationService();
 
     useEffect(() => {
@@ -90,11 +96,7 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
 
    
 
-    useEffect(() => {
-        if (open && id) {
-            fetchData();
-        }
-    }, [open, id, fetchData]);
+    
 
    
     const handleFormSubmit = async (e: FormEvent) => {
@@ -399,16 +401,18 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                             name="itemImages"
                                             accepter={Uploader}
                                             autoUpload={false}
+                                            loading={loadingItemData}
                                             multiple
                                             listType="picture-text"
                                             action="/"
+                                            fileList={formData.itemImages as []}
                                             onChange={(file) => {
                                                 handleFileChange(file, updateField);
                                             }}
                                             onRemove={(file) => {
                                                 handleFileRemoveFromList(file, updateField);
                                             }}
-                                            defaultFileList={formData.itemImages as []}
+                                            
                                             draggable
                                             style={{ width: '100%' }}
                                         >

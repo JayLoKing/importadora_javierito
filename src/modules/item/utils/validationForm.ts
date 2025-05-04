@@ -60,7 +60,10 @@ export const validationItemCreateFormModel = Schema.Model({
         .pattern(/^[a-zA-Z0-9]+$/, 'El acrónimo solo puede contener letras y números.'),
         
     itemStatus: StringType()
-        .isRequired('El estado del artículo es requerido')
+        .isRequired('El estado del artículo es requerido'),
+
+    traction: StringType()
+        .isRequired('La tracción es requerida')
 
 });
 
