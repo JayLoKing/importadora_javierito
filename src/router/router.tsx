@@ -7,7 +7,6 @@ import Home from "../modules/home/components/homeContainer.tsx";
 import ItemTable from "../modules/item/components/item.tsx";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 import Report from "../modules/report/components/inventoryReport.tsx";
-import TrashTable from "../modules/trash/components/trash.tsx";
 import Register from "../modules/user/components/userContainer";
 import Profile from "../modules/user/components/profile.tsx";
 import SaleForm from "../modules/sale/components/sale_form.tsx";
@@ -39,7 +38,6 @@ export default function Routing() {
                 <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin', 'manager']} />}>
                     <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
                     <Route path="/report" element={<Layout titleComponent={'REPORTES DE INVENTARIO'} children={<Report />} />} />
-                    <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<TrashTable />} />} />
                 </Route>
                 
                 {/* Rutas para ADMIN, MANAGER y SALES */}

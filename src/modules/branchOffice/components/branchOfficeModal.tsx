@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { FormEvent, useEffect, useState } from "react";
-import { Button, Container, Form, Input, Modal, Uploader, InputGroup, Tabs, SelectPicker } from "rsuite";
+import { Button, Container, Form, Input, Modal, Uploader, Tabs, SelectPicker } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import Map from "./map";
-import InputGroupAddon from "rsuite/esm/InputGroup/InputGroupAddon";
-import { FaCamera, FaMapPin, FaStore, FaUser } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import { useBranchOfficeForm } from "../hooks/useBranchOfficeForm";
 import { uploadImageToFirebase } from "../services/firebaseImageService";
 import { newBranchOfficeAsync, updateBranchOfficeAsync } from "../services/branchOfficeService";
@@ -110,27 +109,24 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
                 <Tabs defaultActiveKey='1' appearance='pills' >
                     <Tabs.Tab eventKey="1" title="Información General">
                         <Form fluid>
-                            
-                                <Form.Group style={{ flex:1 }}>
-                                    <Form.ControlLabel><strong>Nombre de la sucursal</strong></Form.ControlLabel>
-                                    <Form.Control value={formValues.name} name="name" placeholder="Ingrese el nombre de la sucursal *" onChange={(value) => handleInputChange('name', value)} />
+                            <Form.Group style={{ flex:1 }}>
+                                <Form.ControlLabel><strong>Nombre de la sucursal</strong></Form.ControlLabel>
+                                <Form.Control value={formValues.name} name="name" placeholder="Ingrese el nombre de la sucursal *" onChange={(value) => handleInputChange('name', value)} />
+                            </Form.Group>
+                            <div style={{ display: 'flex', justifyContent:'space-between', gap:20 }}>
+                                <Form.Group style={{flex:1}}>
+                                    <Form.ControlLabel><strong>Estado</strong></Form.ControlLabel>
+                                    <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el estado *"/>
                                 </Form.Group>
-                                
-                                    <div style={{ display: 'flex', justifyContent:'space-between', gap:20 }}>
-                                        <Form.Group style={{flex:1}}>
-                                            <Form.ControlLabel><strong>Estado</strong></Form.ControlLabel>
-                                            <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el estado *"/>
-                                        </Form.Group>
-                                        <Form.Group style={{flex:1}}>
-                                            <Form.ControlLabel><strong>Responsable</strong></Form.ControlLabel>
-                                            <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el nombre del responsable *"/>
-                                        </Form.Group>
-                                    </div>
-                                
-                                <Form.Group>
-                                    <Form.ControlLabel><strong>Dirección de la Sucursal</strong></Form.ControlLabel>
-                                    <Input placeholder="Ingrese la dirección de la sucursal *" value={formValues.address} name="address" as={'textarea'} rows={5} onChange={(value) => handleInputChange('address', value)} />
+                                <Form.Group style={{flex:1}}>
+                                    <Form.ControlLabel><strong>Responsable</strong></Form.ControlLabel>
+                                    <SelectPicker block data={[]} searchable={false} placeholder="Seleccione el nombre del responsable *"/>
                                 </Form.Group>
+                            </div>
+                            <Form.Group>
+                                <Form.ControlLabel><strong>Dirección de la Sucursal</strong></Form.ControlLabel>
+                                <Input placeholder="Ingrese la dirección de la sucursal *" value={formValues.address} name="address" as={'textarea'} rows={5} onChange={(value) => handleInputChange('address', value)} />
+                            </Form.Group>
                         </Form>
                     </Tabs.Tab>
                     <Tabs.Tab eventKey="2" title="Ubicación">

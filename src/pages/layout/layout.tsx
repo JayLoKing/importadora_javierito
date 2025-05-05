@@ -149,7 +149,6 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
                 <Nav.Item eventKey="6" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "6" ? "active" : ""}`}>Ventas</Nav.Item>
                 <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>
-                <Nav.Item eventKey="8" onClick={() => navigate('/trash')} icon={<Icon as={FaTrash} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Papelera</Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>

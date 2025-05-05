@@ -104,7 +104,7 @@ export default function BranchOffices() {
             
             <Panel bordered style={{ marginBottom:15 }}>
                 <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={370} headerHeight={50} data={branchOffices!} >
-                    <Column align="center" flexGrow={1} minWidth={100}>
+                    <Column align="center" flexGrow={1} minWidth={100} fixed resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
                         <Cell>
                             {(rowData) => (
@@ -138,23 +138,36 @@ export default function BranchOffices() {
                         </Column>
                     )}
 
-                    <Column align="center" flexGrow={1} minWidth={140}>
+                    <Column align="center" flexGrow={1} minWidth={140} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                     </Column>
 
-                    <Column align="center" flexGrow={1} minWidth={120}>
+                    <Column align="center" flexGrow={1} minWidth={120} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                     </Column>
 
-                    <Column align="center" flexGrow={1} minWidth={140}>
+                    <Column align="center" flexGrow={1} minWidth={120} resizable>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Responsable</HeaderCell>
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="risponsable" />
+                    </Column>
+
+                    <Column align="center" flexGrow={1} minWidth={140} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
                             {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
                         </Cell>
                     </Column>
-                    <Column align="center" flexGrow={1} minWidth={100}>
+                    
+                    <Column align="center" flexGrow={1} minWidth={140} resizable>
+                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Estado</HeaderCell>
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                            
+                        </Cell>
+                    </Column>
+
+                    <Column align="center" flexGrow={1} minWidth={100} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Producto</HeaderCell>
                         <Cell>
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
@@ -191,7 +204,7 @@ export default function BranchOffices() {
                             <h5>Total de Sucursales</h5>
                             <FaShop style={{fontSize:'1.5em'}}/>
                         </div>
-                        <h3 style={{ margin: '10px 0' }}>5</h3>
+                        <h3 style={{ margin: '10px 0' }}>{total}</h3>
                         <small>3 activas 1 activa</small>
                     </Panel>
                 </FlexboxGrid.Item>
