@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BranchOffice } from "../models/branchOffice.model";
 
 export const useBranchOfficeTable = () => {
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(4);
     const [page, setPage] = useState(1);
     const [searchBranchOffice, setSearchBranchOffice] = useState<string>('');
     const [filterStatus, setFilterStatus] = useState<number | null>(null);
@@ -36,13 +36,13 @@ export const useBranchOfficeTable = () => {
         value: status === 'Activo' ? 1 : status === 'Inactivo' ? 0 : null,
     }));
 
-    const handleCountActiveAndInactive = (branchOffices: BranchOffice[]) => {
-        let activeCount = 0;
-        
-        branchOffices.forEach(branch => {
-            if (branch.status === 1) activeCount++;
-        });
-        
+    const handleCountActiveAndInactive = (branchOffices: BranchOffice[] | undefined) => {
+        // Si no hay datos o no es un array, retorna 0 en ambos contadores
+        if (!branchOffices || !Array.isArray(branchOffices)) {
+            return { active: 0, inactive: 0 };
+        }
+    
+        const activeCount = branchOffices.filter(branch => branch.status === 1).length;
         return {
             active: activeCount,
             inactive: branchOffices.length - activeCount

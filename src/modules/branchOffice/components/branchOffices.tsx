@@ -16,11 +16,9 @@ import { useApi } from "../../../common/services/useApi";
 import { BsEraserFill, BsFillCheckCircleFill, BsFillXCircleFill, BsWrenchAdjustable } from "react-icons/bs";
 import { FaShop } from "react-icons/fa6";
 import { BsBoxSeam } from "react-icons/bs";
-import { PiBroomDuotone } from "react-icons/pi";
 import { useBranchOfficeForm } from "../hooks/useBranchOfficeForm";
 
 export default function BranchOffices() {
-
     const {limit, page, filterStatus,handleCountActiveAndInactive,setPage,handleChangeLimit, handleChangePage, handleFilterStatus,searchBranchOffice, handleClearSearch, handleSearch, filterStatusOptions} = useBranchOfficeTable();
     const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,searchBranchOffice, filterStatus), [limit,page,searchBranchOffice, filterStatus]);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: true });
@@ -31,7 +29,7 @@ export default function BranchOffices() {
     useEffect(() => {
         fetchBranchOffices();
     }, [fetchBranchOffices]);
-
+    console.log(dataBranchOffice);
     useEffect(() => {
         if(dataBranchOffice) {
             if(Array.isArray(dataBranchOffice)){
@@ -71,13 +69,10 @@ export default function BranchOffices() {
                         </InputGroup.Addon>
                         <Input placeholder="Buscar por sucursal, responsable y dirección" value={searchBranchOffice!} onChange={(value) => handleSearch(value)}/>
                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
-                            <IconButton icon={<BsEraserFill />} appearance="primary" style={{ background:'transparent', color:'black'}} ></IconButton>
+                            <IconButton icon={<BsEraserFill />} onClick={handleClearSearch}  appearance="primary" style={{ background:'transparent', color:'black'}} ></IconButton>
                         </Whisper>
                     </InputGroup>
                 </Form.Group>
-                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
-                    <IconButton icon={<PiBroomDuotone/>} appearance="primary" onClick={handleClearSearch} ></IconButton>
-                </Whisper>
                 <SelectPicker value={filterStatus} label="Filtro" data={filterStatusOptions} searchable={false}  onChange={(value) => handleFilterStatus(value)}/>
             </div>
             
@@ -194,7 +189,7 @@ export default function BranchOffices() {
                             <h5>Total de Sucursales</h5>
                             <FaShop style={{fontSize:'1.5em'}}/>
                         </div>
-                        <h3 style={{ margin: '10px 0' }}>{total}</h3>
+                        <h3 style={{ margin: '10px 0' }}>{total ? total: 0}</h3>
                         <small>{active} activas {inactive} inactivas</small>
                     </Panel>
                 </FlexboxGrid.Item>
