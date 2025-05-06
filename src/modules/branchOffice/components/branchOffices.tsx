@@ -1,9 +1,9 @@
 /* eslint-disable no-constant-binary-expression */
 
 import { useEffect,useMemo ,useState } from "react";
-import { Dropdown, FlexboxGrid, Col, Form, IconButton, Input, InputGroup, Pagination, Panel, Stack, Table, Tooltip, Whisper } from "rsuite";
-import { BranchOffice, BranchOfficeDetailsDTO, GetDataBranchOffice } from "../models/branchOffice.model";
-import { getBranchOfficeDetailsAsync, getBranchOfficesAsync2 } from "../services/branchOfficeService";
+import { FlexboxGrid, Col, Form, IconButton, Input, InputGroup, Pagination, Panel, Stack, Table, Tooltip, Whisper, SelectPicker, Message } from "rsuite";
+import { BranchOffice, GetDataBranchOffice } from "../models/branchOffice.model";
+import { getBranchOfficesAsync2 } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
 import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
@@ -16,28 +16,17 @@ import { useApi } from "../../../common/services/useApi";
 import { BsWrenchAdjustable } from "react-icons/bs";
 import { FaShop } from "react-icons/fa6";
 import { BsBoxSeam } from "react-icons/bs";
+import { PiBroomDuotone } from "react-icons/pi";
+import { useBranchOfficeForm } from "../hooks/useBranchOfficeForm";
 
 export default function BranchOffices() {
 
-    const {limit, page, paramQuery} = useBranchOfficeTable();
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,paramQuery), [limit,page,paramQuery]);
+    const {limit, page, filterStatus,handleCountActiveAndInactive,setPage,handleChangeLimit, handleChangePage, handleFilterStatus,searchBranchOffice, handleClearSearch, handleSearch, filterStatusOptions} = useBranchOfficeTable();
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,searchBranchOffice, filterStatus), [limit,page,searchBranchOffice, filterStatus]);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: true });
     const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
     const [total, setTotal] = useState(0);
-    const [details, setDetails] = useState<BranchOfficeDetailsDTO>({
-        id: 0,
-        name: '',
-        address: '',
-        latitude: '',
-        longitude: '',
-        images: []
-    })
-
-    const [action, setAction] = useState<string>('')
-    const [showModal, setShowModal] = useState<boolean>(false)
-    const [showModalDelete, setShowModalDelete] = useState<boolean>(false)
-
-    const [removeOffice, setRemoveOffice] = useState<{ id: number, name: string }>({ id: 0, name: '' })
+    const {handleModalCreate, showModal}= useBranchOfficeForm();
 
     useEffect(() => {
         fetchBranchOffices();
@@ -54,24 +43,12 @@ export default function BranchOffices() {
         }
     }, [dataBranchOffice]);
 
+    const { active, inactive } = handleCountActiveAndInactive(branchOffices);
 
-    async function getBranchOfficeById(id: number) {
-        const office = await getBranchOfficeDetailsAsync(id)
-        setDetails(office)
-    }
-
-    function handleModal(hidde: boolean, act: string): void {
-        setAction(act)
-        setShowModal(hidde)
-    }
-
-    function handleModalDelete(hidde: boolean): void {
-        setShowModalDelete(hidde);
-    }
-
-    function remove(id: number, name: string) {
-        setRemoveOffice({ id: id, name: name });
-    }
+    const handleRefreshData = () => {
+        setPage(1); 
+        fetchBranchOffices();   
+    };
 
     return (
         <div style={{padding:30}}>
@@ -81,7 +58,7 @@ export default function BranchOffices() {
                     <p style={{ color:'#878787' }}>Crea sucursales y visualiza el inventario de cada sucursal</p>         
                 </div>
                 <div >
-                    <IconButton appearance='primary' icon={<PlusIcon />} size="lg" onClick={() => handleModal(true, 'insert')}>
+                    <IconButton appearance='primary' icon={<PlusIcon />} size="lg" onClick={() => handleModalCreate(true)}>
                         Nueva Sucursal
                     </IconButton>
                 </div>
@@ -92,14 +69,13 @@ export default function BranchOffices() {
                         <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
                             <FaSearch />
                         </InputGroup.Addon>
-                        <Input placeholder="Buscar por sucursal, responsable y dirección" />
+                        <Input placeholder="Buscar por sucursal, responsable y dirección" value={searchBranchOffice!} onChange={(value) => handleSearch(value)}/>
                     </InputGroup>
                 </Form.Group>
-                <Dropdown title="Todos los estados" placement="bottomEnd">
-                    <Dropdown.Item>Todos los estados</Dropdown.Item>
-                    <Dropdown.Item>Activo</Dropdown.Item>
-                    <Dropdown.Item>Inactivo</Dropdown.Item>
-                </Dropdown>
+                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
+                    <IconButton icon={<PiBroomDuotone/>} appearance="primary" onClick={handleClearSearch} ></IconButton>
+                </Whisper>
+                <SelectPicker value={filterStatus} label="Filtro" data={filterStatusOptions} searchable={false}  onChange={(value) => handleFilterStatus(value)}/>
             </div>
             
             <Panel bordered style={{ marginBottom:15 }}>
@@ -112,8 +88,7 @@ export default function BranchOffices() {
                                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
                                         <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
                                             onClick={() => {
-                                                getBranchOfficeById(rowData.id)
-                                                handleModal(true, 'update')
+                                                
                                             }} />
                                     </Whisper>
                                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver ubicación</Tooltip>}>
@@ -122,8 +97,7 @@ export default function BranchOffices() {
                                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
                                         <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary"
                                             onClick={() => {
-                                                remove(rowData.id, rowData.name)
-                                                handleModalDelete(true);
+                                                
                                             }} />
                                     </Whisper>
                                 </Stack>
@@ -150,7 +124,7 @@ export default function BranchOffices() {
 
                     <Column align="center" flexGrow={1} minWidth={120} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Responsable</HeaderCell>
-                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="risponsable" />
+                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="owner" />
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={140} resizable>
@@ -162,8 +136,16 @@ export default function BranchOffices() {
                     
                     <Column align="center" flexGrow={1} minWidth={140} resizable>
                         <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Estado</HeaderCell>
-                        <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-                            
+                        <Cell dataKey="status" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                            {(rowData) => (
+                                <>
+                                    {rowData.status === 1 ? (
+                                        <Message showIcon type="success">Activo</Message>
+                                    ) : (
+                                        <Message showIcon type="error">Inactivo</Message>
+                                    )}
+                                </>
+                            )}
                         </Cell>
                     </Column>
 
@@ -189,10 +171,11 @@ export default function BranchOffices() {
                     size="xs"
                     layout={['total', '-', '|', 'pager', 'skip']}
                     total={total}
-                    limit={10}
-                    activePage={1}
-                    onChangePage={() => {}}
+                    limit={limit}
+                    activePage={page}
+                    onChangePage={handleChangePage}
                     style={{marginTop:7}}
+                    onChangeLimit={handleChangeLimit}
                     className="custom-pagination"
                 />
             </Panel>
@@ -205,7 +188,7 @@ export default function BranchOffices() {
                             <FaShop style={{fontSize:'1.5em'}}/>
                         </div>
                         <h3 style={{ margin: '10px 0' }}>{total}</h3>
-                        <small>3 activas 1 activa</small>
+                        <small>{active} activas {inactive} inactivas</small>
                     </Panel>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item as={Col} colspan={24} md={8}  style={{ marginBottom:10, flex:1}}>
@@ -219,8 +202,8 @@ export default function BranchOffices() {
                     </Panel>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
-           {/* <BranchOfficeModal details={details} action={action} open={showModal} refreshList={loadBranchOffices} hiddeModal={() => handleModal(false, '')} />
-            <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} /> */}
+           <BranchOfficeModal open={showModal} onBranchOfficeCreated={handleRefreshData} hiddeModal={() => handleModalCreate(false)} />
+            {/* <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} /> */}
         </div>
     );
 }

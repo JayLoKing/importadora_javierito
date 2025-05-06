@@ -1,6 +1,9 @@
+
 export interface BranchOffice {
     id: number;
     name: string;
+    owner: string;
+    status: number;
     address: string;
     registerDate: string;
 }
@@ -13,6 +16,8 @@ export interface GetDataBranchOffice {
 export interface NewBranchOfficeDTO {
     name: string;
     address: string;
+    status: number | null;
+    userId: number;
     latitude: string;
     longitude: string;
     pathImages: string[];

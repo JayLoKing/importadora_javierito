@@ -14,6 +14,8 @@ export const useCreateBranchOfficeFormStore = create<CreateBranchOfficeFormStore
     formData: {
         name: '',
         address: '',
+        status: null,
+        userId: 0,
         latitude: '',
         longitude: '',
         pathImages: [],
@@ -24,6 +26,8 @@ export const useCreateBranchOfficeFormStore = create<CreateBranchOfficeFormStore
             formData: {
                 name: '',
                 address: '',
+                status: null,
+                userId: 0,
                 latitude: '',
                 longitude: '',
                 pathImages: [],

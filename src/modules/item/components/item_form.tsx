@@ -43,9 +43,9 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
         transmitionsOptions,
         combustibleTypesOptions
     } = useRegisterItem();
-    const {limit, page, paramQuery} = useBranchOfficeTable();
+    const {limit, page} = useBranchOfficeTable();
     // Fetch para sucursales, marcas, direcciones y subcategorías
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page,paramQuery), [limit,page,paramQuery]);
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(limit,page), [limit,page]);
     const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: false });
 
     const fetchItemSubCategoryAsync = useMemo(() => getSubCategoryAsync(), []);
@@ -159,7 +159,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
 
     return (
         <>
-            <Modal size={"lg"} open={open} onClose={() => hiddeModal(false)} overflow backdrop="static">
+            <Modal size={"lg"} open={open} overflow backdrop="static">
             <ModalHeader closeButton={false}>
                 <ModalTitle style={{ fontWeight: "bold" }}>Nuevo Repuesto</ModalTitle> 
             </ModalHeader>
