@@ -35,17 +35,20 @@ export default function SaleTable(){
 
     return(
         <div style={{ padding:30 }} >
-            <Panel bordered >
-                <Stack spacing={10} style={{ marginBottom: 20 }}>
+            <Panel bordered style={{ marginBottom:15 }}>
+                <Stack spacing={10} style={{ marginBottom: 15 }}>
                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Volver</Tooltip>}>
                         <IconButton icon={<FaArrowLeft style={{fontSize:"16px"}}/>} appearance="primary" style={{ backgroundColor: "transparent", color:"black"}} onClick={() => navigate('/sale')}/>
                     </Whisper>
-                    <h4 style={{ margin: 0 }}>Ventas Realizadas</h4>
+                    <div>
+                        <h4 style={{ margin: 0 }}>Ventas Realizadas</h4>
+                        <p style={{ color:'#878787' }}>Visualiza, filtra y devuelve las ventas</p>
+                    </div>
                 </Stack>
                 <div style={{ marginBottom: 20, gap:"10px", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                         <Form.Group style={{ flex: 1, minWidth: 200 }}>      
                             <InputGroup style={{ width: "100%" }}>
-                                <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
                                     <FaSearch />
                                 </InputGroup.Addon>
                                 <Input placeholder="Buscar por ID Venta, vendedor, cliente... " />
@@ -61,23 +64,23 @@ export default function SaleTable(){
                 </div>
                 <Table cellBordered bordered data={salesData} autoHeight rowHeight={70} style={{ background: "white", fontSize:"14px", borderRadius:"5px"}} height={590} headerHeight={50}>
                     <Column flexGrow={1} align="center" fixed resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >ID Venta</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >ID Venta</HeaderCell>
                         <Cell dataKey="id" style={{alignItems:"center"}} />
                     </Column>
                     <Column width={200} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Fecha</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Fecha</HeaderCell>
                         <Cell dataKey="date" style={{alignItems:"center"}} />
                     </Column>
                     <Column flexGrow={1} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Vendedor</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Vendedor</HeaderCell>
                         <Cell dataKey="user" style={{alignItems:"center"}}/>
                     </Column>
                     <Column flexGrow={1} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Cliente</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Cliente</HeaderCell>
                         <Cell dataKey="user" style={{alignItems:"center"}}/>
                     </Column>
                     <Column width={200} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Repuestos</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Repuestos</HeaderCell>
                         <Cell dataKey="products" style={{alignItems:"center"}} >
                             {rowData => (
                                 <div>
@@ -92,17 +95,17 @@ export default function SaleTable(){
                         </Cell>
                     </Column>
                     <Column width={200} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Descuento Total (%)</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Descuento Total (%)</HeaderCell>
                         <Cell dataKey="discount" style={{alignItems:"center"}} />
                     </Column>
                     <Column width={150} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Total</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Total</HeaderCell>
                         <Cell style={{alignItems:"center"}}>
                             {rowData => `$${rowData.total.toFixed(2)}`}
                         </Cell>
                     </Column>
                     <Column width={120} align="center" resizable>
-                        <HeaderCell style={{ backgroundColor: "#f08b33", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Acciones</HeaderCell>
+                        <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell>
                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Imprimir venta</Tooltip>}>
                                 <IconButton appearance="link" icon={<FaPrint style={{color:"black"}}/>} />
@@ -131,7 +134,7 @@ export default function SaleTable(){
                         className="custom-pagination"
                     />
             </Panel>
-            <FlexboxGrid justify="space-between" style={{ marginTop: 30 }}>
+            <FlexboxGrid justify="space-between">
                 <FlexboxGrid.Item style={{ flex: 1, marginRight: 15 }}>
                     <Panel bordered >
                         <h5>Total de Ventas</h5>

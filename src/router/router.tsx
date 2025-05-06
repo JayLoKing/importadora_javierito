@@ -8,12 +8,12 @@ import ItemTable from "../modules/item/components/item.tsx";
 import BranchOffices from "../modules/branchOffice/components/branchOffices";
 import Report from "../modules/report/components/inventoryReport.tsx";
 import Register from "../modules/user/components/userContainer";
-import Profile from "../modules/user/components/profile.tsx";
 import SaleForm from "../modules/sale/components/sale_form.tsx";
 import SaleTable from "../modules/sale/components/saleTable.tsx";
 import PrivateRoute from "./privateRoute.tsx";
 import RoleBasedRoute from "./roleBases.Route.tsx";
 import Unauthorized from "../pages/layout/components/unauthorized.tsx";
+import Trash from "../modules/trash/components/trash.tsx"
 
 export default function Routing() {
     return (
@@ -26,7 +26,6 @@ export default function Routing() {
             {/* Rutas protegidas (requieren autenticación) */}
             <Route element={<PrivateRoute />}>
                 <Route path="/home" element={<Layout titleComponent={'INICIO'} children={<Home/>}/>}/>
-                <Route path="/profile" element={<Layout titleComponent={'PERFIL'} children={<Profile />} />} />
                 
                 {/* Rutas para ADMIN */}
                 <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin']} />}>
@@ -38,6 +37,7 @@ export default function Routing() {
                 <Route element={<RoleBasedRoute allowedRoles={['ROLE_Admin', 'manager']} />}>
                     <Route path="/items" element={<Layout titleComponent={'INVENTARIO'} children={<ItemTable />} />} />
                     <Route path="/report" element={<Layout titleComponent={'REPORTES DE INVENTARIO'} children={<Report />} />} />
+                    <Route path="/trash" element={<Layout titleComponent={'PAPELERA'} children={<Trash />} />} />
                 </Route>
                 
                 {/* Rutas para ADMIN, MANAGER y SALES */}

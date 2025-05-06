@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function useItemTable (){
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(4);
     const [page, setPage] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
     const [searchTerm, setSearchTerm] = useState<string>('');

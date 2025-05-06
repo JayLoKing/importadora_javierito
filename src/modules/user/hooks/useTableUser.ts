@@ -41,6 +41,11 @@ export function useTableUser (){
         setPage(1);
         setFilterSomeName(value);
     }
+    
+    const handleClearSearch = () => {
+        setPage(1);
+        setFilterSomeName("");
+    }
 
     useEffect(() => {
         const checkScreenSize = () => {
@@ -53,6 +58,7 @@ export function useTableUser (){
     
     return {
         handleChangeLimit,
+        handleClearSearch,
         limit,
         page,
         setPage,
