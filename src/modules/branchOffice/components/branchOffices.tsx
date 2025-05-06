@@ -16,6 +16,7 @@ import { useApi } from "../../../common/services/useApi";
 import { BsWrenchAdjustable } from "react-icons/bs";
 import { FaShop } from "react-icons/fa6";
 import { BsBoxSeam } from "react-icons/bs";
+import { BsFillCheckCircleFill, BsFillXCircleFill, BsEraserFill } from "react-icons/bs";
 
 export default function BranchOffices() {
 
@@ -74,7 +75,7 @@ export default function BranchOffices() {
     }
 
     return (
-        <div style={{padding:30}}>
+        <div style={{padding:30 }}>
             <div style={{ display:'flex', justifyContent:'space-between', marginBottom:15}}>
                 <div>
                     <h4>Gestión de Sucursales</h4>
@@ -89,10 +90,13 @@ export default function BranchOffices() {
             <div style={{ marginBottom: 15, gap:10, display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                 <Form.Group style={{ flex: 1, minWidth: 200 }}>      
                     <InputGroup style={{ width: "100%" }}>
-                        <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                        <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
                             <FaSearch />
                         </InputGroup.Addon>
                         <Input placeholder="Buscar por sucursal, responsable y dirección" />
+                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
+                            <IconButton icon={<BsEraserFill />} appearance="primary" style={{ background:'transparent', color:'black'}} ></IconButton>
+                        </Whisper>
                     </InputGroup>
                 </Form.Group>
                 <Dropdown title="Todos los estados" placement="bottomEnd">
@@ -103,9 +107,9 @@ export default function BranchOffices() {
             </div>
             
             <Panel bordered style={{ marginBottom:15 }}>
-                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={370} headerHeight={50} data={branchOffices!} >
+                <Table loading={loadingBranchOffice} bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={380} headerHeight={50} data={branchOffices!} >
                     <Column align="center" flexGrow={1} minWidth={100} fixed resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Acciones</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Acciones</HeaderCell>
                         <Cell>
                             {(rowData) => (
                                 <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
@@ -139,36 +143,48 @@ export default function BranchOffices() {
                     )}
 
                     <Column align="center" flexGrow={1} minWidth={140} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Nombre de la Sucursal</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Nombre de la Sucursal</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={120} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Dirección</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Dirección</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={120} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Responsable</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Responsable</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="risponsable" />
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={140} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Fecha de Registro</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Fecha de Registro</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
                             {(rowData) => new Date(rowData.registerDate).toLocaleDateString()}
                         </Cell>
                     </Column>
                     
                     <Column align="center" flexGrow={1} minWidth={140} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Estado</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Estado</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-                            
+                            {(rowData) => (
+                                <>
+                                    {rowData.status === 1 ? (
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Activo
+                                            <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
+                                        </Tooltip>                                        
+                                    ) : (
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Inactivo
+                                            <BsFillXCircleFill style={{ marginLeft:5 }}/>
+                                        </Tooltip>
+                                    )}
+                                </>
+                            )}
                         </Cell>
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={100} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '15px' }}>Producto</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Producto</HeaderCell>
                         <Cell>
                             <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Ver Productos</Tooltip>}>

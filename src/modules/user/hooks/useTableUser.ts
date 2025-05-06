@@ -16,6 +16,11 @@ export function useTableUser (){
         setSearchTerm(value);
     };
     
+    const handleClearSearch = () => {
+        setPage(1);
+        setSearchTerm("");
+    }
+
     useEffect(() => {
         const checkScreenSize = () => {
             setIsMobile(window.innerWidth < 768);
@@ -28,6 +33,7 @@ export function useTableUser (){
     return {
         handleChangeLimit,
         handleSearch,
+        handleClearSearch,
         limit,
         page,
         setPage,

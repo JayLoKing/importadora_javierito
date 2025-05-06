@@ -15,6 +15,7 @@ import { useAuthStore } from "../../store/store";
 import { AuthUser } from "../../modules/auth/models/auth.model";
 import { NotificationComponent } from "../../modules/notification/components/Notification";
 import { useLayaout } from "./hooks/useLayaout";
+import Profile from "../../modules/user/components/profile";
 
 interface LayoutProps {
   titleComponent: ReactNode;
@@ -108,6 +109,11 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
     { key: '7', icon: FaUsers, label: 'Vendedores' },
     { key: '8', icon: FaTrash, label: 'Papelera' },
   ];
+  
+  const [showModalProfile, setShowModalProfile] = useState<boolean>(false);
+  function handleModalProfile(hidde: boolean): void {
+    setShowModalProfile(hidde)
+  }
 
   // const handleGoogleMaps = () => {
   //   window.open('https://maps.app.goo.gl/ouHB1jvoa9gGgYEFA');
@@ -134,21 +140,21 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
   if (!isMobile) {
     return (
       <Container style={{ display: "flex", height: '100vh' }}>
-        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#F5F5F5', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-          <Sidenav.Header style={{ backgroundColor: '#F5F5F5', padding: "10px", marginTop: "10px" }}>
+        <Sidebar className="sidebar" width={expand ? 300 : 120} collapsible style={{ backgroundColor: '#16151A', borderRight: '1px solid #e5e5e5', borderBottom: "1px solid #e5e5e5", boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+          <Sidenav.Header style={{ backgroundColor: '#16151A', padding: "10px", marginTop: "10px" }}>
             <Brand expand={expand} />
           </Sidenav.Header>
           <Divider style={{ height: '0px' }}></Divider>
           <Sidenav expanded={expand} appearance="subtle" style={{ height: '100vh', overflow: "auto" }} >
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
-                <Nav.Item eventKey="1" onClick={() => navigate('/home')} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
-                <Nav.Item eventKey="2" style={{  }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Reportes </Nav.Item>  
-                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
-                <Nav.Item eventKey="6" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "6" ? "active" : ""}`}>Ventas</Nav.Item>
-                <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px" }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>
+                <Nav.Item eventKey="1" onClick={() => navigate('/home')} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
+                <Nav.Item eventKey="2" style={{  }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
+                <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Ventas</Nav.Item>  
+                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="6" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "6" ? "active" : ""}`}>Reportes</Nav.Item>
+                <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -197,7 +203,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                           <p>{user.userName}</p>
                           <strong>{user.role}</strong>
                           <hr />
-                          <IconButton onClick={() => navigate('/profile')} icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
+                          <IconButton onClick={() => handleModalProfile(true)}  icon={<FaEdit style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Editar Perfil</IconButton>
                           <hr />
                           <IconButton onClick={signOut} icon={<FaPowerOff style={{ marginRight: "5px", fontSize: "12px" }} />} style={{ background: "white", fontSize: "13px", padding: "3px", textAlign: "center" }}>Cerrar Sesión</IconButton>
                         </div>
@@ -215,6 +221,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
           </Content>
           <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: 'white' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
+        <Profile open={showModalProfile} hiddeModal={() => handleModalProfile(false)} />
       </Container>
     );
   } else {
@@ -318,7 +325,7 @@ const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void
 const Brand = ({ }: { expand: boolean }) => {
   return (
     <HStack className="pagebrand" >
-      <div style={{ borderRadius: "50%", backgroundColor: "#f08b33" }} >
+      <div style={{ borderRadius: "50%", backgroundColor: "#db7114" }} >
         <Image circle src={LOGO} width={120} style={{ padding: "3px", cursor: "pointer" }} />
       </div>
       {/* {expand && <Text style={{fontWeight:"bold", textAlign:"left", color:"black"}}>IMPORTADORA JAVIERITO</Text>} */}

@@ -15,6 +15,7 @@ import { useReport } from "../hooks/useReport";
 import { FaSearch } from "react-icons/fa";
 import { FaDownload, FaRegCalendar, FaTrash } from "react-icons/fa6";
 import { RiRefreshLine } from "react-icons/ri";
+import { BsFillCheckCircleFill, BsFillXCircleFill  } from "react-icons/bs";
 
 interface ReportData {
     datakey: number;
@@ -173,7 +174,7 @@ export default function InventoryReport() {
                 <div style={{ display:'flex', justifyContent:"space-around", flexDirection:'row', gap:10}}>
                     <Form.Group >      
                         <InputGroup style={{ width: "100%" }}>
-                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                            <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
                                 <FaSearch />
                             </InputGroup.Addon>
                             <Input placeholder="Buscar..." />
@@ -186,8 +187,8 @@ export default function InventoryReport() {
                         <Dropdown.Item>Más antiguos</Dropdown.Item>
                     </Dropdown>
                     <div>
-                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar</Tooltip>} >
-                            <Button size="lg" appearance="ghost" >
+                        <Whisper placement="top" trigger="hover" speaker={<Tooltip>Actualizar Tabla</Tooltip>} >
+                            <Button size="lg" appearance="primary" >
                                 <RiRefreshLine />
                             </Button>
                         </Whisper>
@@ -227,6 +228,19 @@ export default function InventoryReport() {
                     <Column width={130} align="center"  resizable>
                         <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold' }}>Estado</HeaderCell>
                         <Cell dataKey="code" style={{alignItems:"center"}}>
+                            {(rowData) => (
+                                <>
+                                    {rowData.status === 1 ? (
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Activo
+                                            <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
+                                        </Tooltip>                                        
+                                    ) : (
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Inactivo
+                                            <BsFillXCircleFill style={{ marginLeft:5 }}/>
+                                        </Tooltip>
+                                    )}
+                                </>
+                            )}
                         </Cell>
                     </Column>
                     <Column width={220} align="center"  resizable>

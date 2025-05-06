@@ -3,7 +3,7 @@ import { Button, Form, Grid, Stack, Row, Col, Panel, InputGroup, Input, Table, W
 import { useEffect, useState } from "react";
 import PlusIcon from '@rsuite/icons/Plus';
 import { FaCamera, FaHistory,  FaLine, FaSearch, FaWrench } from "react-icons/fa";
-import { FaBarcode, FaTrash, FaClipboardUser, FaPrint, } from "react-icons/fa6";
+import { FaBarcode, FaTrash, FaPrint, } from "react-icons/fa6";
 import { CiCircleInfo } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import ModalInfoProduct from "./modal_infoProduct";
@@ -83,31 +83,32 @@ export default function SaleForm(){
     }
     
     return(
-        <div style={{ padding: "0", height: "100%", }}>
+        <div style={{ height: "100%"}}>
             <Grid fluid style={{height:"100%", margin:0}}>
                 <Row style={{ height: '100%', margin:0, display:"flex", flexWrap: "nowrap"}}>
-                    <Col xs={24} md={16} style={{ height: '100%', padding: "20px", }}>
-                        <div style={{ marginBottom: 25 }}>
-                            <Panel bordered>
-                                <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center"}}>
-                                    <div>
-                                        <h4>Registro de Ventas</h4>
-                                        <p>{currentDate}</p>
-                                    </div>
-                                    <div style={{ display:"flex", alignItems:"center"}}>
-                                        <FaClipboardUser style={{width:"20px", height:"20px", marginRight:"3px"}}/>
-                                        <span >Vendedor: JUANITO PEREZ</span>
-                                    </div>
+                    <Col xs={24} md={16} style={{ height: '100%', padding:30 }}>
+                        <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center", marginBottom: 20 }}>
+                            <div>
+                                <h4>Registro de Ventas</h4>
+                                <p style={{ color:'#878787' }}>Registra, visualiza e imprime tus ventas</p>
+                            </div>
+                            <div style={{ display:"flex", flexDirection:'column'}}>
+                                <div style={{ display:"flex", gap:7 }}>
+                                    <strong>Vendedor:</strong>
+                                    <p>JUANITO EL MAS PINGON</p>
                                 </div>
-                            </Panel>
-                        </div>
+                                <div style={{ display:'flex', justifyContent:'end'}}>
+                                    <strong>{currentDate}</strong>
+                                </div>
+                            </div>
+                        </div>                
                         <div style={{ marginBottom: 25 }}>
                             <Panel bordered >
-                                <div style={{justifyContent:"flex-start", display:"flex", gap:"5px", marginBottom:10}}>
+                                <div style={{justifyContent:"flex-start", display:"flex", gap:"5px", marginBottom:15}}>
                                     <FaCamera style={{width:"20px", height:"20px"}}/>
                                     <h5>Lector de Códigos de Barras</h5>
                                 </div>
-                                <div style={{marginBottom:20, display:"flex", gap:"10px", justifyContent:"space-between", alignItems: 'center', flexWrap: 'wrap'}}>
+                                <div style={{marginBottom:25, display:"flex", gap:"10px", justifyContent:"space-between", alignItems: 'center', flexWrap: 'wrap'}}>
                                     <Button onClick={() => setIsScanning(!isScanning)} color={isScanning ? "red" : "green"} style={{ backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold", margin: '5px 0', flexShrink: 0}}> {isScanning ? "Detener Cámara" : "Activar Cámara"} </Button>
                                         <Form.Group style={{ flex: 1, minWidth: 200 }}>
                                             <InputGroup inside style={{ width: "100%" }}>
@@ -179,10 +180,9 @@ export default function SaleForm(){
                                         {rowData => (
                                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Quitar</Tooltip>} >
                                                 
-                                            <IconButton onClick={() => removeProduct(rowData.id)} style={{ background:"transparent" }} icon={<FaTrash style={{color:"red"}}/>} />
+                                            <IconButton onClick={() => removeProduct(rowData.id)} style={{ background:"transparent" }} icon={<FaTrash />} />
                                             </Whisper>
                                         )}
-                                            
                                         </Cell>
                                     </Column>
                                 </Table>
@@ -296,7 +296,7 @@ export default function SaleForm(){
                                 <Tabs.Tab eventKey="2" title="Buscar Repuestos" icon={<FaWrench />}>
                                     <Content style={{ flex: 1, overflow:"auto", padding: 5 }}>
                                         <InputGroup style={{ marginBottom: '15px' }}>
-                                            <InputGroup.Addon style={{background:"#f08b33", color:"white"}}>
+                                            <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
                                                 <FaSearch />
                                             </InputGroup.Addon>
                                             <Input placeholder="Buscar por nombre o código..."/>

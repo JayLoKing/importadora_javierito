@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ComponentType, FC, useEffect, useMemo, useState } from "react";
-import { InlineEdit, Input, Loader, Stack, Panel } from "rsuite";
+import { InlineEdit, Input, Loader, Stack, Panel, Modal, Button } from "rsuite";
 import { UserProfile } from "../models/userProfile.model";
 import { editProfileAsync, getAccountByIdAsync } from "../services/user.service";
 import { useApi } from "../../../common/services/useApi";
@@ -18,6 +18,7 @@ interface FieldProps {
 }
 
 const Field: FC<FieldProps> = ({ label, value, name, onChange }) => {
+
     const [tempValue, setTempValue] = useState(value);
     useEffect(() => {
         console.log(`Sincronizando tempValue con value para ${name}:`, value);
@@ -51,10 +52,19 @@ const Field: FC<FieldProps> = ({ label, value, name, onChange }) => {
     );
 };
 
-export default function Profile() {
+interface ModalProfileProps {
+    open: boolean,
+    hiddeModal: () => void,
+}
+
+export default function Profile({ open, hiddeModal}:ModalProfileProps) {
     const { formData, loadData, updateField } = useUpdateProfileFormStore();
     const jwt = useAuthStore(state => state.jwt);
     const [userID, setUserID] = useState<number | null>(null); 
+
+    const handleCancel = () => {
+        hiddeModal();
+    }
 
     useEffect(() => {
         if (jwt) {
@@ -121,7 +131,15 @@ export default function Profile() {
     }
 
     return (
-        <div style={{ padding:35, justifyContent: 'center', alignItems: 'center' }}>    
+        <Modal open={open} onClose={hiddeModal} size="sm" keyboard={false} style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
+            <Modal.Header>
+                <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+                    <FaUser style={{ fontSize:'1em'}}/>
+                    <h4 style={{ fontWeight:"bold" }}>Mi cuenta</h4>
+                </div>
+                <p style={{ color:'#878787' }}>Presione el campo que desea modificar..</p>
+            </Modal.Header>
+            <Modal.Body>
             <Stack direction="column" alignItems="center" justifyContent="center" spacing={10}>
                 {loading ? (
                     <Loader size="lg" content="¡Cargando Perfil!" />
@@ -129,17 +147,10 @@ export default function Profile() {
                     <div>Error al cargar el perfil: {error.message}</div>
                 ) : (
                     <>
-                    
-                        <Stack direction="row" spacing={10} alignItems="center">
-                            <FaUser size={30}/>
-                            <h3>Mi cuenta</h3>
-                        </Stack>
-                        
-                        
                         <Panel  bordered >
                             <Stack>
-                                <Stack direction="row" spacing={10} style={{marginBottom:10}} alignItems="center">
-                                    <FaIdCard size={20}/>
+                                <Stack direction="row" spacing={10} style={{marginBottom:10, alignItems:'center'}}>
+                                    <FaIdCard size={18}/>
                                     <h6>Información Personal</h6>
                                 </Stack>
                             </Stack>
@@ -148,11 +159,10 @@ export default function Profile() {
                             <Field label="Apellido Materno" as={Input} value={formData.secondLastName || ''} name="secondLastName" onChange={handleFieldChange} />
                             <Field label="Carnet de Identidad" as={Input} value={formData.ci || ''} name="ci" onChange={handleFieldChange} />
                         </Panel>
-                        
                         <Panel bordered>
                             <Stack>
-                                <Stack direction="row" spacing={10} style={{marginBottom:10}} alignItems="center">
-                                    <FaPhoneAlt size={20}/>
+                                <Stack direction="row" spacing={10} style={{marginBottom:10, alignItems:'center'}}>
+                                    <FaPhoneAlt size={18}/>
                                     <h6>Información de Contacto</h6>
                                 </Stack>
                             </Stack>
@@ -162,6 +172,10 @@ export default function Profile() {
                     </>
                 )}
             </Stack>
-        </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button appearance="primary" onClick={handleCancel}>Cancelar</Button>
+            </Modal.Footer>
+        </Modal>
     );
 }
