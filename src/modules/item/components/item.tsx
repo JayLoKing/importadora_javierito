@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {  Stack, IconButton, Image,Table, Whisper, Tooltip, Pagination, Input,Text, Heading, InputGroup, Grid, Row, Col, Card, InlineEdit, SelectPicker, Panel, Button, FlexboxGrid } from "rsuite";
@@ -46,11 +47,12 @@ export default function ItemTable() {
     const navigate = useNavigate();
     const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
+    const [refreshKey, setRefreshkey] = useState(0);
 
     const fetchItemsAsync = useMemo(() => {
       return getItemsAsync(page, limit, searchTerm, searchSubCategory, searchBrand);
-    }, [limit, page, searchTerm, searchSubCategory, searchBrand]);
-    const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: false });
+    }, [limit, page, searchTerm, searchSubCategory, searchBrand, refreshKey]);
+    const { loading, data: itemsData, error, fetch} = useApi<GetItems>(fetchItemsAsync, { autoFetch: true });
 
     useEffect(() => {
       fetch();
@@ -73,7 +75,7 @@ export default function ItemTable() {
         setItems(processedItems);
         setTotal(Array.isArray(itemsData) ? 0 : itemsData.total);
       }
-    }, [itemsData]);
+    }, [itemsData, fetch]);
 
     useEffect(() => {
       fetchBrands();
@@ -118,8 +120,9 @@ export default function ItemTable() {
     };
 
     const handleRefreshData = () => {
-      setPage(1); 
-      fetch();   
+      setRefreshkey(prev => prev+1);
+      setPage(1);
+      fetch();
     };
 
     if(error){

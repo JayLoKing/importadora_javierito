@@ -9,7 +9,7 @@ export const validationItemCreateFormModel = Schema.Model({
 
     alias: StringType()
         .isRequired('El año es requerido')
-        .pattern(/^[a-zA-Z0-9\s]+$/, 'El año solo puede contener letras y numeros.'),
+        .pattern(/^[a-zA-Z0-9\s\-_]+$/, 'El año solo puede contener letras y numeros.'),
 
     model: StringType()
         .isRequired('El modelo es requerido')
@@ -78,10 +78,6 @@ export const validationItemEditFormModel = Schema.Model({
         .minLength(3, 'El alias debe tener al menos 3 caracteres.')
         .pattern(/^[a-zA-Z0-9\s]+$/, 'El año solo puede contener letras y números.'),
 
-    description: StringType()
-        .isRequired('La descripción es requerida')
-        .minLength(10, 'La descripción debe tener al menos 10 caracteres.'),
-
     model: StringType()
         .isRequired('El modelo es requerido')
         .pattern(/^[a-zA-Z0-9\s]+$/, 'El modelo solo puede contener letras y números.'),
@@ -93,10 +89,6 @@ export const validationItemEditFormModel = Schema.Model({
     wholesalePrice: NumberType()
         .isRequired('El precio al por mayor es requerido')
         .min(1, 'El precio al por mayor debe ser mayor a 0.'),
-
-    barePrice: NumberType()
-        .isRequired('El precio base es requerido')
-        .min(1, 'El precio base debe ser mayor a 0.'),
 
     brandID: NumberType()
         .isRequired('Debe seleccionar una marca')

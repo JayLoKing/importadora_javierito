@@ -60,6 +60,7 @@ export interface ItemById{
     model: string;
     price: number;
     wholesalePrice: number;
+    purchasePrice: number;
     barePrice: number;
     brandID: number;
     subCategoryID: number;
@@ -68,6 +69,13 @@ export interface ItemById{
     userID: number;
     acronym: string;
     itemImages: string[];
+
+    itemStatus?: string;
+    transmission?: string;
+    cylinderCapacity?: string;
+    traction?: string;
+    itemSeries?: string;
+    fuel: string;
 }
 
 export interface ItemAddress {

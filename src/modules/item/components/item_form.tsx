@@ -1,5 +1,5 @@
-import { FaAlignJustify, FaBoxOpen, FaCalendar, FaCamera, FaCar, FaCog, FaCubes, FaDollarSign, FaListAlt, FaSignature, FaTag } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Row, Stack, Uploader, SelectPicker, Input, Divider, Modal, InputNumber, RadioGroup, Radio, Tabs } from "rsuite";
+import { FaAlignJustify, FaBoxOpen, FaCalendar, FaCamera, FaCar, FaCog, FaCubes, FaDollarSign, FaSignature } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Row, Uploader, SelectPicker, Input, Divider, Modal, InputNumber, RadioGroup, Radio, Tabs } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
