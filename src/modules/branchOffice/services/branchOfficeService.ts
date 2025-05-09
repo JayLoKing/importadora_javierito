@@ -3,7 +3,6 @@ import { httpClient } from "../../../api/httpClient";
 import { loadAbort } from "../../../utils/loadAbort.utility";
 import { UseApiCall } from "../../../utils/useApi.model";
 import { NewBranchOfficeDTO, BranchOfficeDetailsDTO, GetDataBranchOffice } from "../models/branchOffice.model";
-import { ParamsDTO } from "../models/params.model";
 import { BranchOfficeUrl } from "../urls/branchOffice.url";
 
 // export async function getBranchOfficesAsync() {
@@ -17,10 +16,10 @@ import { BranchOfficeUrl } from "../urls/branchOffice.url";
 //     }
 // }
 
-export const getBranchOfficesAsync2 = (limit: number, offset: number, paramsBody: ParamsDTO) : UseApiCall<GetDataBranchOffice> => {
+export const getBranchOfficesAsync2 = (limit: number, offset: number, query?: string, status?: number | null) : UseApiCall<GetDataBranchOffice> => {
     const controller = loadAbort();
     return { 
-        call: httpClient.post<GetDataBranchOffice>(BranchOfficeUrl.getAll, paramsBody, {signal: controller.signal, params: {limit, offset}}), 
+        call: httpClient.post<GetDataBranchOffice>(BranchOfficeUrl.getAll, {query: query, status: status}, {signal: controller.signal, params: {limit, offset}}), 
         controller
     }
 }

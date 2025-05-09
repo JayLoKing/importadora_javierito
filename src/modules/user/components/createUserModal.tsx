@@ -13,15 +13,15 @@ import { BiSolidUserBadge } from "react-icons/bi";
 import { BsPersonWorkspace } from "react-icons/bs";
 import InputGroupAddon from "rsuite/esm/InputGroup/InputGroupAddon";
 import { useApi } from "../../../common/services/useApi";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
-import { FormEvent, useEffect, useMemo, useRef } from "react";
+import { BranchOffice, GetDataBranchOffice } from "../../branchOffice/models/branchOffice.model";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
 import { useCreateUserFormStore } from "../hooks/useCreateUserFormStorm";
 import { createUserAsync } from "../services/user.service";
 
 interface CreateUserModalProps {
     open: boolean;
-    hiddeModal: () => void;
+    hiddeModal: (hide: boolean) => void;
     onUserCreated?: () => void;
 }
 
@@ -29,12 +29,22 @@ export default function CreateUserModal({ open, hiddeModal, onUserCreated}: Crea
     const formRef = useRef<any>();
     const toaster = useToaster();
     const {formData, validationModel, updateField, resetForm} = useCreateUserFormStore();
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
-    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: false });
-    useEffect(() => { fetchBranchOffices(); }, [fetchBranchOffices]);
-    const roleData = ['MeroMero', 'Administrador', 'Vendedor'].map(role => ({ label: role, value: role }));
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(100,1,"",1), []);
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: false });
+    useEffect(() => { 
+        if(dataBranchOffice) {
+            if(Array.isArray(dataBranchOffice)){
+                setBranchOffices([]);
+            } else {
+                setBranchOffices(dataBranchOffice.first);
+            }
+        }
+        fetchBranchOffices(); 
+    }, [fetchBranchOffices,dataBranchOffice]);
 
+    const roleData = ['MeroMero', 'Administrador', 'Vendedor'].map(role => ({ label: role, value: role }));
+    const branchOfficeOptions = branchOffices?.map(branch => ({ label: branch.name, value: branch.id })) || [];
 
     const showSuccessMessage = () => {
         toaster.push(
@@ -62,7 +72,7 @@ export default function CreateUserModal({ open, hiddeModal, onUserCreated}: Crea
                 console.log(formData);
                 
                 await createUserAsync(formData);
-                hiddeModal();
+                hiddeModal(false);
                 resetForm();
                 formRef.current.reset();
                 formRef.current.cleanErrors();
@@ -79,13 +89,13 @@ export default function CreateUserModal({ open, hiddeModal, onUserCreated}: Crea
 
     const handleCancel = () => {
         resetForm();
-        hiddeModal();
+        hiddeModal(false);
         formRef.current.reset();
         formRef.current.cleanErrors();
     }
 
     return(
-        <Modal size={"md"} open={open} onClose={hiddeModal} overflow>
+        <Modal size={"md"} open={open} onClose={() => hiddeModal(false)} overflow>
             <ModalHeader>
                 <ModalTitle style={{ fontWeight: "bold" }}>Nuevo Usuario</ModalTitle> 
             </ModalHeader>

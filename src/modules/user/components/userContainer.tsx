@@ -2,50 +2,54 @@
 import PlusIcon from '@rsuite/icons/Plus';
 import { useEffect, useMemo, useState } from 'react';
 import { FaSearch, FaTrash } from 'react-icons/fa';
-import { Col, FlexboxGrid, IconButton, Input, InputGroup, Message, Pagination, Panel, SelectPicker, Stack, Table, Tooltip, Whisper,  } from "rsuite";
+import { Col, FlexboxGrid, IconButton, Input, InputGroup, Pagination, Panel, SelectPicker, Table, Tooltip, Whisper,  } from "rsuite";
 import { Cell, HeaderCell } from "rsuite-table";
 import Column from "rsuite/esm/Table/TableColumn";
 import CreateUserModal from './createUserModal';
 import { useApi } from '../../../common/services/useApi';
 import { getAllUsersAsync } from '../services/user.service';
 import { GetUsers, User } from '../models/user.model';
-import { ParamsUser } from '../models/userParams.model';
-import { BranchOffice } from '../../branchOffice/models/branchOffice.model';
+import { BranchOffice, GetDataBranchOffice } from '../../branchOffice/models/branchOffice.model';
 import { getBranchOfficesAsync2 } from '../../branchOffice/services/branchOfficeService';
-import { BsFillPersonCheckFill, BsFillPersonDashFill, BsFillCheckCircleFill, BsFillXCircleFill, BsEraserFill } from "react-icons/bs";
 import { useTableUser } from '../hooks/useTableUser';
+import { useRegisterUserForm } from '../hooks/useRegisterUserForm';
+import { BsFillPersonCheckFill, BsFillPersonDashFill, BsFillCheckCircleFill, BsFillXCircleFill, BsEraserFill } from "react-icons/bs";
 
 export default function UserContainer(){
-    const [limit, setLimit] = useState(4);
-    const { handleClearSearch } = useTableUser();
-    const [page, setPage] = useState(1);
     const [users, setUsers] = useState<User[]>([]);
     const [total, setTotal] = useState(0);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [params, setParams] = useState<ParamsUser>({status: null, role: null, officeId: null, someName: null});
-    const userActive = ['Activo'].map( status => ({ label: status, value: 1 }));
-    const userInactive = ['Inactivo'].map( status => ({label: status,value: 0 }));
-    const employeeRole = ['Empleado'].map( role => ({label: role, value: 'Employee'}));
-    const administratorRole = ['Administrador'].map( role => ({label: role, value: 'Admin'}));
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
+    const {
+        statusOptions, 
+        limit,
+        roleOptions, 
+        handleFilterStatus, 
+        handleFilterRole, 
+        handleFilterSomeName, 
+        handleFilterOfficeId,
+        filterOfficeId,
+        filterRole,
+        filterSomeName,
+        filterStatus,
+        handleChangeLimit,
+        page,
+        setPage,
+        handleClearSearch,
+    } = useTableUser();
+    const {
+        handleOpenModalCreate,
+        showModalCreate
+    } = useRegisterUserForm();
 
-    const statusOptions = [...userActive, ...userInactive];
-    const roleOptions = [...employeeRole, ...administratorRole];
-
-    const handleChangeLimit = (dataKey: number) => {
-      setPage(1);
-      setLimit(dataKey);
-    };
-    const [showModalCreate, setShowModalCreate] = useState(false);
-
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
-        const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(100,1,"",1), []);
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: true });
 
 
     const fetchUsers = useMemo(() => {
-        return getAllUsersAsync(limit, page, params)
-    }, [limit, page, params]);
-    const {data, loading, error, fetch} = useApi<GetUsers>(fetchUsers, {autoFetch: false});
-    useEffect(() => { fetch() }, [fetch, page, limit]);  
+        return getAllUsersAsync(limit, page, filterStatus, filterRole, filterOfficeId, filterSomeName)
+    }, [limit, page, filterStatus, filterRole, filterOfficeId, filterSomeName]);
+    const {data, loading, error, fetch} = useApi<GetUsers>(fetchUsers, {autoFetch: true});
+    useEffect(() => { fetch() }, [fetch, page, limit, filterStatus, filterRole, filterOfficeId, filterSomeName]);  
     useEffect(() => {
         if (data) {
             if (Array.isArray(data)) {
@@ -55,32 +59,18 @@ export default function UserContainer(){
                 setTotal(data.second); 
             }
         } 
+        if(dataBranchOffice) {
+            if(Array.isArray(dataBranchOffice)){
+                setBranchOffices([]);
+            } else {
+                setBranchOffices(dataBranchOffice.first);
+                setTotal(dataBranchOffice.second);
+            }
+        }
         fetchBranchOffices();
-    }, [data, fetchBranchOffices]); 
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
-
-    console.log(data)
-    
-    function handleOpenModalCreate() {
-        setShowModalCreate(true);
-    }
-
-    function handleCloseModalCreate() {
-        setShowModalCreate(false);
-    }
-
-    const paginationLocaleES = {
-        total: "Total de Registros: {0}",
-        limit: "{0} / página",
-        skip: "Ir a la página {0}",
-        pager: {
-          first: "Primero",
-          last: "Último",
-          next: "Siguiente",
-          previous: "Anterior",
-        },
-    };
-
+    }, [data, fetchBranchOffices,dataBranchOffice]); 
+    const branchOfficeOptions = branchOffices?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+    console.log(users);
 
     if(error){
         return (
@@ -90,7 +80,6 @@ export default function UserContainer(){
         );
     }
     
-
     return(
         <div style={{ padding:30 }}>
             <div style={{ display:'flex', justifyContent:'space-between', marginBottom:15}}>
@@ -99,7 +88,7 @@ export default function UserContainer(){
                     <p style={{ color:'#878787' }}>Administra los usuarios del sistema</p>         
                 </div>
                 <div >
-                    <IconButton appearance='primary' icon={<PlusIcon />} size="lg"  onClick={() => handleOpenModalCreate()}>
+                    <IconButton appearance='primary' icon={<PlusIcon />} size="lg"  onClick={() => handleOpenModalCreate(true)}>
                         Nuevo Usuario
                     </IconButton>
                 </div>
@@ -109,15 +98,15 @@ export default function UserContainer(){
                     <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
                         <FaSearch />
                     </InputGroup.Addon>
-                    <Input placeholder="Buscar por usuario y nombre completo.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
+                    <Input placeholder="Buscar por usuario y nombre completo.." value={filterSomeName!} onChange={(value) => handleFilterSomeName(value) }/>
                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
                         <IconButton icon={<BsEraserFill />} style={{ background:'transparent', color:'black'}} onClick={handleClearSearch}></IconButton>
                     </Whisper>
                 </InputGroup>
                 <div style={{ display:'flex', gap:10}}>
-                    <SelectPicker label="Filtro" data={statusOptions} value={params.status} onChange={(value) => setParams(prev => ({...prev, status: value}))} searchable={false} placeholder="Estado"/>
-                    <SelectPicker label="Filtro" data={roleOptions} value={params.role} onChange={(value) => setParams(prev => ({...prev, role: value}))} searchable={false} placeholder="Cargo"/>
-                    <SelectPicker label="Filtro" data={branchOfficeOptions} value={params.officeId} onChange={(value) => setParams(prev => ({...prev, officeId: value}))} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
+                    <SelectPicker label="Filtro" data={statusOptions} value={filterStatus} onChange={(value) => handleFilterStatus(value!)} searchable={false} placeholder="Estado"/>
+                    <SelectPicker label="Filtro" data={roleOptions} value={filterRole} onChange={(value) => handleFilterRole(value!)} searchable={false} placeholder="Cargo"/>
+                    <SelectPicker label="Filtro" data={branchOfficeOptions} value={filterOfficeId} onChange={(value) => handleFilterOfficeId(value!)} loading={loadingBranchOffice} searchable={false} placeholder="Sucursal"/>
                 </div>
             </div>
             
@@ -207,7 +196,6 @@ export default function UserContainer(){
                     activePage={page}
                     onChangePage={setPage}
                     onChangeLimit={handleChangeLimit}
-                    locale={paginationLocaleES}
                     style={{ marginTop:7 }}
                     className="custom-pagination"
                     />
@@ -244,7 +232,7 @@ export default function UserContainer(){
                     </Panel>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
-            <CreateUserModal open={showModalCreate} hiddeModal={handleCloseModalCreate} onUserCreated={fetch} />
+            <CreateUserModal open={showModalCreate}  hiddeModal={() => handleOpenModalCreate(false)} onUserCreated={fetch} />
         </div>
     );
 }

@@ -3,7 +3,6 @@ import { loadAbort } from "../../../utils/loadAbort.utility";
 import { UseApiCall } from "../../../utils/useApi.model";
 import { GetUsers } from "../models/user.model";
 import { NewUserDTO } from "../models/userDto.model";
-import { ParamsUser } from "../models/userParams.model";
 import { UserProfile } from "../models/userProfile.model";
 import { UserUrl } from "../url/user.url";
 
@@ -23,10 +22,10 @@ export const createUserAsync = (user: NewUserDTO): UseApiCall<NewUserDTO> => {
     }
 }
 
-export const getAllUsersAsync = (limit: number, page: number, params?: ParamsUser) : UseApiCall<GetUsers> => {
+export const getAllUsersAsync = (limit: number, page: number, status?: number | null, role?: string | null, officeId?: number | null, someName?: string | null) : UseApiCall<GetUsers> => {
     const controller = loadAbort();
     return {
-        call: httpClient.post<GetUsers>(UserUrl.getAll(limit, page), params, {signal: controller.signal}),
+        call: httpClient.post<GetUsers>(UserUrl.getAll(limit, page), {status: status, role: role, officeId: officeId, someName: someName}, {signal: controller.signal}),
         controller
     }
 }

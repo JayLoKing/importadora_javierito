@@ -6,10 +6,9 @@ import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 import { useUpdateStockFormStore } from "../validations/useUpdateStockFormStore";
 import { useApi } from "../../../common/services/useApi";
-import { BranchOffice } from "../../branchOffice/models/branchOffice.model";
+import { BranchOffice, GetDataBranchOffice } from "../../branchOffice/models/branchOffice.model";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getBranchOfficesAsync2 } from "../../branchOffice/services/branchOfficeService";
-import { useRegisterItem } from "../hooks/useRegisterItem";
 import { FaBuilding, FaBoxOpen} from "react-icons/fa";
 import { createStockAsync } from "../services/stock.service";
 import { useUpdateStock } from "../hooks/useUpdateStock";
@@ -25,8 +24,9 @@ interface StockModalParams {
 }
 
 export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : StockModalParams) {
+    const [branchOffices, setBranchOffices] = useState<BranchOffice[]>([]);
     const {formData, updateField, resetForm, validationModel, loadData} = useUpdateStockFormStore();
-    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(), []);
+    const fetchBranchOfficesAsync = useMemo(() => getBranchOfficesAsync2(100,1), []);
     const fetchAcronymByIdAsync = useMemo(() => {
             if(open && id){
                 return getAcronymAsync(id);
@@ -34,9 +34,8 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
             return null;
     },[id]);
     const { data: acronymData, fetch: fetchData } = useApi<ItemAcronym>(fetchAcronymByIdAsync!, { autoFetch: true });
-    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<BranchOffice[]>(fetchBranchOfficesAsync, { autoFetch: true });
-    const { branchOfficeOptionsES } = useRegisterItem();
-    const branchOfficeOptions = dataBranchOffice?.map(branch => ({ label: branch.name, value: branch.id })) || [];
+    const { data: dataBranchOffice, loading: loadingBranchOffice, fetch: fetchBranchOffices } = useApi<GetDataBranchOffice>(fetchBranchOfficesAsync, { autoFetch: true });
+    
     const {showErrorMessage, showSuccessMessage} = useUpdateStock();
     const [isLoading, setIsLoading] = useState(false);
     const formRef = useRef<any>();
@@ -47,7 +46,14 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
             fetchBranchOffices();
             fetchData();
         }
-    }, [fetchBranchOffices, fetchData]);
+        if(dataBranchOffice){
+            if(Array.isArray(dataBranchOffice)){
+                setBranchOffices([]);
+            } else {
+                setBranchOffices(dataBranchOffice.first);
+            }
+        }
+    }, [open, fetchBranchOffices, fetchData, dataBranchOffice]);
 
     useEffect(() => {
         if (acronymData && !Array.isArray(acronymData)) {
@@ -58,6 +64,7 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
         }
     }, [acronymData]);
 
+    const branchOfficeOptions = branchOffices?.map(branch => ({ label: branch.name, value: branch.id })) || [];
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -101,7 +108,7 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
                         <Form ref={formRef} model={validationModel} formValue={formData} fluid>
                             <Form.Group controlId={'branchOfficeID'}>
                                 <Form.ControlLabel>Sucursales</Form.ControlLabel>
-                                <SelectPicker locale={branchOfficeOptionsES} value={formData.branchOfficeId} onChange={(value) => updateField('branchOfficeId', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
+                                <SelectPicker value={formData.branchOfficeId} onChange={(value) => updateField('branchOfficeId', value)} label={<FaBuilding/>} data={branchOfficeOptions} searchable loading={loadingBranchOffice} placeholder={loadingBranchOffice ? "Cargando..." : "Selecciona una sucursal"} style={{width: "100%"}} />
                             </Form.Group>
                             <Form.Group controlId={'quantity'}>
                                 <Form.ControlLabel>Cantidad del Repuesto</Form.ControlLabel>
