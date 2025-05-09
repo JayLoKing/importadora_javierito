@@ -19,3 +19,14 @@ div.rs-table-body-row-wrapper div.rs-table-row:nth-of-type(odd) {
   div.rs-table-body-row-wrapper div.rs-table-row div.rs-table-cell {
     background-color: inherit !important;
   }
+
+  .rs-btn.rs-btn-primary {
+    background: linear-gradient(to bottom right, #f97316 10%, #bd2828 90%) !important;
+    color: white !important;
+  }
+  
+  .rs-btn.rs-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: scale(1.01);
+  }
+  

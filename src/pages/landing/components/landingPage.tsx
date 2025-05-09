@@ -50,10 +50,10 @@ export default function LandingPage(){
     return(
         <Container  style={{ maxWidth: '100%', padding: 0 }}>
             <Header style={{ position: 'fixed', width: '100%', zIndex: 1000, background: "transparent", transition:"all 0.3s ease" }}>
-                <Navbar  style={{ background: scrolled ? 'rgba(192, 180, 180, 0.51)' : 'rgba(0, 0, 0, 0.1)', backdropFilter: "blur(10px)", height: "80px", padding: "0 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: '1px solid rgba(255, 255, 255, 0.7)'}}>
+                <Navbar  style={{ background: scrolled ? 'rgba(0, 0, 0, 0.1)' : 'rgba(192, 180, 180, 0.53)', backdropFilter: "blur(10px)", height: "80px", padding: "0 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: '1px solid white'}}>
                     <div style={{ display:"flex", alignItems:"center" }}>
-                        <Image circle src={LOGO} style={{ width: "60px", height: "60px", objectFit:"cover" }} />
-                        <label style={{marginLeft:"10px", fontSize:"22px", fontWeight:"bold", color:"black", fontFamily:"calibri"}}>IMPORTADORA JAVIERITO</label>
+                        <Image circle src={LOGO} style={{ width: "4rem", height: "4rem", objectFit:"cover", padding:1, border:'1px solid #1a1a1a'}} />
+                        <label style={{marginLeft:"10px", fontSize:"22px", fontWeight:"bold", color:"black", fontFamily:"calibri", textWrap:'balance'}}>IMPORTADORA JAVIERITO</label>
                     </div>
                     <Nav style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                         <NavItem icon={<FaHome />} onClick={() => scrollToSection('inicio')} style={{ color: 'Black', fontWeight: 'bold' }}>Inicio</NavItem>
@@ -65,7 +65,7 @@ export default function LandingPage(){
                     </Nav>
                     <div style={{display:"flex", gap:"10px", alignItems:"center"}}>
                         <IconButton appearance="primary" icon={< AdminIcon style={{ fontWeight:"bold", background:"transparent" }}/>} style={{ fontSize:"14px", fontWeight:"bold", border:"1px solid white", color:"white" }} onClick={()=> window.open("/login", "_blank", "noopener,noreferrer")}>Iniciar Sesión</IconButton>
-                        <Button appearance="primary" style={{ fontSize:"14px", backgroundColor: "#1a1a1a", color: "white", fontWeight: "bold" }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
+                        <Button style={{ fontSize:"14px", backgroundColor: "black", color: "white", fontWeight: "bold",  border: '1px solid white' }} onClick={handleWhatsapp}>Contactar con Ventas</Button>
                     </div>
                 </Navbar>
             </Header>
@@ -82,7 +82,7 @@ export default function LandingPage(){
                     <h4>Repuestos Americanos y Japoneses</h4>
                     <p style={{ fontSize: '20px', maxWidth: '800px', margin: '0 auto 30px' }}> Ofrecemos los mejores repuestos importados con garantía, entrega rápida y asesoramiento especializado. </p>
                     <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                        <Button size="lg" style={{ backgroundColor: '#f08b33', border: '2px solid white', color: 'white', fontWeight: 'bold' }} onClick={() => scrollToSection('catalogo')}>
+                        <Button size="lg" appearance="primary" style={{ border: '2px solid white', color: 'white', fontWeight: 'bold' }} onClick={() => scrollToSection('catalogo')}>
                             Ver Catálogo
                         </Button>
                         <Button size="lg" style={{ backgroundColor: 'black', border: '2px solid white', color: 'white', fontWeight: 'bold' }} onClick={handleWhatsapp}>
@@ -219,7 +219,7 @@ export default function LandingPage(){
                                     </Panel>
                                 </Col>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <Button style={{ backgroundColor: '#f08b33', color: 'white', fontWeight: 'bold', }} >
+                                    <Button appearance="primary" style={{ border: '2px solid white' }} >
                                         Ver Más Productos
                                     </Button>
                                 </div>
@@ -332,7 +332,7 @@ export default function LandingPage(){
                         </div>
                     </Container>
                 </section>
-                <section id="contacto" style={{ padding: '80px 20px', backgroundColor: '#f08b33', color: 'white', textAlign: 'center' }}>
+                <section id="contacto" style={{ padding: '80px 20px', background: "linear-gradient(to bottom right, #f97316 10%, #bd2828 90%)", color: 'white', textAlign: 'center' }}>
                     <h2 style={{ fontSize: '36px', marginBottom: '30px' }}>¿Listo para encontrar su repuesto ideal?</h2>
                     <p style={{ maxWidth: '800px', margin: '0 auto 40px', fontSize: '18px' }}>
                         Contáctenos hoy mismo y un asesor especializado le guiará en todo el proceso.
@@ -342,7 +342,7 @@ export default function LandingPage(){
                             size="lg" 
                             style={{ 
                                 backgroundColor: 'white', 
-                                color: '#f08b33', 
+                                color: "#db7114", 
                                 fontWeight: 'bold' 
                             }}
                             onClick={handleWhatsapp}
@@ -363,9 +363,9 @@ export default function LandingPage(){
                         </Button>
                     </div>
                 </section>
-                <section  style={{ padding: '80px 20px', backgroundColor: '#f8f8f8' }}>
+                {/* <section  style={{ padding: '80px 20px', backgroundColor: '#f8f8f8' }}>
                     
-                </section>
+                </section> */}
             </Content>
             <Footer style={{ padding: "20px", backgroundColor: "#f5f5f5", borderTop: "1px solid #e5e5e5" }}>
             <Container>

@@ -1,6 +1,100 @@
-.button2{
-    font-size: medium;
-    width: auto;
-    color: black;
+
+.welcome-section {
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.welcome-section h4 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.card-panel {
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-panel.gradient1 {
+    background: linear-gradient(to bottom right, #f97316 10%, #bd2828 90%);
+  }
+  
+  .card-panel.gradient2 {
+    background: linear-gradient(to bottom right, #ea580c 10%, #702323 90%);
+  }
+  
+  .card-panel.gradient3 {
+    background: linear-gradient(to bottom right, #ff7c33 10%, #b33030 90%);
+  }
+  
+  
+.card-panel:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-panel h5 {
+    margin-top: 0;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.card-panel p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+@media (max-width: 1200px) {
+    .home-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .card-panel {
+        margin-bottom: 20px !important;
+    }
     
+    .home-container {
+        padding: 15px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        padding: 10px;
+        overflow-y: auto;
+        height: calc(100vh - 60px); /* Ajusta según la altura de tu navbar */
+    }
+    
+    .welcome-section h4 {
+        font-size: 18px;
+    }
+    
+    .welcome-section p {
+        font-size: 14px;
+    }
+    
+    .card-panel {
+        margin-bottom: 15px !important;
+    }
+}
+
+/* Ajustes para solucionar problemas de scroll en móviles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
 }

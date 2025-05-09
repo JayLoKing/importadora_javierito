@@ -111,7 +111,7 @@ export default function UserContainer(){
                     </InputGroup.Addon>
                     <Input placeholder="Buscar por usuario y nombre completo.." value={searchTerm} onChange={(value) => {setSearchTerm(value); setParams(prev => ({...prev, someName: value}))} }/>
                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
-                        <IconButton icon={<BsEraserFill />} appearance="primary" style={{ background:'transparent', color:'black'}} onClick={handleClearSearch}></IconButton>
+                        <IconButton icon={<BsEraserFill />} style={{ background:'transparent', color:'black'}} onClick={handleClearSearch}></IconButton>
                     </Whisper>
                 </InputGroup>
                 <div style={{ display:'flex', gap:10}}>
@@ -155,7 +155,7 @@ export default function UserContainer(){
                                             <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>                                        
                                     ) : (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Inactivo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>Inactivo
                                             <BsFillXCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>
                                     )}

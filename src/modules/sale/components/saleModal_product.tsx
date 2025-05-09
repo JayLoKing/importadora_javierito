@@ -53,8 +53,8 @@ export default function SaleModalProduct({ open, hiddeModal }: ModalInfoProductP
                                 </div>
                             </div>
                             <div style={{ marginBottom: 12 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <strong style={{width:"100%"}}>Estado:</strong>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <strong style={{width:"50%"}}>Estado:</strong>
                                     <Toggle checkedChildren="Completada" unCheckedChildren="Pendiente" />
                                 </div>
                             </div>

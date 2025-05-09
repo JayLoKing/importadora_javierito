@@ -122,12 +122,12 @@ export default function SaleForm(){
                                 </div>
                                 <h6 style={{display:"flex", justifyContent:"center", marginBottom:"20px"}}>Tabla de Productos Seleccionados</h6>
                                 <Table cellBordered bordered height={300} data={data} rowHeight={60} style={{marginBottom:20, borderRadius:"5px",  }}>
-                                    <Column width={90} align="center" fixed resizable>
+                                    <Column width={150} align="center" fixed resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Código</HeaderCell>
                                         <Cell dataKey="code" style={{alignItems:"center"}}>
                                         </Cell>
                                     </Column>
-                                    <Column flexGrow={1} align="center" resizable>
+                                    <Column width={200} align="center" resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Repuesto</HeaderCell>
                                         <Cell dataKey="name" style={{alignItems:"center"}}>
                                         {rowData => (
@@ -154,10 +154,10 @@ export default function SaleForm(){
                                             {rowData => `$${rowData.price.toFixed(2)}`}
                                         </Cell>
                                     </Column>
-                                    <Column width={100} align="center" fixed resizable>
+                                    <Column width={98} align="center" fixed resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Descuento (%)</HeaderCell>
                                         <Cell dataKey="discount" style={{alignItems:"center"}}>
-                                            <InputNumber type="number" style={{ width: 80 }} />
+                                            <InputNumber type="number" style={{ width: 70 }} />
                                         </Cell>
                                     </Column>
                                     <Column width={100} align="center" resizable>
@@ -174,7 +174,7 @@ export default function SaleForm(){
                                             {rowData => `$${rowData.price.toFixed(2)}`}
                                         </Cell>
                                     </Column>
-                                    <Column width={80} align="center" resizable>
+                                    <Column width={75} align="center" resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Acciones</HeaderCell>
                                         <Cell style={{alignItems:"center"}}>
                                         {rowData => (
@@ -319,7 +319,7 @@ export default function SaleForm(){
                                 <FaPrint style={{ marginRight: '10px' }} />
                                 Imprimir Recibo
                             </Button>
-                            <Button appearance="primary" size="lg" onClick={() => navigate('/saleTable')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background:"black", fontWeight:"bold" }} >
+                            <Button size="lg" onClick={() => navigate('/saleTable')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background:"black", fontWeight:"bold", color:'white' }} >
                                 <FaHistory style={{ marginRight: '10px' }} /> Historial de Ventas 
                             </Button>
                         </div>

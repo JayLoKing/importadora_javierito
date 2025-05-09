@@ -38,7 +38,7 @@ export default function SaleTable(){
             <Panel bordered style={{ marginBottom:15 }}>
                 <Stack spacing={10} style={{ marginBottom: 15 }}>
                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Volver</Tooltip>}>
-                        <IconButton icon={<FaArrowLeft style={{fontSize:"16px"}}/>} appearance="primary" style={{ backgroundColor: "transparent", color:"black"}} onClick={() => navigate('/sale')}/>
+                        <IconButton icon={<FaArrowLeft style={{fontSize:"16px"}}/>} style={{ backgroundColor: "transparent", color:"black"}} onClick={() => navigate('/sale')}/>
                     </Whisper>
                     <div>
                         <h4 style={{ margin: 0 }}>Ventas Realizadas</h4>
@@ -63,7 +63,7 @@ export default function SaleTable(){
                        </Dropdown>
                 </div>
                 <Table cellBordered bordered data={salesData} autoHeight rowHeight={70} style={{ background: "white", fontSize:"14px", borderRadius:"5px"}} height={590} headerHeight={50}>
-                    <Column flexGrow={1} align="center" fixed resizable>
+                    <Column flexGrow={1} minWidth={190} align="center" fixed resizable>
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >ID Venta</HeaderCell>
                         <Cell dataKey="id" style={{alignItems:"center"}} />
                     </Column>
@@ -71,15 +71,15 @@ export default function SaleTable(){
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Fecha</HeaderCell>
                         <Cell dataKey="date" style={{alignItems:"center"}} />
                     </Column>
-                    <Column flexGrow={1} align="center" resizable>
+                    <Column flexGrow={1} minWidth={190} align="center" resizable>
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Vendedor</HeaderCell>
                         <Cell dataKey="user" style={{alignItems:"center"}}/>
                     </Column>
-                    <Column flexGrow={1} align="center" resizable>
+                    <Column flexGrow={1} minWidth={190} align="center" resizable>
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Cliente</HeaderCell>
                         <Cell dataKey="user" style={{alignItems:"center"}}/>
                     </Column>
-                    <Column width={200} align="center" resizable>
+                    <Column width={210} align="center" resizable>
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}} >Repuestos</HeaderCell>
                         <Cell dataKey="products" style={{alignItems:"center"}} >
                             {rowData => (
@@ -104,7 +104,7 @@ export default function SaleTable(){
                             {rowData => `$${rowData.total.toFixed(2)}`}
                         </Cell>
                     </Column>
-                    <Column width={120} align="center" resizable>
+                    <Column width={130} align="center" resizable>
                         <HeaderCell style={{ backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize:"14px", textAlign:"center"}}>Acciones</HeaderCell>
                         <Cell>
                             <Whisper placement="top" trigger="hover" speaker={<Tooltip>Imprimir venta</Tooltip>}>
@@ -159,29 +159,30 @@ export default function SaleTable(){
             </FlexboxGrid>
             <SaleModalProduct open={showModal} hiddeModal={() => handleModal(false)} />
             
-            <Modal open={open} onClose={handleClose} size="xs" backdrop="static" keyboard={false}>
+            <Modal open={open} onClose={handleClose} backdrop="static" >
                 <Modal.Header>
                     <Modal.Title >
-                        <Stack justifyContent="center" alignItems="center">
-                            <FaExclamationTriangle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
+                        <Stack >
+                        <FaExclamationTriangle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
                             <strong>Advertencia</strong>
                         </Stack>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div style={{ backgroundColor: "#f08b33", padding: 7, borderRadius: 4, display:"flex", alignItems:"center", justifyContent:"center", marginBottom: 10}}>
-                        <p style={{ color:"white", fontWeight:"bold" }}>¡Esta acción no se puede deshacer!</p>
-                    </div>
-                        <p><strong>Devolver Venta?</strong></p>
-                        <p> Está seguro que desea realizar la devolución de la venta "ID DE LA VENTA"</p>
+                    <Stack justifyContent="center" direction="row" spacing={5} alignItems="center">
+                        <div style={{ display:'flex', alignItems:"center", justifyContent:"center", flexDirection:'column'}}>
+                            <p style={{ color: '#d32f2f', marginBottom:5 }}><strong>¡Atención!</strong> Esta acción no se puede deshacer.</p>
+                            <div>
+                                <strong>¿Devolver Venta?</strong>
+                                <p>Está segur@ que desea realizar la devolución de la venta: <strong>id de la venta</strong></p>
+                            </div>
+                        </div>
+                        
+                    </Stack>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button appearance="primary">
-                        Sí
-                    </Button>
-                    <Button onClick={handleClose} appearance="subtle">
-                        No
-                    </Button>
+                    <Button type="submit" appearance="ghost" style={{ color: "#f08b33", borderColor: "#f08b33"}}>Sí</Button>
+                    <Button onClick={handleClose} appearance="primary">No</Button>
                 </Modal.Footer>
             </Modal>            
         </div>

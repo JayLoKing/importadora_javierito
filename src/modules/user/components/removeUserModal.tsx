@@ -4,13 +4,13 @@ import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
-import { deleteItemAsync } from "../services/item.service";
+
 import { useAuthStore } from "../../../store/store";
 import { useEffect, useState } from "react";
 import { AuthUser } from "../../auth/models/auth.model";
 import { jwtDecoder } from "../../../utils/jwtDecoder";
 
-interface ItemModalParams {
+interface UserModalParams {
     open: boolean;
     hiddeModal: (hide: boolean) => void;
     id: number;
@@ -18,7 +18,7 @@ interface ItemModalParams {
     onItemDeleted?: () => void;  
 }
 
-export default function ItemDelete({open, hiddeModal, id, name, onItemDeleted} : ItemModalParams){
+export default function UserDelete({open, hiddeModal, id, name, onItemDeleted} : UserModalParams){
 
     const jwt = useAuthStore(state => state.jwt);
     const [user, setUser] = useState<AuthUser>({ id: 0, userName: '', role: '' });
@@ -39,7 +39,7 @@ export default function ItemDelete({open, hiddeModal, id, name, onItemDeleted} :
       async function confirmDelete() {
         try {
             console.log("id", id, "user.id", user.id);
-            await deleteItemAsync(id, user.id); 
+            // await deleteItemAsync(id, user.id); 
             hiddeModal(false);
             if(onItemDeleted){
                 onItemDeleted();
@@ -72,11 +72,11 @@ export default function ItemDelete({open, hiddeModal, id, name, onItemDeleted} :
                             <div style={{ display:'flex', gap:10 }}>
                             <section>
                                 <p>
-                                    <strong>¿Eliminar Registro?</strong>
+                                    <strong>¿Eliminar Usuario?</strong>
                                 </p>
                             </section>
                                 <p>
-                                    Está segur@ que desea eliminar el registro: <strong>{name}</strong>
+                                    Está segur@ que desea eliminar el usuario: <strong>{name}</strong>
                                 </p>
                             </div>
                         </div>
@@ -85,6 +85,7 @@ export default function ItemDelete({open, hiddeModal, id, name, onItemDeleted} :
                 <ModalFooter>
                     <Button onClick={() => confirmDelete()} type="submit" appearance="ghost" style={{ color: "#f08b33", borderColor: "#f08b33"}}>Sí</Button>
                     <Button onClick={() => hiddeModal(open)} appearance="primary">No</Button>
+
                 </ModalFooter>
             </Modal>
         </>

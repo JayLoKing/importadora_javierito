@@ -25,6 +25,8 @@ import { CiCircleInfo } from "react-icons/ci";
 import { BsEraserFill, BsWrenchAdjustable, BsFillTrash3Fill  } from "react-icons/bs";
 import '../styles/pagination.style.css';
 import { useNavigate } from "react-router-dom";
+import { TbPigMoney } from "react-icons/tb";
+import ItemInformation from "./item_info";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -35,6 +37,12 @@ export default function ItemTable() {
     const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
     const {handleModalStock, showModalStock, setGetIDStock, getIDStock} = useUpdateStock();
     const {handleModalBareCode, showModalBareCode, setGetIDBarcode, getIDBarcode} = useBarcode();
+    
+    const [showModalInfo, setShowModalInfo] = useState<boolean>(false)
+    function handleModalInfo(hidde: boolean): void {
+      setShowModalInfo(hidde)
+    }
+    
     const navigate = useNavigate();
     const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
@@ -128,7 +136,7 @@ export default function ItemTable() {
               <h4>Gestión de Inventario</h4>
               <p style={{ color:'#878787' }}>Registra repuestos, visualiza el inventario de manera general, y recupera repuestos eliminados </p>         
             </div>
-            <div >
+            <div>
               <IconButton appearance='primary' icon={<PlusIcon />} size="lg" onClick={() => handleModalCreate(true)} >
                 Nuevo Repuesto
               </IconButton>
@@ -141,34 +149,34 @@ export default function ItemTable() {
               </InputGroup.Addon>
               <Input placeholder="Buscar por repuesto, especificación, modelo, marca, categoría y sub Categoría.." value={searchTerm!} onChange={(value) => handleSearch(value)}/>
               <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
-                <IconButton icon={<BsEraserFill />} appearance="primary" style={{ background:'transparent', color:'black'}} onClick={handleClearSearch} ></IconButton>
+                <IconButton icon={<BsEraserFill />} style={{ background:'transparent', color:'black'}} onClick={handleClearSearch} ></IconButton>
               </Whisper>
             </InputGroup>
             <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchBrand(value as string)} searchable placeholder="Marca"/>
             <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchSubCategory(value as string)} searchable placeholder="Sub-Categoría"/>
-            <Button appearance="primary" style={{ background:'#16151A'}} onClick={() => navigate('/trash')}>
+            <Button style={{ background:'#16151A', color:'white' }} onClick={() => navigate('/trash')}>
               <BsFillTrash3Fill style={{ marginRight:7 }}/>
               Papelera
             </Button>
           </div>
           <Panel bordered style={{ marginBottom:15 }} >
             <Table bordered cellBordered style={{ background: "white", fontSize:"15px", borderRadius:"5px"}} locale={tableLoadingES} loading={ loading}  height={390} data={filteredData} rowHeight={80} headerHeight={60}>
-              <Column align="center" flexGrow={3.7} minWidth={200} fixed resizable >
+              <Column align="center" flexGrow={3.7} minWidth={220} fixed resizable >
                 <HeaderCell style={{backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize: '14px',  whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Acciones</HeaderCell>
                 <Cell>
                   { rowData => ( 
                     <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
                       <Whisper placement="top" trigger="hover" speaker={<Tooltip>Editar</Tooltip>}>
-                        <IconButton onClick={() => {setGetIDUpdate(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}} appearance="primary" />
+                        <IconButton onClick={() => {setGetIDUpdate(rowData.itemID); handleModalUpdate(true)}} icon={<FaEdit style={{width:22, height:22}}/>} style={{ width: 40, background:"transparent", color:"black"}}  />
                       </Whisper>
                       <Whisper placement="top" trigger="hover" speaker={<Tooltip>Agregar Stock</Tooltip>}>
-                        <IconButton onClick={() => {setGetIDStock(rowData.itemID); handleModalStock(true) }} icon={<PlusIcon style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }} appearance="primary" />
+                        <IconButton onClick={() => {setGetIDStock(rowData.itemID); handleModalStock(true) }} icon={<PlusIcon style={{width:20, height:20}}/>} style={{ width: 40, background:"transparent", color:"black" }}  />
                       </Whisper>
                       <Whisper placement="top" trigger="hover" speaker={<Tooltip>Código de Barras</Tooltip>}>
-                        <IconButton onClick={() => {setGetIDBarcode(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                        <IconButton onClick={() => {setGetIDBarcode(rowData.itemID); handleModalBareCode(true)}} icon={<FaBarcode style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }}  />
                       </Whisper>
                       <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar Ítem</Tooltip>}>
-                        <IconButton onClick={() => {setGetIDDelete(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
+                        <IconButton onClick={() => {setGetIDDelete(rowData.itemID); handleModalDelete(true, { id: rowData.itemID, name: rowData.name })}} icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }}  />
                       </Whisper>
                     </Stack>
                   )}
@@ -180,14 +188,14 @@ export default function ItemTable() {
                   <Cell dataKey="itmID" />
                 </Column>
               )}
-              <Column align="center" flexGrow={2} minWidth={200} resizable>
+              <Column align="center" flexGrow={2} minWidth={240} resizable>
                 <HeaderCell style={{backgroundColor: "#16151A", color:"white", fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Repuesto</HeaderCell>
                 <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" >
                   {rowData => (
                     <div>
                       {rowData.name}
                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Información</Tooltip>} >
-                          <Button appearance="subtle" size="xs" style={{ background:"transparent" }}>
+                          <Button appearance="subtle" size="xs" style={{ background:"transparent" }} onClick={() => handleModalInfo(true)}>
                             <CiCircleInfo style={{ fontSize: '14px', fontWeight:"bold" }}/>
                           </Button>
                         </Whisper>
@@ -205,7 +213,7 @@ export default function ItemTable() {
                   )}
                 </Cell>
               </Column>
-              <Column align="center" flexGrow={2} minWidth={150} resizable>
+              <Column align="center" flexGrow={2} minWidth={200} resizable>
                 <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Especificaciones</HeaderCell>
                   <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
               </Column>
@@ -213,7 +221,7 @@ export default function ItemTable() {
                 <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Imagen del Repuesto</HeaderCell>
                 <ImageCell  rowData={(rowData: any ) => rowData}/>
               </Column>
-              <Column align="center" flexGrow={1} minWidth={150} resizable>
+              <Column align="center" flexGrow={1} minWidth={180} resizable>
                 <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
                 <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
               </Column>
@@ -306,12 +314,23 @@ export default function ItemTable() {
                 <small>Total de repuestos eliminados</small>
               </Panel>
             </FlexboxGrid.Item>
+            <FlexboxGrid.Item as={Col} colspan={24} md={8}  style={{ marginBottom:10, flex:1}}>
+              <Panel bordered>
+                <div style={{ display:'flex', justifyContent:'space-between'}}>
+                  <h5>Valuación de Inventario</h5>
+                  <TbPigMoney style={{fontSize:'1.7em'}}/>
+                </div>
+                <h3 style={{ margin: '10px 0' }}>5000bs</h3>
+                <small>Total de Capital Invertida en repuestos</small>
+              </Panel>
+            </FlexboxGrid.Item>
           </FlexboxGrid>
           <ItemForm open={showModal} hiddeModal={() => handleModalCreate(false)} onItemCreated={handleRefreshData} />
           <ItemUpdate id={getIDUpdate} open={showModalUpdate} hiddeModal={() => handleModalUpdate(false)} onItemUpdated={handleRefreshData} />
           <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
           <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)} onStockUpdated={handleRefreshData}/>
           <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
+          <ItemInformation open={showModalInfo} hiddeModal={()=> handleModalInfo(false)} />
         </div>
       );   
     } else {

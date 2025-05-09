@@ -23,31 +23,38 @@ export default function RemoveOfficeModal({ open, hiddeModal, id, name, refreshL
     }
 
     return (
-        <Modal open={open} onClose={() => hiddeModal(false)} overflow>
-            <ModalHeader>
-                <ModalTitle>
-                    <Stack justifyContent="center" alignItems="center">
+        <>
+            <Modal  open={open} onClose={()=> hiddeModal(false)} backdrop="static">
+                <ModalHeader>
+                    <ModalTitle >
+                        <Stack >
                         <FaExclamationTriangle style={{color: "#f08b33", height:"30px", width:"30px", marginRight:"10px"}}/>
                             <strong>Advertencia</strong>
+                        </Stack>
+                    </ModalTitle>
+                </ModalHeader>
+                <ModalBody>
+                    <Stack justifyContent="center" direction="row" spacing={5} alignItems="center">
+                        <div style={{ display:'flex', flexDirection:'column', alignItems:'center'}}>
+                            <p style={{ color: '#d32f2f', marginBottom:5 }}><strong>¡Atención!</strong> Esta acción no se puede deshacer.</p>
+                            <div style={{ display:'flex', gap:10 }}>
+                            <section>
+                                <p>
+                                    <strong>¿Eliminar Registro?</strong>
+                                </p>
+                            </section>
+                                <p>
+                                    Está segur@ que desea eliminar el registro: <strong>{name}</strong>
+                                </p>
+                            </div>
+                        </div>
                     </Stack>
-                </ModalTitle>
-            </ModalHeader>
-            <ModalBody>
-                <Stack justifyContent="center" direction="row" spacing={5} alignItems="center">
-                    <section>
-                        <p>
-                            <strong>Eliminar la sucursal?</strong>
-                        </p>
-                    </section>
-                    <p>
-                        Está segur@ de eliminar la sucursal {name}?
-                    </p>
-                </Stack>
-            </ModalBody>
-            <ModalFooter>
-                <Button onClick={() => confirmDelete()} type="submit" appearance="ghost" style={{ color: "#f08b33", borderColor: "#f08b33"}}>Sí</Button>
-                <Button onClick={() => hiddeModal(open)} appearance="primary">No</Button>
-            </ModalFooter>
-        </Modal>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={() => confirmDelete()} type="submit" appearance="ghost" style={{ color: "#f08b33", borderColor: "#f08b33"}}>Sí</Button>
+                    <Button onClick={() => hiddeModal(open)} appearance="primary">No</Button>
+                </ModalFooter>
+            </Modal>
+        </>
     )
 }

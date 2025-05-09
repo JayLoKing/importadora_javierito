@@ -15,6 +15,7 @@ import { createStockAsync } from "../services/stock.service";
 import { useUpdateStock } from "../hooks/useUpdateStock";
 import { getAcronymAsync } from "../services/item.service";
 import { ItemAcronym } from "../models/item.model";
+import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 
 interface StockModalParams {
     open: boolean;
@@ -91,11 +92,10 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
     return (
         <>
             <Modal size={"xs"} open={open} onClose={() => hiddeModal(false)} overflow>
-                <ModalTitle>
-                    <Stack justifyContent="center" alignItems="center">
-                        <strong>Actualización de Stock</strong>
-                    </Stack>   
-                </ModalTitle>
+                <ModalHeader>
+                    <ModalTitle style={{ fontWeight: "bold" }}>Actualización de Stock</ModalTitle>
+                    <p>Agrega stock de este repuesto a otras sucursales</p> 
+                </ModalHeader>
                 <ModalBody>
                     <Stack spacing={24} direction="column" alignItems="center" justifyContent="center">
                         <Form ref={formRef} model={validationModel} formValue={formData} fluid>
@@ -105,15 +105,11 @@ export default function UpdateStock ({open, hiddeModal,id, onStockUpdated} : Sto
                             </Form.Group>
                             <Form.Group controlId={'quantity'}>
                                 <Form.ControlLabel>Cantidad del Repuesto</Form.ControlLabel>
-                                    <InputGroup inside>
-                                        <InputGroup.Addon>
-                                            <FaBoxOpen />
-                                        </InputGroup.Addon>
-                                            <Form.Control
-                                                name="quantity"
-                                                type="number"
-                                                onChange={(value) => updateField('quantity', parseFloat(value))}
-                                    />
+                                <InputGroup inside>
+                                    <InputGroup.Addon>
+                                        <FaBoxOpen />
+                                    </InputGroup.Addon>
+                                    <Form.Control name="quantity" type="number" onChange={(value) => updateField('quantity', parseFloat(value))}/>
                                 </InputGroup>
                             </Form.Group>
                         </Form>

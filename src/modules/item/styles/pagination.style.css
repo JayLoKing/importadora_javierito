@@ -17,14 +17,13 @@
   /* Hover en botones */
   .custom-pagination .rs-pagination-btn:hover {
     color: #fff !important;
-    background-color: #f08b33 !important;
+    background: linear-gradient(to bottom right, #ee9454 10%, #bd6060 90%) !important;
   }
   
   /* Botón activo (página actual) */
   .custom-pagination .rs-pagination-btn-active {
     color: white !important;
-    background-color: #f08b33 !important;
-    border-color: #f08b33 !important;
+    background: linear-gradient(to bottom right, #f97316 10%, #bd2828 90%) !important;
     font-weight: bold !important;
   }
   

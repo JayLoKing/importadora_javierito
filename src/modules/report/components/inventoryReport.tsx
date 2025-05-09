@@ -210,12 +210,12 @@ export default function InventoryReport() {
                         <Cell dataKey="code" style={{alignItems:"center"}}>
                         </Cell>
                     </Column>
-                    <Column width={150} align="center"  resizable>
+                    <Column flexGrow={1} minWidth={170} align="center"  resizable>
                         <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold' }}> Tipo de Reporte </HeaderCell>
                         <Cell dataKey="code" style={{alignItems:"center"}}>
                         </Cell>
                     </Column>
-                    <Column width={150} align="center"  resizable>
+                    <Column width={170} align="center"  resizable>
                         <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold' }}>Filtro</HeaderCell>
                         <Cell dataKey="code" style={{alignItems:"center"}}>
                         </Cell>
@@ -225,7 +225,7 @@ export default function InventoryReport() {
                         <Cell dataKey="code" style={{alignItems:"center"}}>
                         </Cell>
                     </Column>
-                    <Column width={130} align="center"  resizable>
+                    <Column width={150} align="center"  resizable>
                         <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold' }}>Estado</HeaderCell>
                         <Cell dataKey="code" style={{alignItems:"center"}}>
                             {(rowData) => (
@@ -235,7 +235,7 @@ export default function InventoryReport() {
                                             <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>                                        
                                     ) : (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Inactivo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>Inactivo
                                             <BsFillXCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>
                                     )}

@@ -41,13 +41,14 @@
     height: auto;
   }
   .navItem:hover {
-    background: #eb994d !important;
+    background: linear-gradient(to bottom right, #ee9454 10%, #bd6060 90%) !important;
     color: white !important;
     font-weight: medium;
+    font-weight: bold;
   }
   .navItem.active {
     color: white !important;
-    background: #db7114 !important;
+    background: linear-gradient(to bottom right, #f97316 10%, #bd2828 90%) !important;
     font-weight: bold;
   }
 

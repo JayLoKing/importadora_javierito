@@ -182,7 +182,7 @@ export default function BranchOfficeModal({ open, hiddeModal, refreshList, detai
                                         </Button>
                                     </div>
                                 </Uploader>
-                            </Form.Group>
+                        </Form.Group>
                     </Tabs.Tab>
                 </Tabs>
             </ModalBody>

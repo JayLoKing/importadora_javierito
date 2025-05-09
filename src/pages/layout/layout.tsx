@@ -1,11 +1,10 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer, Toggle } from "rsuite";
+import { Container, Header, Sidebar, Sidenav, Content, Nav, IconButton, HStack, Stack, Image, Divider, Badge, Navbar, Whisper, Dropdown, Popover, Grid, Row, Col, Avatar, Footer } from "rsuite";
 import { FC, useEffect, useState, useRef, ReactNode } from "react";
 import { Icon, Search } from '@rsuite/icons';
-import { FaWrench, FaFileAlt, FaShoppingCart, FaTrash, FaUsers, FaHome, FaSearch, FaElementor, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaEdit, FaPowerOff } from "react-icons/fa";
+import { FaShoppingCart, FaUsers, FaHome, FaSearch, FaRegBell, FaShoppingBag, FaEllipsisV, FaUser, FaEdit, FaPowerOff } from "react-icons/fa";
 import { MdOutlineInventory } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
 import LOGO from '../../assets/LogoJavier.jpg';
 import NavItem from "rsuite/esm/Nav/NavItem";
 import { FaShop, FaBars } from "react-icons/fa6";
@@ -16,6 +15,7 @@ import { AuthUser } from "../../modules/auth/models/auth.model";
 import { NotificationComponent } from "../../modules/notification/components/Notification";
 import { useLayaout } from "./hooks/useLayaout";
 import Profile from "../../modules/user/components/profile";
+import { BsGraphUpArrow, BsWrenchAdjustable } from "react-icons/bs";
 
 interface LayoutProps {
   titleComponent: ReactNode;
@@ -101,13 +101,13 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
 
   const navItems = [
     { key: '1', icon: FaHome, label: 'Inicio' },
-    { key: '2', icon: FaShoppingCart, label: 'Carrito' },
-    { key: '3', icon: FaWrench, label: 'Inventario' },
-    { key: '4', icon: FaShop, label: 'Sucursales' },
-    { key: '5', icon: FaFileAlt, label: 'Reportes' },
-    { key: '6', icon: FaElementor, label: 'Movimientos' },
-    { key: '7', icon: FaUsers, label: 'Vendedores' },
-    { key: '8', icon: FaTrash, label: 'Papelera' },
+    { key: '2', icon: BsGraphUpArrow, label: 'Dashboard' },
+    { key: '3', icon: BsWrenchAdjustable, label: 'Inventario' },
+    { key: '4', icon: FaShoppingCart, label: 'Ventas' },
+    { key: '5', icon: FaShoppingBag, label: 'Reservas' },
+    { key: '6', icon: FaShop, label: 'Sucursales' },
+    { key: '7', icon: MdOutlineInventory, label: 'Reportes' },
+    { key: '8', icon: FaUsers, label: 'Usuarios' }
   ];
   
   const [showModalProfile, setShowModalProfile] = useState<boolean>(false);
@@ -149,12 +149,13 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
             <Sidenav.Body style={{ flexGrow: 1, fontSize: "20px" }}>
               <Nav defaultActiveKey="1" activeKey={activeKey} onSelect={(key) => setActiveKey(key)} >
                 <Nav.Item eventKey="1" onClick={() => navigate('/home')} icon={<Icon as={FaHome} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "1" ? "active" : ""}`} >Inicio</Nav.Item>
-                <Nav.Item eventKey="2" style={{  }} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`}>Carrito</Nav.Item>
-                <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={FaWrench} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
-                <Nav.Item eventKey="4" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingBag} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Ventas</Nav.Item>  
-                <Nav.Item eventKey="5" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Sucursales</Nav.Item>
-                <Nav.Item eventKey="6" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "6" ? "active" : ""}`}>Reportes</Nav.Item>
-                <Nav.Item eventKey="7" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Usuarios</Nav.Item>
+                <Nav.Item eventKey="2" onClick={() => navigate('/dashboard')} icon={<Icon as={BsGraphUpArrow} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "2" ? "active" : ""}`} >Dashboard</Nav.Item>
+                <Nav.Item eventKey="3" onClick={() => navigate('/items')} icon={<Icon as={BsWrenchAdjustable} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "3" ? "active" : ""}`}>Inventario</Nav.Item>
+                <Nav.Item eventKey="4" onClick={() => navigate('/sale')} icon={<Icon as={FaShoppingCart} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "4" ? "active" : ""}`}>Ventas</Nav.Item>  
+                <Nav.Item eventKey="5"                                   icon={<Icon as={FaShoppingBag} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "5" ? "active" : ""}`}>Reservas</Nav.Item>
+                <Nav.Item eventKey="6" onClick={() => navigate('/branchOffice')}  icon={<Icon as={FaShop} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "6" ? "active" : ""}`}>Sucursales</Nav.Item>
+                <Nav.Item eventKey="7" onClick={() => navigate('/report')} icon={<Icon as={MdOutlineInventory} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "7" ? "active" : ""}`}>Reportes</Nav.Item>
+                <Nav.Item eventKey="8" onClick={() => navigate('/register')} icon={<Icon as={FaUsers} style={{ height: "20px", width: "20px", color:'white' }} />} className={`navItem ${expand ? "" : "collapsed"} ${activeKey === "8" ? "active" : ""}`}>Usuarios</Nav.Item>
               </Nav>
             </Sidenav.Body>
           </Sidenav>
@@ -188,15 +189,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
                 ) : (
                   <>
                     <NotificationComponent userRole={"Administrador"} visibility={handleVisibility}/>
-                    <Whisper trigger="click" placement="bottomEnd" speaker={
-                      <Popover style={{ textAlign: "center" }}>
-                        <div style={{ padding: "5px", fontSize: "13px" }}>
-                          <Toggle style={{ background: "white", fontSize: "13px", padding: "3px", }}>Modo Oscuro</Toggle>
-                        </div>
-                      </Popover>
-                    }>
-                      <IconButton style={{ marginRight: "20px", fontSize: '25px', background: "transparent", color: "white" }} icon={<IoMdSettings />} appearance="subtle" onClick={handleVisibility} />
-                    </Whisper>
+                    
                     <Whisper trigger="click" placement="bottomEnd" speaker={
                       <Popover >
                         <div style={{ padding: "5px", fontSize: "13px" }}>
@@ -325,7 +318,7 @@ const NavToggle = ({ expand, onChange }: { expand: boolean; onChange: () => void
 const Brand = ({ }: { expand: boolean }) => {
   return (
     <HStack className="pagebrand" >
-      <div style={{ borderRadius: "50%", backgroundColor: "#db7114" }} >
+      <div style={{ borderRadius: "50%", background: "linear-gradient(to bottom right, #f97316 10%, #bd2828 90%)" }} >
         <Image circle src={LOGO} width={120} style={{ padding: "3px", cursor: "pointer" }} />
       </div>
       {/* {expand && <Text style={{fontWeight:"bold", textAlign:"left", color:"black"}}>IMPORTADORA JAVIERITO</Text>} */}

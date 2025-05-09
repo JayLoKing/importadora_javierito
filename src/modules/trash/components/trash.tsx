@@ -15,7 +15,7 @@ export default function TrashTable (){
             <Panel bordered style={{ marginBottom:15 }}>
                 <Stack spacing={10} style={{ marginBottom: 20 }}>
                     <Whisper placement="top" trigger="hover" speaker={<Tooltip>Volver</Tooltip>}>
-                        <IconButton icon={<FaArrowLeft style={{fontSize:"16px"}}/>} appearance="primary" style={{ backgroundColor: "transparent", color:"black"}} onClick={()=> navigate('/items')}/>
+                        <IconButton icon={<FaArrowLeft style={{fontSize:"16px"}}/>}  style={{ backgroundColor: "transparent", color:"black"}} onClick={()=> navigate('/items')}/>
                     </Whisper>
                     <div>
                         <h4>Repuestos Eliminados</h4>
@@ -29,22 +29,22 @@ export default function TrashTable (){
                         </InputGroup.Addon>
                         <Input placeholder="Buscar repuesto.." />
                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Limpiar buscador</Tooltip>}>
-                            <IconButton icon={<BsEraserFill />} appearance="primary" style={{ background:'transparent', color:'black'}} ></IconButton>
+                            <IconButton icon={<BsEraserFill />}  style={{ background:'transparent', color:'black'}} ></IconButton>
                         </Whisper>
                     </InputGroup>
                 </div>
                 <Table bordered cellBordered style={{ background: "white", overflow: "hidden", borderRadius:"5px"}} rowHeight={80} height={380} headerHeight={50} >
                     <Column align="center" width={140} minWidth={120} fixed resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Acciones</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Acciones</HeaderCell>
                         <Cell>
-                                <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
-                                    <Whisper placement="top" trigger="hover" speaker={<Tooltip>Recuperar</Tooltip>}>
-                                        <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                                    </Whisper>
-                                    <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
-                                        <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }} appearance="primary" />
-                                    </Whisper>
-                                </Stack>
+                            <Stack spacing={6} justifyContent="center" alignItems="center" direction="row">
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Recuperar</Tooltip>}>
+                                    <IconButton icon={<FaEdit style={{width:20, height:20}}/>} style={{ width: 40,  background:"transparent", color:"black" }}  />
+                                </Whisper>
+                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
+                                    <IconButton icon={<FaTrash style={{width:18, height:18}}/>} style={{ width: 40,  background:"transparent", color:"black" }}  />
+                                </Whisper>
+                            </Stack>
                         </Cell>
                     </Column>
 
@@ -56,42 +56,42 @@ export default function TrashTable (){
                     )}
 
                     <Column align="center" flexGrow={1} minWidth={200} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Repuesto</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Repuesto</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="name" />
                     </Column>
 
                     <Column align="center" width={180} minWidth={160} resizable>
-                        <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
+                        <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Descripción</HeaderCell>
                         <Cell dataKey="description" style={{ whiteSpace: "normal", wordBreak: "break-word", textAlign:"center", display: "flex", justifyContent: "center", alignItems: "center",}}/>
                     </Column>
 
                     <Column align="center" width={140} minWidth={130} resizable>
-                        <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
+                        <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Modelo</HeaderCell>
                         <Cell dataKey="model" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} />
                     </Column>
                             
                     <Column align="center" width={140} minWidth={130} resizable>
-                        <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Marca</HeaderCell>
+                        <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Marca</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="brand" />
                     </Column>
                             
                     <Column align="center" width={140} minWidth={130} resizable>
-                        <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Categoría</HeaderCell>
+                        <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Categoría</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="category" />
                     </Column>
                             
                     <Column align="center" width={150} minWidth={140} resizable>
-                        <HeaderCell style={{backgroundColor: "#f08b33", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Sub-Categoría</HeaderCell>
+                        <HeaderCell style={{backgroundColor: "#16151A", color:"white",fontWeight: "bold", fontSize: '14px', whiteSpace: "normal", wordBreak: "break-word", textAlign:"center"}}>Sub-Categoría</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="subCategory" />
                     </Column>
 
                     <Column align="center" flexGrow={1} minWidth={120} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Usuario</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Usuario</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }} dataKey="address" />
                     </Column>
     
                     <Column align="center" width={160} minWidth={150} resizable>
-                        <HeaderCell style={{ background: "#f08b33", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Fecha de acción</HeaderCell>
+                        <HeaderCell style={{ background: "#16151A", color: "white", fontWeight: 'bold', fontSize: '14px' }}>Fecha de acción</HeaderCell>
                         <Cell style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
                         </Cell>
                     </Column>
