@@ -31,9 +31,9 @@ export const useBranchOfficeTable = () => {
         setFilterStatus(status);
     }
 
-    const filterStatusOptions = ['Activo', 'Inactivo'].map((status) => ({
+    const filterStatusOptions = ['ACTIVO', 'INACTIVO'].map((status) => ({
         label: status,
-        value: status === 'Activo' ? 1 : status === 'Inactivo' ? 0 : null,
+        value: status === 'ACTIVO' ? 1 : status === 'INACTIVO' ? 0 : null,
     }));
 
     const handleCountActiveAndInactive = (branchOffices: BranchOffice[] | undefined) => {

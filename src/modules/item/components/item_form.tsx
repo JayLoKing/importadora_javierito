@@ -271,7 +271,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                         <InputGroup.Addon>
                                                             <BsCalendarDate />
                                                         </InputGroup.Addon>
-                                                        <Form.Control name="alias" placeholder="Desde - hasta *" onChange={(value) => updateField('alias', value)} />
+                                                        <Form.Control name="alias" placeholder="Desde - hasta *" onChange={(value) => updateField('alias', value.toUpperCase())} />
                                                     </InputGroup>
                                             </Form.Group>
                                             <Form.Group controlId={'transmission'}>
@@ -295,7 +295,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <InputGroup.Addon>
                                                         <FaSignature />
                                                     </InputGroup.Addon>
-                                                    <Form.Control name="model" placeholder="Ingrese el modelo del repuesto *" onChange={(value) => updateField('model', value)} />
+                                                    <Form.Control name="model" placeholder="Ingrese el modelo del repuesto *" onChange={(value) => updateField('model', value.toUpperCase())} />
                                                 </InputGroup>
                                             </Form.Group>
                                             <Form.Group controlId={'fuel'}>
@@ -308,7 +308,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <InputGroup.Addon>
                                                         <BsClipboardMinusFill  />
                                                     </InputGroup.Addon>
-                                                    <Form.Control name="itemSeries" placeholder="Ingrese la serie del repuesto *" onChange={(value) => updateField('itemSeries', value)} />
+                                                    <Form.Control name="itemSeries" placeholder="Ingrese la serie del repuesto *" onChange={(value) => updateField('itemSeries', value.toUpperCase())} />
                                                 </InputGroup>    
                                             </Form.Group>
                                             <Form.Group controlId={'barePrice'}>
@@ -350,7 +350,7 @@ export default function ItemForm({open, hiddeModal, onItemCreated} : ItemModalPa
                                                     <InputGroup.Addon>
                                                         <FaAlignJustify />
                                                     </InputGroup.Addon>
-                                                    <Input value={formData.description} name="description" as={'textarea'} rows={5} placeholder="Especificaciones del repuesto *" onChange={(value) => updateField('description', value)} />
+                                                    <Input value={formData.description} name="description" as={'textarea'} rows={5} placeholder="Especificaciones del repuesto *" onChange={(value) => updateField('description', value.toUpperCase())} />
                                                 </InputGroup>
                                             </Form.Group>
                                         </Col>

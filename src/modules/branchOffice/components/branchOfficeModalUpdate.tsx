@@ -15,13 +15,13 @@ import { useApi } from "../../../common/services/useApi";
 import { getAllUsersAsync } from "../../user/services/user.service";
 import { BsFillPinMapFill, BsShop, BsCalendarDate } from "react-icons/bs";
 
-interface BranchOfficeModalProps {
+interface BranchOfficeModalUpdateProps {
     open: boolean,
     hiddeModal: (hide: boolean) => void,
     onBranchOfficeCreated?: () => void;
 }
 
-export default function BranchOfficeModal({ open, hiddeModal, onBranchOfficeCreated }: BranchOfficeModalProps) {
+export default function BranchOfficeModalUpdate({ open, hiddeModal, onBranchOfficeCreated }: BranchOfficeModalUpdateProps) {
     const formRef = useRef<any>();
     const [users, setUsers] = useState<User[]>([]);
     const fetchUsers = useMemo(() => {return getAllUsersAsync(50, 1, 1, null, null, null)}, []);
@@ -62,8 +62,8 @@ export default function BranchOfficeModal({ open, hiddeModal, onBranchOfficeCrea
     return (
         <Modal size={"lg"} open={open} overflow backdrop="static">
             <ModalHeader closeButton={false}>
-                <h4>Nueva Sucursal</h4>
-                <p style={{ color:'#878787' }}>Complete la información para registrar una nueva sucursal.</p>
+                <h4>Editar Sucursal</h4>
+                <p style={{ color:'#878787' }}>Complete la información para editar una nueva sucursal.</p>
             </ModalHeader>
             <ModalBody >
                 <Form fluid ref={formRef} model={validationModel} formValue={formData}>
@@ -118,7 +118,7 @@ export default function BranchOfficeModal({ open, hiddeModal, onBranchOfficeCrea
                         <Tabs.Tab eventKey="3" title="Imágenes">
                             <div style={{ marginBottom:15 }}>
                                 <h5>Imágenes de la Sucursal</h5>
-                                <p>Suba imágenes de la fachada, interior u otros aspectos relevantes de la sucursal</p>
+                                <p>Edite las imágenes de la sucursal, agregue imágenes del interior u otros aspectos relevantes de la sucursal</p>
                             </div>
                             <Form.Group>
                                     <Form.Control

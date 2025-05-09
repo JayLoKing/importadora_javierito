@@ -89,7 +89,7 @@ export default function ModalInfoProduct({ open, hiddeModal }: ModalInfoProductP
                             <Divider />
                             <div>
                                 <h5 style={{marginBottom: 12 }}>Especificaciones</h5>
-                                <p style={{ textAlign:"left", lineHeight:1.5 }}>Hoola soy gay</p>
+                                <p style={{ textAlign:"left", lineHeight:1.5 }}>Holaaa</p>
                             </div>
                             </Panel>
                         </Col>

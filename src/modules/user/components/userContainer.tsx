@@ -119,12 +119,6 @@ export default function UserContainer(){
                                 <Whisper placement="top" trigger="hover" speaker={<Tooltip>Eliminar</Tooltip>}>
                                     <IconButton icon={<FaTrash />} appearance="ghost" style={{ color: 'black', border: 'Transparent', fontSize: '22px', padding: 5 }} />
                                 </Whisper>
-                                {/* <Whisper placement="top" trigger="hover" speaker={<Tooltip>Deshabilitar</Tooltip>}>
-                                    <IconButton icon={<FaCircleMinus />} appearance="ghost" style={{ color: 'black', border: 'Transparent', fontSize: '23px', padding: 5 }} />
-                                </Whisper>
-                                <Whisper placement="top" trigger="hover" speaker={<Tooltip>Habilitar</Tooltip>}>
-                                    <IconButton icon={<FaCircleCheck />} appearance="ghost" style={{ color: 'black', border: 'Transparent', fontSize: '23px', padding: 5 }} />
-                                </Whisper>   */}
                             </div>
                         </Cell>
                     </Column>
@@ -140,11 +134,11 @@ export default function UserContainer(){
                             {(rowData) => (
                                 <>
                                     {rowData.status === 1 ? (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Activo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>ACTIVO
                                             <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>                                        
                                     ) : (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>Inactivo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>INACTIVO
                                             <BsFillXCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>
                                     )}
