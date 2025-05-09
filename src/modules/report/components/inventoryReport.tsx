@@ -231,11 +231,11 @@ export default function InventoryReport() {
                             {(rowData) => (
                                 <>
                                     {rowData.status === 1 ? (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Activo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>ACTIVO
                                             <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>                                        
                                     ) : (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>Inactivo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>INACTIVO
                                             <BsFillXCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>
                                     )}
@@ -270,7 +270,7 @@ export default function InventoryReport() {
                     <div style={{ display:'flex', justifyContent:'space-between', flexDirection:'column', marginBottom:8}}>
                         <div style={{ marginBottom:7 }}>
                             <strong>Nombre del reporte</strong>
-                            <Input placeholder='Ej: Reporte de Inventario Mensual'></Input>
+                            <Input placeholder='Ej: Reporte de Inventario Mensual' ></Input>
                         </div>
                         <div style={{ display:'flex', flexDirection:'row', gap:15, width: '100%'}}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', flex: 1 }}>

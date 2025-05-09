@@ -5,6 +5,7 @@ import { FlexboxGrid, Col, Form, IconButton, Input, InputGroup, Pagination, Pane
 import { BranchOffice, GetDataBranchOffice } from "../models/branchOffice.model";
 import { getBranchOfficesAsync2 } from "../services/branchOfficeService";
 import BranchOfficeModal from "./branchOfficeModal";
+import BranchOfficeModalUpdate from "./branchOfficeModalUpdate";
 import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import PlusIcon from '@rsuite/icons/Plus';
 import "../styles/styles.css";
@@ -138,11 +139,11 @@ export default function BranchOffices() {
                             {(rowData) => (
                                 <>
                                     {rowData.status === 1 ? (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>Activo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#5dd414', display:'flex', alignItems:'center' }}>ACTIVO
                                             <BsFillCheckCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>                                        
                                     ) : (
-                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>Inactivo
+                                        <Tooltip  visible style={{ borderRadius:7, background:'#cf2601', display:'flex', alignItems:'center' }}>INACTIVO
                                             <BsFillXCircleFill style={{ marginLeft:5 }}/>
                                         </Tooltip>
                                     )}
@@ -204,6 +205,7 @@ export default function BranchOffices() {
                 </FlexboxGrid.Item>
             </FlexboxGrid>
            <BranchOfficeModal open={showModal} onBranchOfficeCreated={handleRefreshData} hiddeModal={() => handleModalCreate(false)} />
+           <BranchOfficeModalUpdate open={showModal} onBranchOfficeCreated={handleRefreshData} hiddeModal={() => handleModalCreate(false)} />
             {/* <RemoveOfficeModal refreshList={loadBranchOffices} id={removeOffice.id} name={removeOffice.name} open={showModalDelete} hiddeModal={() => handleModalDelete(false)} /> */}
         </div>
     );

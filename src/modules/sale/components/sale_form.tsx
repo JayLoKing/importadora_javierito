@@ -15,6 +15,7 @@ export default function SaleForm(){
     const [currentDate, setCurrentDate] = useState<string>("");
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [expandSidebar, setExpandSidebar] = useState(window.innerWidth > 768);
     const {
         handleConfigSound,
         handleInitializeCamera,
@@ -50,6 +51,16 @@ export default function SaleForm(){
         handleInitializeCamera(isScanning);
     },[isScanning]);
 
+    useEffect(() => {
+    const handleResize = () => {
+      setExpandSidebar(window.innerWidth > 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    
+
     const data = [
         {
           code: "P001",
@@ -82,28 +93,32 @@ export default function SaleForm(){
         setShowModal(hidde)
     }
     
+    const subtotal = data.reduce((sum, item) => sum + item.total, 0);
+    const discountTotal = data.reduce((sum, item) => sum + (item.discount * item.price * item.quantity / 100), 0);
+    const total = subtotal - discountTotal;
+
     return(
-        <div style={{ height: "100%"}}>
-            <Grid fluid style={{height:"100%", margin:0}}>
-                <Row style={{ height: '100%', margin:0, display:"flex", flexWrap: "nowrap"}}>
-                    <Col xs={24} md={16} style={{ height: '100%', padding:30 }}>
-                        <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center", marginBottom: 20 }}>
+        <div style={{ height: "100%", overflow: "hidden"}}>
+            <Grid fluid style={{ height: "100%", margin: 0, padding: 0 }}>
+                <Row style={{ height: "100%", margin: 0 }}>
+                    <Col xs={24} md={expandSidebar ? 16 : 24} style={{ height: "100%", padding: "20px", overflow: "auto" }}>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap" }}>
                             <div>
                                 <h4>Registro de Ventas</h4>
-                                <p style={{ color:'#878787' }}>Registra, visualiza e imprime tus ventas</p>
+                                <p style={{ color: '#878787' }}>Registra, visualiza e imprime tus ventas</p>
                             </div>
-                            <div style={{ display:"flex", flexDirection:'column'}}>
-                                <div style={{ display:"flex", gap:7 }}>
-                                    <strong>Vendedor:</strong>
-                                    <p>JUANITO EL MAS PINGON</p>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                                <div style={{ display: "flex", gap: 7 }}>
+                                <strong>Vendedor:</strong>
+                                <p>JUANITO</p>
                                 </div>
-                                <div style={{ display:'flex', justifyContent:'end'}}>
-                                    <strong>{currentDate}</strong>
+                                <div>
+                                <strong>{currentDate}</strong>
                                 </div>
                             </div>
                         </div>                
-                        <div style={{ marginBottom: 25 }}>
-                            <Panel bordered >
+                        
+                            <Panel bordered style={{ marginBottom: 25 }}>
                                 <div style={{justifyContent:"flex-start", display:"flex", gap:"5px", marginBottom:15}}>
                                     <FaCamera style={{width:"20px", height:"20px"}}/>
                                     <h5>Lector de Códigos de Barras</h5>
@@ -122,12 +137,23 @@ export default function SaleForm(){
                                 </div>
                                 <h6 style={{display:"flex", justifyContent:"center", marginBottom:"20px"}}>Tabla de Productos Seleccionados</h6>
                                 <Table cellBordered bordered height={300} data={data} rowHeight={60} style={{marginBottom:20, borderRadius:"5px",  }}>
+                                    <Column width={75} align="center" fixed resizable>
+                                        <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Acciones</HeaderCell>
+                                        <Cell style={{alignItems:"center"}}>
+                                        {rowData => (
+                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Quitar</Tooltip>} >
+                                                
+                                            <IconButton onClick={() => removeProduct(rowData.id)} style={{ background:"transparent" }} icon={<FaTrash />} />
+                                            </Whisper>
+                                        )}
+                                        </Cell>
+                                    </Column>
                                     <Column width={150} align="center" fixed resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Código</HeaderCell>
                                         <Cell dataKey="code" style={{alignItems:"center"}}>
                                         </Cell>
                                     </Column>
-                                    <Column width={200} align="center" resizable>
+                                    <Column width={240} align="center" resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Repuesto</HeaderCell>
                                         <Cell dataKey="name" style={{alignItems:"center"}}>
                                         {rowData => (
@@ -160,12 +186,10 @@ export default function SaleForm(){
                                             <InputNumber type="number" style={{ width: 70 }} />
                                         </Cell>
                                     </Column>
-                                    <Column width={100} align="center" resizable>
+                                    <Column width={90} align="center" resizable>
                                         <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Cantidad</HeaderCell>
                                         <Cell dataKey="quantity" style={{alignItems:"center"}}>
-                                            <div style={{flexDirection:"row", display:"flex", gap:"3px", alignItems:"center"}}>
-                                                <Input style={{width:"2rem"}} defaultValue={1} max={100} min={1} disabled/>
-                                            </div>
+                                            <p>1</p>
                                         </Cell>
                                     </Column>
                                     <Column width={100} align="center" resizable>
@@ -174,38 +198,35 @@ export default function SaleForm(){
                                             {rowData => `$${rowData.price.toFixed(2)}`}
                                         </Cell>
                                     </Column>
-                                    <Column width={75} align="center" resizable>
-                                        <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Acciones</HeaderCell>
-                                        <Cell style={{alignItems:"center"}}>
-                                        {rowData => (
-                                            <Whisper placement="top" trigger="hover" speaker={<Tooltip>Quitar</Tooltip>} >
-                                                
-                                            <IconButton onClick={() => removeProduct(rowData.id)} style={{ background:"transparent" }} icon={<FaTrash />} />
-                                            </Whisper>
-                                        )}
+                                    <Column width={110} align="center" resizable>
+                                        <HeaderCell style={{  fontWeight: "bold", background:"#16151A", color:"white" }}>Precio pelado</HeaderCell>
+                                        <Cell dataKey="price" style={{alignItems:"center"}}>
+                                            {rowData => `$${rowData.price.toFixed(2)}`}
                                         </Cell>
                                     </Column>
+                                    
                                 </Table>
                                 <Stack style={{ display:"flex", alignItems:"center", justifyContent:"end"}}>
                                     <IconButton appearance="primary" icon={<PlusIcon/>}>Registrar Venta</IconButton>
                                 </Stack>
                             </Panel>
-                        </div>
+                        
                         <div >
                             <Panel bordered>
-                                <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center"}}>
+                                <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center", flexWrap: "wrap", gap: "15px"}}>
                                     <div >
-                                        <Stack style={{marginBottom:10, fontWeight:"bold", fontSize:"18px"}}>
+                                        <Stack style={{marginBottom:10, fontWeight:"bold", fontSize:"18px", gap:10 }}>
                                             <span>Subtotal:</span>
-                                            <span></span>
+                                            <span>Bs.{subtotal.toFixed(2)}</span>
                                         </Stack>
-                                        <Stack style={{color:"red", fontWeight:"bold", fontSize:"18px"}}>
+                                        <Stack style={{color:"red", fontWeight:"bold", fontSize:"18px", gap:10}}>
                                             <span>Descuento Total:</span>
-                                            <span></span>
+                                            <span>Bs.{discountTotal.toFixed(2)}</span>
                                         </Stack>
                                     </div>
-                                    <div style={{ display:"flex", alignItems:"center", fontWeight:"bolder", fontSize:"22px"}}>
+                                    <div style={{ display:"flex", alignItems:"center", fontWeight:"bolder", fontSize:"22px", gap:10}}>
                                         <span >Total: </span>
+                                        <span>Bs.{total.toFixed(2)}</span>
                                     </div>
                                 </div>
                             </Panel>
@@ -213,7 +234,7 @@ export default function SaleForm(){
                     </Col>
                     <Col xs={8} style={{ display:"flex", flexDirection:"column", justifyContent: "space-between", background:"#f6f6f6", height:"100%", padding:"20px", borderLeft:"1px solid #e0e0e0", borderBottom:"1px solid #e0e0e0", borderRadius:"7px 0 0 7px"}}>
                         <div style={{ width: "100%" }} >
-                            <Tabs className="tab" defaultActiveKey="1" appearance="pills" style={{padding:10}}>
+                            <Tabs className="tab" defaultActiveKey="1" appearance="pills" style={{ textWrap:'wrap'}}>
                                 <Tabs.Tab eventKey={keyTab} title="Camara" icon={<FaCamera/>}>
                                     <Content style={{ flex: 1, overflow: 'hidden', paddingTop: '15px' }}>
                                         {isScanning && (
@@ -293,7 +314,7 @@ export default function SaleForm(){
                                         )}
                                     </Content>
                                 </Tabs.Tab>
-                                <Tabs.Tab eventKey="2" title="Buscar Repuestos" icon={<FaWrench />}>
+                                <Tabs.Tab eventKey="1" title="Buscar Repuestos" icon={<FaWrench />}>
                                     <Content style={{ flex: 1, overflow:"auto", padding: 5 }}>
                                         <InputGroup style={{ marginBottom: '15px' }}>
                                             <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
@@ -303,7 +324,7 @@ export default function SaleForm(){
                                         </InputGroup>
                                     </Content>
                                 </Tabs.Tab>
-                                <Tabs.Tab eventKey="3" title="Detalles de Repuesto" icon={<FaLine />}>
+                                <Tabs.Tab eventKey="2" title="Detalles de Repuesto" icon={<FaLine />}>
                                     <Content style={{ flex: 1, overflow: 'auto', paddingTop: '15px' }}>
 
                                     </Content>
@@ -314,13 +335,13 @@ export default function SaleForm(){
                         <div style={{ marginBottom: 20 }}>
                             {/* Detalles del producto */}
                         </div>
-                        <div style={{  display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '20px'}}>
-                            <Button appearance="primary" size="lg" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background:"transparent", fontWeight:"bold", border:"1px solid #f08b33", color:"#f08b33" }}>
-                                <FaPrint style={{ marginRight: '10px' }} />
+                        <div style={{  display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop:20 }}>
+                            <Button appearance="primary" style={{ display: 'flex', flex:1, alignItems: 'center', justifyContent: 'center', fontWeight:'bold', gap:10 }}>
+                                <FaPrint  />
                                 Imprimir Recibo
                             </Button>
-                            <Button size="lg" onClick={() => navigate('/saleTable')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background:"black", fontWeight:"bold", color:'white' }} >
-                                <FaHistory style={{ marginRight: '10px' }} /> Historial de Ventas 
+                            <Button onClick={() => navigate('/saleTable')} style={{ display: 'flex', flex:1, alignItems: 'center', justifyContent: 'center', gap:10, background:"black", fontWeight:"bold", color:'white' }} >
+                                <FaHistory /> Historial de Ventas 
                             </Button>
                         </div>
                     </Col>
