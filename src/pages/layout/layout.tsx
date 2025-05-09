@@ -212,7 +212,7 @@ const Layout: FC<LayoutProps> = ({ titleComponent, children }) => {
           <Content style={{ background: "white", height: "100vh", overflow: "auto", }}>
             {children}
           </Content>
-          <Footer style={{ textAlign: "center", fontSize: "16px", fontWeight: "bold", background: 'white' }}>IMPORTADORA JAVIERITO ®</Footer>
+          <Footer style={{ textAlign: "center", fontSize: "15px", fontWeight: "bold", background: 'white' }}>IMPORTADORA JAVIERITO ®</Footer>
         </Container>
         <Profile open={showModalProfile} hiddeModal={() => handleModalProfile(false)} />
       </Container>

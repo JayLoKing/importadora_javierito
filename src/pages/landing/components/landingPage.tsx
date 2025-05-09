@@ -285,7 +285,7 @@ export default function LandingPage(){
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     color: 'white',
-                    padding: '80px 20px',
+                    padding: '90px 20px',
                     textAlign: 'center'
                 }}>
                     <Container>
@@ -332,40 +332,52 @@ export default function LandingPage(){
                         </div>
                     </Container>
                 </section>
-                <section id="contacto" style={{ padding: '80px 20px', background: "linear-gradient(to bottom right, #f97316 10%, #bd2828 90%)", color: 'white', textAlign: 'center' }}>
-                    <h2 style={{ fontSize: '36px', marginBottom: '30px' }}>¿Listo para encontrar su repuesto ideal?</h2>
-                    <p style={{ maxWidth: '800px', margin: '0 auto 40px', fontSize: '18px' }}>
-                        Contáctenos hoy mismo y un asesor especializado le guiará en todo el proceso.
-                    </p>
-                    <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                        <Button 
-                            size="lg" 
-                            style={{ 
-                                backgroundColor: 'white', 
-                                color: "#db7114", 
-                                fontWeight: 'bold' 
-                            }}
-                            onClick={handleWhatsapp}
-                        >
-                            Solicitar Cotización
-                        </Button>
-                        <Button 
-                            size="lg" 
-                            style={{ 
-                                backgroundColor: 'transparent', 
-                                border: '2px solid white', 
-                                color: 'white', 
-                                fontWeight: 'bold' 
-                            }}
-                            onClick={() => scrollToSection('catalogo')}
-                        >
-                            Ver Catálogo
-                        </Button>
+                <section id="contacto" style={{ padding: '0', background: "linear-gradient(to bottom right, #f97316 10%, #bd2828 90%)", color: 'white', textAlign: 'center' }}>
+                    <div style={{ display:'flex', flexDirection:'row', flexWrap:'wrap', width:'100%', minHeight:'400px'}}>
+                        
+                        <div style={{
+                            flex: '1 1 50%',
+                            minWidth: '300px',
+                            padding: '60px 40px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            textAlign: 'center'
+                        }}>
+                            <h2 style={{ fontSize: '36px', marginBottom: '30px' }}>¿Listo para encontrar su repuesto ideal?</h2>
+                        <p style={{ maxWidth: '800px', margin: '0 auto 40px', fontSize: '18px' }}>
+                            Contáctenos hoy mismo y un asesor especializado le guiará en todo el proceso.
+                        </p>
+                        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap:'wrap'}}>
+                            <Button 
+                                size="lg" 
+                                style={{ 
+                                    backgroundColor: 'white', 
+                                    color: "#db7114", 
+                                    fontWeight: 'bold' 
+                                }}
+                                onClick={handleWhatsapp}
+                            >
+                                Solicitar Cotización
+                            </Button>
+                            <Button 
+                                size="lg" 
+                                style={{ 
+                                    backgroundColor: 'transparent', 
+                                    border: '2px solid white', 
+                                    color: 'white', 
+                                    fontWeight: 'bold' 
+                                }}
+                                onClick={() => scrollToSection('catalogo')}
+                            >
+                                Ver Catálogo
+                            </Button>
+                            
+                        </div>
+                        </div>
                     </div>
                 </section>
-                {/* <section  style={{ padding: '80px 20px', backgroundColor: '#f8f8f8' }}>
-                    
-                </section> */}
             </Content>
             <Footer style={{ padding: "20px", backgroundColor: "#f5f5f5", borderTop: "1px solid #e5e5e5" }}>
             <Container>
