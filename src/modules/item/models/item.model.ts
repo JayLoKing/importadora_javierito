@@ -28,7 +28,6 @@ export interface NewItemDTO {
    
 }
 
-
 export interface Item {
     itemID: number;
     name: string;

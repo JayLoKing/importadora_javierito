@@ -28,6 +28,7 @@ import '../styles/pagination.style.css';
 import { useNavigate } from "react-router-dom";
 import { TbPigMoney } from "react-icons/tb";
 import ItemInformation from "./item_info";
+import { useItemAllInfo } from "../hooks/useItemAllInfo";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -38,12 +39,8 @@ export default function ItemTable() {
     const {handleModalDelete, showModalDelete, getIDDelete, setGetIDDelete, selectedItem} = useDeleteItem();
     const {handleModalStock, showModalStock, setGetIDStock, getIDStock} = useUpdateStock();
     const {handleModalBareCode, showModalBareCode, setGetIDBarcode, getIDBarcode} = useBarcode();
-    
-    const [showModalInfo, setShowModalInfo] = useState<boolean>(false)
-    function handleModalInfo(hidde: boolean): void {
-      setShowModalInfo(hidde)
-    }
-    
+    const {handleModalAllInfo, showModalAllInfo, getItemInfoId,setGetItemInfoId} = useItemAllInfo();
+
     const navigate = useNavigate();
     const [items, setItems] = useState<Item[]>([]);
     const [total, setTotal] = useState(0);
@@ -198,7 +195,7 @@ export default function ItemTable() {
                     <div>
                       {rowData.name}
                         <Whisper placement="top" trigger="hover" speaker={<Tooltip>Información</Tooltip>} >
-                          <Button appearance="subtle" size="xs" style={{ background:"transparent" }} onClick={() => handleModalInfo(true)}>
+                          <Button appearance="subtle" size="xs" style={{ background:"transparent" }} onClick={() => {setGetItemInfoId(rowData.itemID); handleModalAllInfo(true)}}>
                             <CiCircleInfo style={{ fontSize: '14px', fontWeight:"bold" }}/>
                           </Button>
                         </Whisper>
@@ -333,7 +330,7 @@ export default function ItemTable() {
           <ItemBareCode id={getIDBarcode} open={showModalBareCode} hiddeModal={() => handleModalBareCode(false)} />
           <UpdateStock id={getIDStock} open={showModalStock} hiddeModal={() => handleModalStock(false)} onStockUpdated={handleRefreshData}/>
           <ItemDelete open={showModalDelete} hiddeModal={() => handleModalDelete(false)} id={getIDDelete} name={selectedItem.name} onItemDeleted={handleRefreshData}/>
-          <ItemInformation open={showModalInfo} hiddeModal={()=> handleModalInfo(false)} />
+          <ItemInformation id={getItemInfoId} open={showModalAllInfo} hiddeModal={()=> handleModalAllInfo(false)} />
         </div>
       );   
     } else {

@@ -4,6 +4,7 @@ import { Brand, GetItems, ItemAcronym, ItemAddress, ItemById, NewItemDTO, SubCat
 import { ItemUrl } from "../urls/item.url.ts";
 import { loadAbort } from "../../../utils/loadAbort.utility.ts";
 import { UseApiCall } from "../../../utils/useApi.model.ts";
+import { GetAllItemInfo } from "../models/itemAllInfo.model.ts";
 
 export const getItemsAsync = (offset: number, limit: number, query: string, subCategory?: string, brand?: string) : UseApiCall<GetItems> => {
     const controller = loadAbort();
@@ -18,6 +19,14 @@ export const getItemsAsync = (offset: number, limit: number, query: string, subC
 
     return { 
         call: httpClient.get<GetItems>(ItemUrl.getAll, {signal: controller.signal, params: params}), 
+        controller
+    }
+}
+
+export const getItemAllInfo = (id: number) : UseApiCall<GetAllItemInfo> => {
+    const controller = loadAbort();
+    return {
+        call: httpClient.post<GetAllItemInfo>(ItemUrl.getAllInfo, id, {signal: controller.signal}),
         controller
     }
 }
