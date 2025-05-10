@@ -393,11 +393,11 @@ export default function SaleForm(){
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', width:60, height:60, }}>
                                                                 <img 
-                                                                    src="src/assets/brands/BMW.png"
+                                                                    src="src/assets/brands/bmw.png"
                                                                     alt="BMW logo" 
-                                                                    style={{ width:57, height:57, borderRadius:8 , border: "1px solid #878787", }} 
+                                                                    style={{ width:'100%', height:'100%', borderRadius:8 , border: "1px solid #878787", }} 
                                                                 />
                                                                 
                                                             </div>
