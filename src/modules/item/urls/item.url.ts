@@ -2,6 +2,7 @@ const moduleBaseUrl = "/items";
 
 export const ItemUrl = {
     getAll: `${moduleBaseUrl}/getAllItems`,
+    getAllInfo: `${moduleBaseUrl}/getItemAllInfo`,
     getById: `${moduleBaseUrl}/getItemByItemID`,
     create: `${moduleBaseUrl}/insertItem`,
     update: `${moduleBaseUrl}/UpdateItem`,

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FaAlignJustify, FaCalendar, FaCamera, FaCog, FaCubes, FaDollarSign, FaMapMarkerAlt, FaSignature, FaTag, FaBoxOpen } from "react-icons/fa";
-import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, Stack, useToaster, Uploader, SelectPicker, Input, Loader, InputNumber, Tabs, Radio } from "rsuite";
+import { FaAlignJustify, FaCalendar, FaCamera, FaCar, FaCog, FaCubes, FaDollarSign, FaSignature, } from "react-icons/fa";
+import { Button, Col, Form, Grid, InputGroup, Message, Modal, Row, useToaster, Uploader, SelectPicker, Input, Loader, InputNumber, Tabs, Radio, RadioGroup } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
 import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
@@ -15,8 +15,9 @@ import { useUpdateItemFormStore } from "../validations/useUpdateItemFormStorn";
 import { useAuthStore } from "../../../store/store";
 import { useUpdateItem } from "../hooks/useUpdateItem";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
-import { BsWrenchAdjustable, BsShieldShaded, BsFillPinMapFill, BsShop, BsCalendarDate, BsFillFuelPumpFill, BsClipboardMinusFill   } from "react-icons/bs";
+import { BsWrenchAdjustable, BsShieldShaded, BsFillPinMapFill, BsCalendarDate, BsFillFuelPumpFill, BsClipboardMinusFill   } from "react-icons/bs";
 import { FaBarcode, FaCheck } from "react-icons/fa6";
+import { useRegisterItem } from "../hooks/useRegisterItem";
 
 interface ItemModalParams {
     open: boolean;
@@ -30,8 +31,9 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
     const formRef = useRef<any>();
     const [loading, setLoading] = useState<boolean>(false);
     const {userId, userName, role} = useAuthStore();
-    const {showErrorMessage, showWarningFilesMessage,setFilesToRemove,setFiles,originalImages,  showSuccessMessage, setOriginalImages,handleFileRemove, files,filesToRemove,handleFileUpload,handleFileChange, handleRoles, handleFileRemoveFromList} = useUpdateItem();
+    const {showErrorMessage, showWarningFilesMessage,setFilesToRemove,setFiles,  showSuccessMessage,handleFileRemove, files,filesToRemove,handleFileUpload,handleFileChange, handleRoles, handleFileRemoveFromList} = useUpdateItem();
     const {formData, loadData, updateField, validationModel} = useUpdateItemFormStore();
+    const { transmitionsOptions, combustibleTypesOptions} = useRegisterItem();
 
     const fetchItemByIdAsync = useMemo(() => {
         if(open && id){
@@ -74,7 +76,7 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
             const fileList = itemData.itemImages.map((url, index) => ({
                 name: `image-${index + 1}`,
                 url,
-                fileKey: url,
+                isExisting: true,
             }));
             loadData({
                 itemID: itemData.itemID,
@@ -83,35 +85,38 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                 model: itemData.model,
                 price: itemData.price,
                 wholesalePrice: itemData.wholesalePrice,
+                purchasePrice: itemData.purchasePrice,
                 barePrice: itemData.barePrice,
                 brandID: itemData.brandID,
-                subCategoryID: itemData.subCategoryID,
+                subCategoryID: itemData.subCategoryID, 
                 dateManufacture: itemData.dateManufacture,
                 itemAddressID: itemData.itemAddressID,
                 description: itemData.description,
                 itemImages: fileList as any,
                 userID: 0,
                 acronym: itemData.acronym,
+                itemStatus: itemData.itemStatus,
+                transmission: itemData.transmission,
+                cylinderCapacity: itemData.cylinderCapacity,
+                traction: itemData.traction,
+                itemSeries: itemData.itemSeries,
+                fuel: itemData.fuel,
            });
-           setOriginalImages(itemData.itemImages);
+           setFiles(fileList);
+           updateField('itemImages', itemData.itemImages);
         }
     }, [itemData, loadData]);
 
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        
-
+        let uploadedUrls: string[] = [];
         try {
             formData.userID = userId as number;
-        console.log("Datos del formulario:", formData);
-        const currentFilesToRemove = [...filesToRemove];
-        console.log('Archivos a eliminar confirmados:', currentFilesToRemove);
-        
-        const currentUrls = originalImages.filter(url => !currentFilesToRemove.includes(url));
-        console.log("URLs actuales:", currentUrls); 
-        formData.itemImages = currentUrls; 
-        const result = await formRef.current.checkAsync();
+            console.log("Datos del formulario:", formData);
+            console.log('Archivos a eliminar confirmados:', filesToRemove);
+    
+            const result = await formRef.current.checkAsync();
         if (result.hasError) {
             console.error("El formulario no es válido");
             console.warn("Errores de validación:", result);
@@ -123,20 +128,24 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
             } 
             return;
         }
-             // 2. Subir nuevas imágenes (las que no tienen URL)
-            const filesToUpload = files.filter(file => !file.url);
-            const uploadedUrls = await handleFileUpload(filesToUpload) || [];
+            const filesWithUrl = files.filter(file => file.url && !file.blobFile?.name);
+            const filesToUpload = files.filter(file => file.url && file.blobFile?.name);
+            console.log('imgs con urls', filesWithUrl);
+            console.log('imgs sin urls', filesToUpload);
+            uploadedUrls = await handleFileUpload(filesToUpload) || [];
             console.log("nuevas urls:", uploadedUrls);
             // 4. Actualizar el campo pathItems con:
             // - URLs de imágenes existentes que no se eliminaron
             // - URLs de nuevas imágenes subidas
-            
+            if(uploadedUrls.length < 1){
+                console.log('no se subio nada')
+            }
            
                 
-            const allUrls = [...currentUrls, ...uploadedUrls];
+            const allUrls = [...filesWithUrl.map(f => f.url), ...uploadedUrls];
             console.log("Todas las URLs:", allUrls);
            
-            formData.itemImages = allUrls;
+            formData.itemImages = allUrls as string[];
     
             console.log("Datos finales del formulario:", formData);
 
@@ -167,17 +176,16 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                 handleFileRemove(filesToRemove);
                 setFilesToRemove([]);
                 setFiles([]);
-                setOriginalImages([]);
         } catch (error) {
             console.error("Error al crear el ítem:", error);
-            await handleFileRemove(formData.itemImages as string[]);
+            if(uploadedUrls.length > 0) {
+                await handleFileRemove(uploadedUrls);
+            }
             showErrorMessage("Error al editar el ítem");
             setLoading(false);
         } finally {
             setLoading(false); 
             setFilesToRemove([]);
-                setFiles([]);
-                setOriginalImages([]);
         }
     };
 
@@ -185,7 +193,6 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
         try {
             setFilesToRemove([]);
             setFiles([]);
-            setOriginalImages([]);
             hiddeModal(false);
             formRef.current.reset();
         } catch (error) {
@@ -249,13 +256,13 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                             </Form.Group>
                                         </Col>
                                         <Col xs={24} md={8}>
-                                            {/* <Form.Group controlId={'itemStatus'} >
+                                            <Form.Group controlId={'itemStatus'} >
                                                 <Form.ControlLabel><strong>Estado del Repuesto</strong></Form.ControlLabel>
                                                 <Form.Control name="itemStatus" style={{ justifyContent:'space-around'}} inline accepter={RadioGroup} onChange={(value) => updateField('itemStatus', value)} defaultValue={formData.itemStatus}>
                                                     <Radio value="N">Nuevo</Radio>
                                                     <Radio value="U">Usado</Radio>
                                                 </Form.Control>
-                                            </Form.Group> */}
+                                            </Form.Group>
                                             <Form.Group controlId={'wholesalePrice'}>
                                                 <Form.ControlLabel><strong>Precio Por Mayor</strong></Form.ControlLabel>
                                                 <InputGroup inside>
@@ -285,7 +292,7 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                                     <Form.Control name="acronym" placeholder="Acrónimo del artículo *" onChange={(value) => updateField('acronym', value.toUpperCase())} />
                                                 </InputGroup>
                                             </Form.Group>
-                                            {/* <Form.Group controlId={'purchasePrice'}>
+                                            <Form.Group controlId={'purchasePrice'}>
                                                 <Form.ControlLabel ><strong>Precio Público</strong></Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
@@ -293,7 +300,7 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                                     </InputGroup.Addon>
                                                     <Form.Control name="purchasePrice" accepter={InputNumber} min={0} formatter={(value) => `${value} Bs.`} onChange={(value) => updateField('purchasePrice', parseFloat(value))} />
                                                 </InputGroup>
-                                            </Form.Group> */}
+                                            </Form.Group>
                                         </Col>
                                     </Row>
                                 </Grid>
@@ -319,34 +326,10 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                                     <Form.Control name="alias" placeholder="Desde - hasta *" onChange={(value) => updateField('alias', value)} />
                                                 </InputGroup>
                                             </Form.Group>
-                                            {/* <Form.Group controlId={'transmission'}>
+                                            <Form.Group controlId={'transmission'}>
                                                 <Form.ControlLabel><strong>Transmisión</strong></Form.ControlLabel>
                                                 <SelectPicker value={formData.transmission} onChange={(value) => updateField('transmission', value)} label={<FaCar />} data={transmitionsOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona una transmision *"} style={{width: "100%"}} />
-                                            </Form.Group> */}
-                                        </Col>
-                                        <Col xs={24} md={8}>
-                                            <Form.Group controlId={'model'}>
-                                                <Form.ControlLabel><strong>Modelo</strong></Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <FaSignature />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control name="model" placeholder="Ingrese el modelo del repuesto *" onChange={(value) => updateField('model', value)} />
-                                                </InputGroup>
                                             </Form.Group>
-                                            {/* <Form.Group controlId={'fuel'}>
-                                                <Form.ControlLabel><strong>Combustible</strong></Form.ControlLabel>    
-                                                <SelectPicker  value={formData.fuel} onChange={(value) => updateField('fuel', value)} label={<BsFillFuelPumpFill />} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona un tipo de combustible"} style={{width: "100%"}} />
-                                            </Form.Group> */}
-                                            {/* <Form.Group controlId={'itemSeries'}>
-                                                <Form.ControlLabel><strong>Serie del Motor</strong></Form.ControlLabel>
-                                                <InputGroup inside>
-                                                    <InputGroup.Addon>
-                                                        <BsClipboardMinusFill  />
-                                                    </InputGroup.Addon>
-                                                    <Form.Control name="itemSeries" placeholder="Ingrese la serie del repuesto *" onChange={(value) => updateField('itemSeries', value)} />
-                                                </InputGroup>    
-                                            </Form.Group> */}
                                             <Form.Group controlId={'barePrice'}>
                                                 <Form.ControlLabel ><strong>Precio Pelado</strong></Form.ControlLabel>
                                                 <InputGroup inside>
@@ -358,7 +341,31 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                             </Form.Group>
                                         </Col>
                                         <Col xs={24} md={8}>
-                                            {/* <Form.Group controlId={'cylinderCapacity'}>
+                                            <Form.Group controlId={'model'}>
+                                                <Form.ControlLabel><strong>Modelo</strong></Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaSignature />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control name="model" placeholder="Ingrese el modelo del repuesto *" onChange={(value) => updateField('model', value)} />
+                                                </InputGroup>
+                                            </Form.Group>
+                                            <Form.Group controlId={'fuel'}>
+                                                <Form.ControlLabel><strong>Combustible</strong></Form.ControlLabel>    
+                                                <SelectPicker  value={formData.fuel} onChange={(value) => updateField('fuel', value)} label={<BsFillFuelPumpFill />} data={combustibleTypesOptions} searchable loading={loadingSubCategories} placeholder={ loadingSubCategories? "Cargando..." : "Selecciona un tipo de combustible"} style={{width: "100%"}} />
+                                            </Form.Group>
+                                            <Form.Group controlId={'itemSeries'}>
+                                                <Form.ControlLabel><strong>Serie del Motor</strong></Form.ControlLabel>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <BsClipboardMinusFill  />
+                                                    </InputGroup.Addon>
+                                                    <Form.Control name="itemSeries" placeholder="Ingrese la serie del repuesto *" onChange={(value) => updateField('itemSeries', value)} />
+                                                </InputGroup>    
+                                            </Form.Group> 
+                                        </Col>
+                                        <Col xs={24} md={8}>
+                                            <Form.Group controlId={'cylinderCapacity'}>
                                                 <Form.ControlLabel><strong>Cilindrada</strong></Form.ControlLabel>
                                                 <InputGroup inside>
                                                     <InputGroup.Addon>
@@ -366,18 +373,18 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                                     </InputGroup.Addon>
                                                     <Form.Control name="cylinderCapacity" value={formData.cylinderCapacity} placeholder="Ingrese la cilindrada del repuesto *" onChange={(value) => updateField('cylinderCapacity', value)} />
                                                 </InputGroup>
-                                            </Form.Group> */}
+                                            </Form.Group> 
                                             <Form.Group controlId="subCategoryID">
                                                 <Form.ControlLabel><strong>Sub-Categoría</strong></Form.ControlLabel>
                                                 <Form.Control name="subCategoryID" label={<FaCubes/>} accepter={SelectPicker} value={formData.subCategoryID} onChange={(value) => updateField('subCategoryID', value)} data={subCategoriesOptions} searchable loading={loadingSubCategories} placeholder={loadingSubCategories ? "Cargando..." : "Selecciona una subcategoría *"} style={{ width: "100%" }} />                                          
                                             </Form.Group>
-                                            {/* <Form.Group controlId={'traction'}>
+                                            <Form.Group controlId={'traction'}>
                                                 <Form.ControlLabel><strong>Tracción</strong></Form.ControlLabel>
                                                 <Form.Control style={{ justifyContent:'space-around'}} name="traction" inline accepter={RadioGroup} onChange={(value) => updateField('traction', value)} defaultValue={formData.traction}>
                                                     <Radio value="2">Tracción 4x2</Radio>
                                                     <Radio value="4">Tracción 4x4</Radio>
                                                 </Form.Control>
-                                            </Form.Group> */}
+                                            </Form.Group> 
                                         </Col>
                                         <Col xs={24} md={24} style={{ marginTop:20 }}>
                                             <Form.Group controlId={'description'}>
@@ -407,7 +414,7 @@ export default function ItemForm({open, hiddeModal, id, onItemUpdated} : ItemMod
                                         multiple
                                         listType="picture-text"
                                         action="/"
-                                        fileList={formData.itemImages as []}
+                                        fileList={files}
                                         draggable
                                         onChange={(file) => {
                                             handleFileChange(file, updateField);

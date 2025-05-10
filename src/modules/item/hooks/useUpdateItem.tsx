@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Message, toaster } from "rsuite";
+import { Message, useToaster } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader";
 import { deleteFile, fileUpload } from "../services/storage.service";
 import { ItemById } from "../models/item.model";
@@ -10,8 +10,7 @@ export const useUpdateItem = () => {
     const [getIDUpdate, setGetIDUpdate] = useState(0);
     const [files, setFiles] = useState<FileType[]>([]);
     const [filesToRemove, setFilesToRemove] = useState<string[]>([]);
-    const [originalImages, setOriginalImages] = useState<string[]>([]);
-
+    const toaster = useToaster();
     let remainingOriginalFiles;
 
     const handleModalUpdate = (isOpen: boolean) => {
@@ -42,7 +41,7 @@ export const useUpdateItem = () => {
     const showWarningFilesMessage = (mesage: string) => {
         toaster.push(
             <Message closable showIcon type="warning">
-                {mesage }
+                {mesage}
             </Message>,
             { placement: 'topCenter', duration: 3000 }
         );
@@ -124,37 +123,76 @@ export const useUpdateItem = () => {
     };
     
     const handleFileChange = (filesList: FileType[], updateField: (field: keyof ItemById, value: any) => void) => {
-        // Filtrar solo archivos válidos
-        const validFiles = filesList.filter(file => 
-            /\.(jpg|jpeg|png)$/i.test(file.name || file.blobFile?.name || '')
-        );
-        console.log('Archivos válidos:', validFiles);
-        setFiles(validFiles);
-        updateField('itemImages', validFiles.map(f => f.name || f.url));
-    };
-    
-    const handleFileRemoveFromList = (file: FileType, updateField: (field: keyof ItemById, value: any) => void) => {
-        const fileNameToRemove = file.name || file.blobFile?.name;
-        const updatedFiles = files.filter(f => 
-            f.name !== fileNameToRemove && 
-            f.blobFile?.name !== fileNameToRemove
-        );
-        setFiles(updatedFiles);
-        updateField('itemImages', updatedFiles.map(f => f.name || f.url));
-        // Si el archivo tiene URL (ya estaba en el storage), agregar a filesToRemove
-        // Luego manejar la URL para eliminar (si existe)
-        if (file.url) {
-            setFilesToRemove(prev => {
-                const newFilesToRemove = [...prev, file.url as string];
-                console.log('Archivos a eliminar actualizados:', newFilesToRemove);
-                return newFilesToRemove;
-            });
+         // 1. Verificar si es una operación de eliminación
+        if (filesList.length < files.length) {
+            // Es una eliminación, no hacer nada porque onRemove ya lo maneja
+            return;
         }
+
+        // 2. Validar tipos de archivo (solo para nuevas adiciones)
+        console.log('Nuevas imágenes seleccionadas:', filesList.map(f => f.name));
+        const invalidFiles = filesList.filter(f => !f.url).some(file => {
+            const fileName = file.name || file.blobFile?.name || '';
+            return !/\.(jpg|jpeg|png)$/i.test(fileName);
+        });
+
+        if (invalidFiles) {
+            showWarningFilesMessage('Solo se permiten JPG, JPEG o PNG');
+            return;
+        }
+
+        // 2. Separar archivos existentes (con URL) y nuevos (con blob)
+        const existingFiles = files.filter(f => f.url && !f.blobFile);
+        const newFiles = filesList.filter(file => !file.url && file.blobFile);
+
+        // 3. Crear objetos para nuevos archivos
+        const processedNewFiles = newFiles.map(file => ({
+            ...file,
+            url: file.blobFile ? URL.createObjectURL(file.blobFile) : undefined
+        }));
+
+        // 4. Combinar archivos
+        const allFiles = [...existingFiles, ...processedNewFiles];
+        setFiles(allFiles);
+
+        updateField('itemImages', allFiles.map(f => f.name || f.url) as string[]);
+
+        console.log('Archivos actuales:', allFiles.map(f => f.name || f.url) as string[]);
+       
+    };
+
+    const handleFileRemoveFromList = (file: FileType, updateField: (field: keyof ItemById, value: any) => void) => {
+        // 1. Mantengo tu find original para la URL existente
+        const existingFile = files.find(f => f.url === file.url);
         
-        // Actualizar lista de archivos visibles
-        
-        
-        
+        // 2. Si encontramos un archivo existente, lo agregamos a filesToRemove
+        let newFilesToRemove = filesToRemove;
+        if (existingFile?.url) {
+            newFilesToRemove = [...filesToRemove, existingFile.url as string];
+            setFilesToRemove(newFilesToRemove); // Actualizar estado
+        } else {
+            console.log('file vacio');
+        }
+        console.log('url a eliminar:',filesToRemove)
+        // 3. Filtramos para quitar el archivo (manteniendo tu lógica)
+        const updatedFiles = files.filter(f => {
+            if (file.url) return f.url !== file.url;
+            return f.name !== file.name;
+        });
+
+        // 4. Actualizamos el estado de files
+        setFiles(updatedFiles);
+
+        updateField('itemImages', updatedFiles);
+        console.log('Files actualizados CORRECTAMENTE:', updatedFiles);
+
+        // 6. Liberamos memoria de blobs (nuevas imágenes) si es necesario
+        if (!file.url) {
+            const blobToRemove = files.find(f => f.name === file.name);
+            if (blobToRemove?.url) {
+                URL.revokeObjectURL(blobToRemove.url);
+            }
+        }
     };
 
     return {
@@ -171,11 +209,9 @@ export const useUpdateItem = () => {
         showErrorMessage,
         showWarningFilesMessage,
         files,
-        originalImages,
         setFiles,
         setFilesToRemove,
         remainingOriginalFiles,
         filesToRemove,
-        setOriginalImages,
     }
 }

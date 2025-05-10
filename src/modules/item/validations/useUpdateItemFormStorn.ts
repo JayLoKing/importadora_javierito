@@ -19,6 +19,7 @@ export const useUpdateItemFormStore = create<UpdateItemFormStore>((set) => ({
         model: '',
         price: 0,
         wholesalePrice: 0,
+        purchasePrice: 0,
         barePrice: 0,
         brandID: 0,
         subCategoryID: 0,
@@ -27,7 +28,12 @@ export const useUpdateItemFormStore = create<UpdateItemFormStore>((set) => ({
         userID: 0,
         itemImages: [],
         acronym: '',
-        branchOfficeID: 0,
+        itemStatus: '',
+        transmission: '',
+        cylinderCapacity: '',
+        traction: '',
+        itemSeries: '',
+        fuel:''
     }, 
     loadData: (data) => set({formData: data}),
     updateField: (field, value) =>
