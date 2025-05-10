@@ -153,6 +153,7 @@ export default function ItemTable() {
               </Whisper>
             </InputGroup>
             <SelectPicker label="Filtro" data={brandsOptions} loading={loadingBrands} onChange={(value) => setSearchBrand(value as string)} searchable placeholder="Marca"/>
+            <SelectPicker label="Filtro" data={brandsOptions} searchable placeholder="Estado"/>
             <SelectPicker label="Filtro" data={subCategoriesOptions} loading={loadingSubCategories} onChange={(value) => setSearchSubCategory(value as string)} searchable placeholder="Sub-Categoría"/>
             <Button style={{ background:'#16151A', color:'white' }} onClick={() => navigate('/trash')}>
               <BsFillTrash3Fill style={{ marginRight:7 }}/>

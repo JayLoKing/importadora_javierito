@@ -99,8 +99,8 @@ export default function SaleModalProduct({ open, hiddeModal }: ModalInfoProductP
                                         </div>
                                     </div>
                                 </div>
-                                    <Divider />
-                                    <div style={{ display: 'flex', alignItems: "center", justifyContent: 'left', gap: 20 }}>
+                                <Divider />
+                                <div style={{ display: 'flex', alignItems: "center", justifyContent: 'left', gap: 20 }}>
                                     <img src="src\assets\brands\BMW.png" alt="Product" style={{ width:"5em", height:"5em" }} />
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 5, width: '100%' }}>
                                         <strong >Nombre del producto</strong>
@@ -117,8 +117,8 @@ export default function SaleModalProduct({ open, hiddeModal }: ModalInfoProductP
                                         </div>
                                     </div>
                                 </div>
-                                    <Divider />
-                                    <div style={{ display: 'flex', alignItems: "center", justifyContent: 'left', gap: 20 }}>
+                                <Divider />
+                                <div style={{ display: 'flex', alignItems: "center", justifyContent: 'left', gap: 20 }}>
                                     <img src="src\assets\brands\BMW.png" alt="Product" style={{ width:"5em", height:"5em" }} />
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 5, width: '100%' }}>
                                         <strong >Nombre del producto</strong>

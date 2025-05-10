@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaSearchMinus, FaSearchPlus } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, } from "react-icons/fa";
 import { FaExpand } from "react-icons/fa6";
-import { Badge, Button, Carousel, Col, Divider, Grid, IconButton, Modal, Panel, Row, Tabs, Toggle } from "rsuite";
+import { Badge, Col, Grid, IconButton, Modal, Row, Tabs } from "rsuite";
 import ModalBody from "rsuite/esm/Modal/ModalBody";
-import ModalFooter from "rsuite/esm/Modal/ModalFooter";
 import ModalHeader from "rsuite/esm/Modal/ModalHeader";
 import ModalTitle from "rsuite/esm/Modal/ModalTitle";
 
@@ -13,11 +12,11 @@ interface ModalInfoItemProps {
 }
 
 const imageList = [
-    "src/assets/LogoJavier.jpg",
-    "src/assets/LogoJavier.jpg",
     "src/assets/iconImportJavierito.png",
-    "src/assets/iconImportJavierito.png",
+    "src/assets/excel.png",
     "src/assets/LogoJavier.jpg",
+    "src/assets/csv.png",
+    "src/assets/brands/bmw.png",
 ]
 
 export default function ItemInformation({ open, hiddeModal }: ModalInfoItemProps){
@@ -75,7 +74,7 @@ export default function ItemInformation({ open, hiddeModal }: ModalInfoItemProps
                                 <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
                                     {imageList.map((src, index) => (
                                         <div key={index} style={{ position: "relative", borderRadius: 5, }} >
-                                            <img src={src} onClick={() => setSelectedIndex(index)} style={{ width: "100%", border: selectedIndex === index ? "2px solid #db7114" : "1px solid #ccc", cursor: "pointer", borderRadius: 3 }} alt={`Thumbnail ${index + 1}`} />
+                                            <img src={src} onClick={() => setSelectedIndex(index)} height={105} width={105} style={{ width:'100%', border: selectedIndex === index ? "2px solid #db7114" : "1px solid #ccc", cursor: "pointer", borderRadius: 3 }} alt={`Thumbnail ${index + 1}`} />
                                         </div>
                                     ))}
                                 </div>
@@ -192,8 +191,8 @@ export default function ItemInformation({ open, hiddeModal }: ModalInfoItemProps
                     <Grid fluid>
                         <Row>
                             <Col xs={21}>
-                                <div style={{ display: "flex",  justifyContent: "center", alignItems: "center", height: "100%", width:"100%", position: "relative", background: "#d3d3d3", borderRadius:10, overflow: "hidden" }}>
-                                    <div style={{width: "100%", height: "100%", overflow: zoom ? "hidden" : "visible", cursor: zoom ? "zoom-out" : "zoom-in", display: "flex", justifyContent: "center", alignItems: "center" }}
+                                <div style={{ display: "flex",  justifyContent: "center", alignItems: "center", height: "50rem", width:"100%", position: "relative", background: "#d3d3d3", borderRadius:10, overflow: "hidden" }}>
+                                    <div style={{ width: "100%", height: "100%", overflow: zoom ? "hidden" : "visible", cursor: zoom ? "zoom-out" : "zoom-in", display: "flex", justifyContent: "center", alignItems: "center" }}
                                             onMouseMove={(e) => {
                                                 if (!zoom) return;
                                                 const container = e.currentTarget;
@@ -216,9 +215,9 @@ export default function ItemInformation({ open, hiddeModal }: ModalInfoItemProps
                                 </div>
                             </Col>
                             <Col xs={3} >
-                                <div style={{  display: "flex", flexDirection:'column', alignItems: "center", height: "100%", width: "100%", borderRadius:7, gap:10 }}>
+                                <div style={{  display: "flex", flexDirection:'column', alignItems: "center", height: "50rem", width: "100%", borderRadius:7, gap:10 }}>
                                     {imageList.map((src, index) => (
-                                        <img key={index} src={src} onClick={() => setGalleryIndex(index)} style={{ width: "70%", height: "70%", objectFit: "contain", borderRadius:5, border: galleryIndex === index ? "2px solid #db7114" : "1px solid #666", cursor: "pointer", opacity: galleryIndex === index ? 1 : 0.6 }} alt={`Gallery thumbnail ${index + 1}`} />
+                                        <img key={index} src={src} onClick={() => setGalleryIndex(index)} style={{ width: "60%", height: "60%", objectFit: "contain", borderRadius:5, border: galleryIndex === index ? "2px solid #db7114" : "1px solid #666", cursor: "pointer", opacity: galleryIndex === index ? 1 : 0.6 }} alt={`Gallery thumbnail ${index + 1}`} />
                                     ))}
                                 </div>
                             </Col>

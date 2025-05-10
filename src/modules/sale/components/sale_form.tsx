@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Form, Grid, Stack, Row, Col, Panel, InputGroup, Input, Table, Whisper, IconButton, Tooltip, Content, Tabs, InputNumber, Loader } from "rsuite";
+import { Button, Form, Grid, Stack, Row, Col, Panel, InputGroup, Input, Table, Whisper, IconButton, Tooltip, Content, Tabs, InputNumber, Loader, Divider } from "rsuite";
 import { useEffect, useState } from "react";
 import PlusIcon from '@rsuite/icons/Plus';
-import { FaCamera, FaHistory,  FaLine, FaSearch, FaWrench } from "react-icons/fa";
+import { FaCamera, FaHistory,  FaLine, FaSearch, FaUserAlt, FaWrench } from "react-icons/fa";
 import { FaBarcode, FaTrash, FaPrint, } from "react-icons/fa6";
 import { CiCircleInfo } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import ModalInfoProduct from "./modal_infoProduct";
 import { useSaleForm } from "../hooks/useSaleForm";
+import FormGroup from "rsuite/esm/FormGroup";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -16,6 +17,7 @@ export default function SaleForm(){
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState<boolean>(false)
     const [expandSidebar, setExpandSidebar] = useState(window.innerWidth > 768);
+    const [searchTerm, setSearchTerm] = useState("");
     const {
         handleConfigSound,
         handleInitializeCamera,
@@ -29,6 +31,22 @@ export default function SaleForm(){
         keyTab,
     } = useSaleForm();
 
+    const products = [
+        { id: 1, name: "Leche Entera 1L", price: 2.50, brand: "BMW" },
+        { id: 2, name: "Aceite 900ml", price: 4.20, brand: "BMW" },
+        { id: 3, name: "Arroz 1kg", price: 3.00, brand: "BMW" },
+        { id: 4, name: "Agua 1 litro", price: 3.00, brand: "BMW" },
+        { id: 5, name: "Amaranto 1 litro", price: 3.00, brand: "BMW" },
+        { id: 6, name: "Filtro de Aceite", price: 15.50, brand: "BMW" },
+        { id: 7, name: "Pastillas de Freno", price: 45.00, brand: "BMW" },
+        { id: 8, name: "Bujía de Encendido", price: 12.75, brand: "BMW" },
+        { id: 9, name: "Amortiguador Trasero", price: 89.99, brand: "BMW" },
+        { id: 10, name: "Correa de Distribución", price: 35.50, brand: "BMW" },
+    ];
+
+     const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 
     useEffect(() => {
@@ -87,7 +105,7 @@ export default function SaleForm(){
             total: 40.0
           },
 
-      ];
+    ];
     
     function handleModal(hidde: boolean): void {
         setShowModal(hidde)
@@ -101,8 +119,8 @@ export default function SaleForm(){
         <div style={{ height: "100%", overflow: "hidden"}}>
             <Grid fluid style={{ height: "100%", margin: 0, padding: 0 }}>
                 <Row style={{ height: "100%", margin: 0 }}>
-                    <Col xs={24} md={expandSidebar ? 16 : 24} style={{ height: "100%", padding: "20px", overflow: "auto" }}>
-                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap" }}>
+                    <Col xs={24} md={expandSidebar ? 16 : 24} style={{ height: "100%", padding:20, overflow: "auto" }}>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 15, flexWrap: "wrap" }}>
                             <div>
                                 <h4>Registro de Ventas</h4>
                                 <p style={{ color: '#878787' }}>Registra, visualiza e imprime tus ventas</p>
@@ -118,8 +136,8 @@ export default function SaleForm(){
                             </div>
                         </div>                
                         
-                            <Panel bordered style={{ marginBottom: 25 }}>
-                                <div style={{justifyContent:"flex-start", display:"flex", gap:"5px", marginBottom:15}}>
+                            <Panel bordered style={{ marginBottom: 15 }}>
+                                <div style={{justifyContent:"flex-start", display:"flex", gap:"5px", marginBottom:10}}>
                                     <FaCamera style={{width:"20px", height:"20px"}}/>
                                     <h5>Lector de Códigos de Barras</h5>
                                 </div>
@@ -209,12 +227,23 @@ export default function SaleForm(){
                                 <Stack style={{ display:"flex", alignItems:"center", justifyContent:"end"}}>
                                     <IconButton appearance="primary" icon={<PlusIcon/>}>Registrar Venta</IconButton>
                                 </Stack>
+                            
                             </Panel>
-                        
                         <div >
                             <Panel bordered>
                                 <div style={{ justifyContent:"space-between", display:"flex", alignItems:"center", flexWrap: "wrap", gap: "15px"}}>
                                     <div >
+                                        <Stack style={{marginBottom:10, fontWeight:"bold", gap:10 }}>
+                                            <strong style={{ fontSize:'1.2em'}}>Razón Social:</strong>
+                                            <Form.Group controlId={'description'}>
+                                                <InputGroup inside>
+                                                    <InputGroup.Addon>
+                                                        <FaUserAlt />
+                                                    </InputGroup.Addon>
+                                                    <Input placeholder="cliente *" />
+                                                </InputGroup>
+                                            </Form.Group>
+                                        </Stack>
                                         <Stack style={{marginBottom:10, fontWeight:"bold", fontSize:"18px", gap:10 }}>
                                             <span>Subtotal:</span>
                                             <span>Bs.{subtotal.toFixed(2)}</span>
@@ -233,10 +262,11 @@ export default function SaleForm(){
                         </div>
                     </Col>
                     <Col xs={8} style={{ display:"flex", flexDirection:"column", justifyContent: "space-between", background:"#f6f6f6", height:"100%", padding:"20px", borderLeft:"1px solid #e0e0e0", borderBottom:"1px solid #e0e0e0", borderRadius:"7px 0 0 7px"}}>
-                        <div style={{ width: "100%" }} >
-                            <Tabs className="tab" defaultActiveKey="1" appearance="pills" style={{ textWrap:'wrap'}}>
-                                <Tabs.Tab eventKey={keyTab} title="Camara" icon={<FaCamera/>}>
-                                    <Content style={{ flex: 1, overflow: 'hidden', paddingTop: '15px' }}>
+                        <div style={{ flex: 1, overflow: "hidden" }} >
+                            <Tabs defaultActiveKey="1" appearance="pills" style={{ textWrap:'wrap'}}>
+                                <Tabs.Tab title="Camara" icon={<FaCamera/>}>
+                                    <Content style={{ height: "calc(100vh - 250px)", overflow: 'hidden', paddingTop: '15px', display: 'flex', flexDirection: 'column' }}>
+                                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                                         {isScanning && (
                                         <div style={{ 
                                             position: "relative",
@@ -312,21 +342,139 @@ export default function SaleForm(){
                                             )}
                                         </div>
                                         )}
+                                    </div>
                                     </Content>
                                 </Tabs.Tab>
                                 <Tabs.Tab eventKey="1" title="Buscar Repuestos" icon={<FaWrench />}>
-                                    <Content style={{ flex: 1, overflow:"auto", padding: 5 }}>
-                                        <InputGroup style={{ marginBottom: '15px' }}>
-                                            <InputGroup.Addon style={{background:"#16151A", color:"white"}}>
+                                    <Content style={{ height: "calc(100vh - 250px)", display: 'flex', flexDirection: 'column' }}>
+                                        <InputGroup style={{ marginBottom: '15px', marginTop: '15px' }}>
+                                            <InputGroup.Addon style={{ background: "#16151A", color: "white" }}>
                                                 <FaSearch />
                                             </InputGroup.Addon>
-                                            <Input placeholder="Buscar por nombre o código..."/>
+                                            <Input 
+                                                placeholder="Buscar por nombre o código..." 
+                                                value={searchTerm}
+                                                onChange={(value) => setSearchTerm(value)}
+                                            />
                                         </InputGroup>
+                                        
+                                        <div style={{ flex: 1, overflow: 'auto' }}>
+                                            {searchTerm === "" ? (
+                                                <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                                                    Ingrese un término de búsqueda
+                                                </div>
+                                            ) : filteredProducts.length === 0 ? (
+                                                <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                                                    No se encontraron productos
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {filteredProducts.map(product => (
+                                                        <div key={product.id} style={{ 
+                                                            marginBottom:10, 
+                                                            backgroundColor: '#d3d3d3',
+                                                            padding:15, 
+                                                            borderRadius:5,
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                            textWrap:'wrap'
+                                                        }}>
+                                                            <div>
+                                                                <div style={{ fontWeight: 'bold', fontSize: '16px' }}>{product.name}</div>
+                                                                <div style={{ fontSize:14, display:'flex', gap:20, alignItems:'center', textWrap:'wrap' }}>
+                                                                    ${product.price.toFixed(2)}
+                                                                    <div style={{ display:'flex', gap:15, alignItems:'center'}}>
+                                                                        <Button appearance="subtle" size="sm" style={{ gap:3 }}> 
+                                                                            <CiCircleInfo/>
+                                                                            info 
+                                                                        </Button>
+                                                                        <Button appearance="primary" size="xs" > Agregar </Button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                                <img 
+                                                                    src="src/assets/brands/BMW.png"
+                                                                    alt="BMW logo" 
+                                                                    style={{ width:57, height:57, borderRadius:8 , border: "1px solid #878787", }} 
+                                                                />
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </Content>
                                 </Tabs.Tab>
                                 <Tabs.Tab eventKey="2" title="Detalles de Repuesto" icon={<FaLine />}>
-                                    <Content style={{ flex: 1, overflow: 'auto', paddingTop: '15px' }}>
-
+                                    <Content style={{ height: "calc(100vh - 250px)", overflow: 'auto', padding:10 }}>
+                                        <div style={{ textAlign: 'center', padding: '10px 0' }}>
+                                            <h6>DETALLES DEL REPUESTO</h6>
+                                            <img 
+                                                src="src/assets/LogoJavier.jpg" 
+                                                alt="Imagen del producto"
+                                                width={100}
+                                                height={100} 
+                                                style={{ margin: '20px auto', borderRadius:8 }} 
+                                            />
+                                        </div>
+                                        <div style={{ marginBottom:15 }}>
+                                            <h6>Información General</h6>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold', width: '40%' }}>Código:</td>
+                                                        <td style={{ padding: '8px 0' }}>P001</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Nombre:</td>
+                                                        <td style={{ padding: '8px 0' }}>Filtro de Aceite</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Marca:</td>
+                                                        <td style={{ padding: '8px 0' }}>BMW</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Modelo:</td>
+                                                        <td style={{ padding: '8px 0' }}>Tacoma</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Año:</td>
+                                                        <td style={{ padding: '8px 0' }}>2011-09 al 14</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Especificaciones:</td>
+                                                        <td style={{ padding: '8px 0' }}>Ningúna</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Ubicación:</td>
+                                                        <td style={{ padding: '8px 0' }}>Estante A-15</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <Divider></Divider>
+                                        <div style={{ marginBottom:15 }}>
+                                            <h6>Precios</h6>
+                                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold', width: '40%' }}>Precio Público:</td>
+                                                        <td style={{ padding: '8px 0' }}>$15.50</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Precio por Mayor:</td>
+                                                        <td style={{ padding: '8px 0' }}>$12.75</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ padding: '8px 0', fontWeight: 'bold' }}>Precio Pelado:</td>
+                                                        <td style={{ padding: '8px 0' }}>$0</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </Content>
                                 </Tabs.Tab>
                                 
